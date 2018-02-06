@@ -17,4 +17,30 @@
 package me.duncte123.weebJava;
 
 public class WeebApiBuilder {
+
+    private final TokenType tokenType;
+    private String token;
+
+    /**
+     * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
+     * @param tokenType The type of token that you want to use
+     *
+     * @see TokenType#WOLKETOKENS
+     * @see TokenType#BEARER
+     */
+    public WeebApiBuilder(TokenType tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    /**
+     * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/" target="_blank">weeb.sh</a>
+     * @param token Your token
+     * @return The current builder, useful for chaining
+     */
+    public WeebApiBuilder setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+
 }
