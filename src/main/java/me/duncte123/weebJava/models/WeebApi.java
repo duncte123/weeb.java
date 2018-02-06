@@ -62,7 +62,7 @@ public interface WeebApi {
 
     /**
      * This returns a list of all the available tags
-     * @param hidden if we should display the hidden tags, default {@code false}
+     * @param hidden if we only should display the hidden tags, default {@code false}
      * @return a list of all the available tags
      */
     List<String> getTags(boolean hidden);
@@ -77,7 +77,7 @@ public interface WeebApi {
 
     /**
      * This returns a list of all the available types
-     * @param hidden if we should display the hidden types, default {@code false}
+     * @param hidden if we only should display the hidden types, default {@code false}
      * @return a list of all the available types
      */
     List<String> getTypes(boolean hidden);

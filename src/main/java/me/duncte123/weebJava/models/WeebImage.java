@@ -31,6 +31,16 @@ public interface WeebImage {
      * Returns a category-like type of the image
      * @return a category-like type of the image
      * example: sumfuk
+     * @see #getBaseType()
+     */
+    default String getType() {
+        return getBaseType();
+    }
+
+    /**
+     * Returns a category-like type of the image
+     * @return a category-like type of the image
+     * example: sumfuk
      */
     String getBaseType();
 

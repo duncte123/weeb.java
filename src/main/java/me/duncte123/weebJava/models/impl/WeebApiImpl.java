@@ -14,37 +14,43 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava;
+package me.duncte123.weebJava.models.impl;
 
+import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.models.WeebApi;
 
-public class WeebApiBuilder {
+import java.util.List;
+
+public class WeebApiImpl implements WeebApi {
 
     private final TokenType tokenType;
-    private String token;
+    private final String token;
 
-    /**
-     * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
-     * @param tokenType The type of token that you want to use
-     *
-     * @see TokenType#WOLKETOKENS
-     * @see TokenType#BEARER
-     */
-    public WeebApiBuilder(TokenType tokenType) {
+    public WeebApiImpl(TokenType tokenType, String token) {
         this.tokenType = tokenType;
-    }
-
-    /**
-     * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/" target="_blank">weeb.sh</a>
-     * @param token Your token
-     * @return The current builder, useful for chaining
-     */
-    public WeebApiBuilder setToken(String token) {
         this.token = token;
-        return this;
     }
 
-    public WeebApi build() {
+    @Override
+    public TokenType getTokenType() {
+        return tokenType;
+    }
+
+    @Override
+    public String getToken() {
+        return token;
+    }
+
+    @Override
+    public List<String> getTags(boolean hidden) {
         return null;
     }
+
+    @Override
+    public List<String> getTypes(boolean hidden) {
+        return null;
+    }
+
+    //TODO: Random image
+    //TODO: image by id
 }
