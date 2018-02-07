@@ -17,6 +17,7 @@
 package me.duncte123.weebJava.models;
 
 import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 
 import java.util.List;
 
@@ -81,5 +82,68 @@ public interface WeebApi {
      * @return a list of all the available types
      */
     List<String> getTypes(boolean hidden);
+
+    /**
+     * This gets a random image based on the filter queries
+     * @param tags a comma separated list of tags
+     * @return A random {@link WeebImage WeebImage} based on the query filters
+     * @see #getRandomImage(String, String, boolean, String, String)
+     */
+    default WeebImage getRandomImage(String tags) {
+        return getRandomImage(null, tags, false, "false", null);
+    }
+
+    /**
+     * This gets a random image based on the filter queries
+     * @param tags a comma separated list of tags
+     * @param hidden If we should display hidden images, default {@code false}
+     * @return A random {@link WeebImage WeebImage} based on the query filters
+     * @see #getRandomImage(String, String, boolean, String, String)
+     */
+    default WeebImage getRandomImage(String tags, boolean hidden) {
+        return getRandomImage(null, tags, hidden, "false", null);
+    }
+
+    /**
+     * This gets a random image based on the filter queries
+     * @param tags a comma separated list of tags
+     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @return A random {@link WeebImage WeebImage} based on the query filters
+     * @see #getRandomImage(String, String, boolean, String, String)
+     */
+    default WeebImage getRandomImage(String tags, String NSFW) {
+        return getRandomImage(null, tags, false, NSFW, null);
+    }
+
+    /**
+     * This gets a random image based on the filter queries
+     * @param tags a comma separated list of tags
+     * @param hidden If we should display hidden images, default {@code false}
+     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @return A random {@link WeebImage WeebImage} based on the query filters
+     * @see #getRandomImage(String, String, boolean, String, String)
+     */
+    default WeebImage getRandomImage(String tags, boolean hidden, String NSFW) {
+        return getRandomImage(null, tags, hidden, NSFW, null);
+    }
+
+    /**
+     * This gets a random image based on the filter queries
+     * @param type the image type
+     * @param tags a comma separated list of tags
+     * @param hidden If we should display hidden images, default {@code false}
+     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param filetype Filters by filetype, e.g. gif, jpg and png (jpg and jpeg are treated the same)
+     * @return A random {@link WeebImage WeebImage} based on the query filters
+     */
+    WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype);
+
+    /**
+     * Returns an image by the image id
+     * @param image the image id that you want to get
+     * @return an image by the image id
+     * @throws ImageNotFoundException when the image is not found
+     */
+    WeebImage getImageById(String image) throws ImageNotFoundException;
 
 }

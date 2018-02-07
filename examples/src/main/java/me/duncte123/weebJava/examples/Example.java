@@ -14,30 +14,16 @@
  *    limitations under the License.
  */
 
-plugins {
-    id 'java'
-    id 'idea'
-    id 'maven'
+package me.duncte123.weebJava.examples;
+
+import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.WeebApiBuilder;
+import me.duncte123.weebJava.models.WeebApi;
+
+public class Example {
+    public static void main(String[] args) {
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
+                .setToken("TOKEN")
+                .build();
+    }
 }
-
-group = "ml.duncte123"
-archivesBaseName = "weebJava"
-version = "0.1.0"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compile group: 'com.afollestad', name: 'ason', version: '1.4.16'
-    compile group: 'org.apache.commons', name: 'commons-text', version: '1.1'
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.9.1'
-}
-
-compileJava {
-    options.encoding = 'UTF-8'
-}
-

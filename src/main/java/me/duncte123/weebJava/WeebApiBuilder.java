@@ -17,6 +17,7 @@
 package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.impl.WeebApiImpl;
 
 public class WeebApiBuilder {
 
@@ -45,6 +46,6 @@ public class WeebApiBuilder {
     }
 
     public WeebApi build() {
-        return null;
+        return new WeebApiImpl(tokenType, token);
     }
 }
