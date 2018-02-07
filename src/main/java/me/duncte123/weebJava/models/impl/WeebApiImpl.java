@@ -20,15 +20,16 @@ import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
 import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
+import me.duncte123.weebJava.models.ImageTag;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.WeebImage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -70,18 +71,80 @@ public class WeebApiImpl implements WeebApi {
 
     @Override
     public List<String> getTypes(boolean hidden) {
-        return null;
+        Ason res = executeRequest(getAPIBaseUrl(), "/types", "hidden=" + hidden);
+        if(res == null)
+            return null;
+
+        AsonArray<String> returnData =  res.getJsonArray("types");
+        return returnData.toList();
     }
 
 
     @Override
-    public WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) {
-        return null;
+    public WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) throws ImageNotFoundException {
+        List<String> query = new ArrayList<>();
+
+        if(type != null)
+            query.add("type=" + type);
+        if(tags != null)
+            query.add("tags=" + tags);
+
+        query.add("hidden=" + hidden);
+
+        if(NSFW != null)
+            query.add("nsfw=" + NSFW);
+        if(filetype != null)
+            query.add("filetype=" + filetype);
+
+        Ason response = executeRequest(getAPIBaseUrl(), "/random", query.toArray(new String[0]));
+
+        if(response == null)
+            return null;
+
+        if(response.getInt("status") != 404)
+            return getImageFromResponse(response);
+        else
+            throw new ImageNotFoundException(response.getString("message"));
     }
 
     @Override
-    public WeebImage getImageById(String image) throws ImageNotFoundException {
-        return null;
+    public WeebImage getImageById(String imageId) throws ImageNotFoundException {
+        if(imageId == null || imageId.isEmpty())
+            throw new IllegalArgumentException("imageId cannot be null or empty");
+
+        Ason response = executeRequest(getAPIBaseUrl(), "/info/" + imageId);
+
+        if(response == null)
+            return null;
+
+        if(response.getInt("status") != 404)
+            return getImageFromResponse(response);
+        else
+            throw new ImageNotFoundException(response.getString("message"));
+    }
+
+    private WeebImage getImageFromResponse(Ason response) {
+        AsonArray<Ason> responseTags = response.getJsonArray("tags");
+        List<ImageTag> imageTags = new ArrayList<>();
+        responseTags.forEach(it -> imageTags.add(
+                new ImageTagImpl(
+                        it.getString("name"),
+                        it.getBool("hidden"),
+                        it.getString("user")
+                )
+        ));
+
+        return new WeebImageImpl(
+                response.getString("id"),
+                response.getString("baseType"),
+                response.getString("mimeType"),
+                response.getString("account"),
+                response.getBool("hidden"),
+                response.getBool("nsfw"),
+                imageTags,
+                response.getString("url")
+
+        );
     }
 
     private Ason executeRequest(String apiBase, String path, String... query) {
@@ -93,7 +156,7 @@ public class WeebApiImpl implements WeebApi {
                             String.format("%s%s%s",
                                 apiBase,
                                 path,
-                                query.length == 0 ? "" : "?" + StringUtils.join(query, "&")
+                                query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&")
                             )
                     )
                     .get()

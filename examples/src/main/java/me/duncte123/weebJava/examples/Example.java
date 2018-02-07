@@ -18,12 +18,25 @@ package me.duncte123.weebJava.examples;
 
 import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.WeebApiBuilder;
+import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.WeebImage;
 
 public class Example {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ImageNotFoundException {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 .setToken("TOKEN")
                 .build();
+
+        //This prints a list of all the available tags
+        System.out.println(api.getTags());
+
+        //This prints a list of all the available types
+        System.out.println(api.getTypes());
+
+        WeebImage imageTag = api.getRandomImage("dance");
+
+        System.out.println(imageTag.getUrl());
+
     }
 }
