@@ -17,7 +17,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
 }
 
 group = "ml.duncte123"
@@ -58,6 +58,20 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        MavenProject(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version = version
+
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
 }
 
 build {
