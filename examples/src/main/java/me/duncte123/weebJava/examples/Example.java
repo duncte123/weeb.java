@@ -34,9 +34,14 @@ public class Example {
         //This prints a list of all the available types
         System.out.println(api.getTypes());
 
-        WeebImage imageTag = api.getRandomImage("dance");
+        //This gets a random image by a tag
+        WeebImage imageTag = api.getRandomImageByTag("dance");
 
+        //prints the image url
         System.out.println(imageTag.getUrl());
 
+        WeebImage imageID = api.getImageById("H1mOU3auZ");
+
+        System.out.println(imageID.getUrl());
     }
 }

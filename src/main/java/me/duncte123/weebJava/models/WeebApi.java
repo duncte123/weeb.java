@@ -89,7 +89,7 @@ public interface WeebApi {
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
-    default WeebImage getRandomImageByType(String type) throws ImageNotFoundException {
+    default WeebImage getRandomImageByTags(String type) throws ImageNotFoundException {
         return getRandomImage(type, null, false, "false", null);
     }
 
