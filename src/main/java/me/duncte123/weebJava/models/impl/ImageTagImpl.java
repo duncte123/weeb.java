@@ -14,6 +14,34 @@
  *    limitations under the License.
  */
 
-rootProject.name = 'weebJava'
-//include 'examples'
+package me.duncte123.weebJava.models.impl;
 
+import me.duncte123.weebJava.models.ImageTag;
+
+public class ImageTagImpl implements ImageTag {
+
+    private final String name;
+    private final boolean hidden;
+    private final String user;
+
+    public ImageTagImpl(String name, boolean hidden, String user) {
+        this.name = name;
+        this.hidden = hidden;
+        this.user = user;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    @Override
+    public String getUser() {
+        return user;
+    }
+}

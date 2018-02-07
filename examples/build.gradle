@@ -1,0 +1,19 @@
+group = 'ml.duncte123'
+version = '0.1.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    maven {
+        url = 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    compile group: 'com.github.duncte123', name: 'weeb.java', version: 'dev-SNAPSHOT'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

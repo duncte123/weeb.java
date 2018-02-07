@@ -14,6 +14,25 @@
  *    limitations under the License.
  */
 
-rootProject.name = 'weebJava'
-//include 'examples'
+package me.duncte123.weebJava.models;
 
+public interface ImageTag {
+    /**
+     * Returns the name of the tag
+     * @return the name of the tag
+     * example: momiji inubashiri
+     */
+    String getName();
+
+    /**
+     * Returns if this tag is private and only available to it’s creator
+     * @return if this tag is private and only available to it’s creator
+     */
+    boolean isHidden();
+
+    /**
+     * Returns the id of the Api Account that added the tag
+     * @return the id of the Api Account that added the tag
+     */
+    String getUser();
+}
