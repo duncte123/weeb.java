@@ -85,17 +85,17 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type the image type
+     * @param tags a comma separated list of tags
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
-    default WeebImage getRandomImageByTags(String type) throws ImageNotFoundException {
-        return getRandomImage(type, null, false, "false", null);
+    default WeebImage getRandomImageByTags(String tags) throws ImageNotFoundException {
+        return getRandomImage(null, tags, false, "false", null);
     }
 
     /**
      * This gets a random image based on the filter queries
-     * @param tags the image type
+     * @param tags a comma separated list of tags
      * @param hidden If we should display hidden images, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
@@ -106,7 +106,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param tags the image type
+     * @param tags a comma separated list of tags
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
@@ -117,7 +117,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param tags the image type
+     * @param tags a comma separated list of tags
      * @param hidden If we should display hidden images, default {@code false}
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
@@ -129,7 +129,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type a comma separated list of tags
+     * @param type the image type
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @see #getRandomImage(String, String, boolean, String, String)
      * @throws ImageNotFoundException when the image is not found
@@ -140,7 +140,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type a comma separated list of tags
+     * @param type the image type
      * @param hidden If we should display hidden images, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @see #getRandomImage(String, String, boolean, String, String)
@@ -152,7 +152,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type a comma separated list of tags
+     * @param type the image type
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @see #getRandomImage(String, String, boolean, String, String)
@@ -164,7 +164,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type a comma separated list of tags
+     * @param type the image type
      * @param hidden If we should display hidden images, default {@code false}
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters

@@ -14,6 +14,6 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.github.duncte123', name: 'weeb.java', version: 'eeeaf08318'
+    compile group: 'com.github.duncte123', name: 'weeb.java', version: 'dev-SNAPSHOT'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

@@ -35,7 +35,7 @@ public class Example {
         System.out.println(api.getTypes());
 
         //This gets a random image by a tag
-        WeebImage imageTag = api.getRandomImageByTag("dance");
+        WeebImage imageTag = api.getRandomImageByTags("dance");
 
         //prints the image url
         System.out.println(imageTag.getUrl());
