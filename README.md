@@ -6,6 +6,7 @@ You can install the wrapper with the following dependency managers
 The repo can be downloaded from jitpack
 The docs are available [here](https://jitpack.io/com/github/duncte123/weeb.java/master-SNAPSHOT/javadoc/)
 
+The current latest version is: [![](https://jitpack.io/v/duncte123/weeb.java.svg)](https://jitpack.io/#duncte123/weeb.java)
 
 #### Maven
 ```XML
@@ -19,7 +20,7 @@ The docs are available [here](https://jitpack.io/com/github/duncte123/weeb.java/
 <dependency>
     <groupId>com.github.duncte123</groupId>
     <artifactId>weeb.java</artifactId>
-    <version>master-SNAPSHOT</version>
+    <version>[LATEST-VERSION]</version>
 </dependency>
 ```
 
@@ -30,7 +31,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    compile 'com.github.duncte123:weeb.java:master-SNAPSHOT'
+    compile 'com.github.duncte123:weeb.java:[LATEST-VERSION]'
 }
 ```
 To force gradle to get a new download when you build use `gradle build --refresh-dependencies`
