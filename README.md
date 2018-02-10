@@ -5,8 +5,10 @@
 A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## Instalation & documentation
-You can install the wrapper with the following dependency managers
-The repo can be downloaded from jcenter
+You can install the wrapper with the following dependency managers.
+
+The repo can be downloaded from jcenter.
+
 The docs are available [here](https://jitpack.io/com/github/duncte123/weeb.java/master-SNAPSHOT/javadoc/)
 
 The current latest version is: [ ![version][] ][download]
