@@ -18,6 +18,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven-publish'
+    id 'maven'
 }
 
 group = "ml.duncte123"
