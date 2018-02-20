@@ -22,7 +22,7 @@ The current latest version is: [ ![version][] ][download]
 </repository>
 
 <dependency>
-  <groupId>ml.duncte123</groupId>
+  <groupId>me.duncte123</groupId>
   <artifactId>weebJava</artifactId>
   <version>[LATEST-VERSION]</version>
   <type>pom</type>
@@ -35,7 +35,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'ml.duncte123:weebJava:[LATEST-VERSION]'
+    compile 'me.duncte123:weebJava:[LATEST-VERSION]'
 }
 ```
 Make sure to replace `[LATEST-VERSION]` with whatever the latest version is
