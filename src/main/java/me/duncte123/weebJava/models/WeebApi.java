@@ -17,11 +17,17 @@
 package me.duncte123.weebJava.models;
 
 import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 
 import java.util.List;
 
 public interface WeebApi {
+
+    /**
+     * This holds the current version of the api
+     */
+    String VERSION = WeebInfo.VERSION;
 
     /**
      * Returns the token type set on the builder

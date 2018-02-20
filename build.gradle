@@ -19,11 +19,12 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'maven'
+    id 'de.fuerstenau.buildconfig' version '1.1.8'
 }
 
-group = "ml.duncte123"
+group = "me.duncte123"
 archivesBaseName = "weebJava"
-version = "0.1.0"
+version = "0.1.1"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -45,6 +46,15 @@ javadoc {
     options.encoding = 'UTF-8'
     options.addStringOption('-html5')
     exclude('me/duncte123/weebJava/models/impl')
+}
+
+buildConfig {
+    appName = project.name
+    version = project.version
+    packageName = project.group + "." + project.archivesBaseName
+    charset = 'UTF-8'
+
+    clsName = 'WeebInfo'
 }
 
 compileJava {

@@ -38,7 +38,8 @@ public class WeebApiImpl implements WeebApi {
     private final TokenType tokenType;
     private final String token;
     private final OkHttpClient client;
-	private final String USER_AGENT = "Mozilla/5.0 Weeb.java (v0.1.0, https://github.com/duncte123/weeb.java)";
+	private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
+            WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
 
     public WeebApiImpl(TokenType tokenType, String token) {
         this.tokenType = tokenType;
