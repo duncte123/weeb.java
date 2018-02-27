@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class WeebApiImpl implements WeebApi {
@@ -40,6 +41,8 @@ public class WeebApiImpl implements WeebApi {
     private final OkHttpClient client;
 	private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
             WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
+	private final List<String> tagsCache = new ArrayList<>();
+	private final List<String> typesCache = new ArrayList<>();
 
     public WeebApiImpl(TokenType tokenType, String token) {
         this.tokenType = tokenType;
@@ -61,26 +64,46 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public List<String> getTags(boolean hidden) {
+    public List<String> getTagsCached(boolean hidden, boolean refresh) {
 
-        Ason res = executeRequest(getAPIBaseUrl(), "/tags", "hidden=" + hidden);
-        if(res == null)
-            return null;
+        if(refresh || this.tagsCache.isEmpty()) {
 
-        AsonArray<String> returnData =  res.getJsonArray("tags");
-        return returnData.toList();
+            this.tagsCache.clear();
+
+            Ason res = executeRequest(getAPIBaseUrl(), "/tags", "hidden=" + hidden);
+            if(res == null)
+                return null;
+
+            AsonArray<String> returnData =  res.getJsonArray("tags");
+            List<String> tagsReturned = returnData.toList();
+            this.tagsCache.addAll(tagsReturned);
+            //System.out.println("made api request");
+            return tagsReturned;
+        }
+
+        return this.tagsCache;
     }
 
     @Override
-    public List<String> getTypes(boolean hidden) {
-        Ason res = executeRequest(getAPIBaseUrl(), "/types", "hidden=" + hidden);
-        if(res == null)
-            return null;
+    public List<String> getTypesCached(boolean hidden, boolean refresh) {
 
-        AsonArray<String> returnData =  res.getJsonArray("types");
-        return returnData.toList();
+        if(refresh || this.typesCache.isEmpty()) {
+
+            this.typesCache.clear();
+
+            Ason res = executeRequest(getAPIBaseUrl(), "/types", "hidden=" + hidden);
+            if(res == null)
+                return null;
+
+            AsonArray<String> returnData =  res.getJsonArray("types");
+            List<String> typesReturned = returnData.toList();
+            this.typesCache.addAll(typesReturned);
+            //System.out.println("made api request");
+            return typesReturned;
+        }
+
+        return this.typesCache;
     }
-
 
     @Override
     public WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) throws ImageNotFoundException {
@@ -152,7 +175,7 @@ public class WeebApiImpl implements WeebApi {
     private Ason executeRequest(String apiBase, String path, String... query) {
 
         try {
-            Response res =  client.newCall(
+            Response res = client.newCall(
                     new Request.Builder()
                     .url(
                             String.format("%s%s%s",
@@ -167,7 +190,7 @@ public class WeebApiImpl implements WeebApi {
                     .build()
             ).execute();
 
-            return new Ason(res.body().string());
+            return new Ason(Objects.requireNonNull(res.body()).string());
         }
         catch (IOException e) {
             e.printStackTrace();

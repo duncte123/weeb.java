@@ -10,5 +10,5 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'ml.duncte123:weebJava:0.1.0'
+    compile 'me.duncte123:weebJava:0.1.1'
 }
