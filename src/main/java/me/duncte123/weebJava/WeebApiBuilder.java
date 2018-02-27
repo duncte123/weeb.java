@@ -45,6 +45,10 @@ public class WeebApiBuilder {
         return this;
     }
 
+    /**
+     * This builds the api and returns the {@link WeebApi WeebApi} interface ready to be used
+     * @return the {@link WeebApi WeebApi} interface ready to be used
+     */
     public WeebApi build() {
         return new WeebApiImpl(tokenType, token);
     }
