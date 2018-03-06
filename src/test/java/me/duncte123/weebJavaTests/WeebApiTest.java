@@ -72,7 +72,7 @@ public class WeebApiTest {
     private static void writeToFile(InputStream in, String name) {
         try {
 
-            File targetFile = new File(name + ".png");
+            File targetFile = new File("image-test-" + name + ".png");
             OutputStream outStream = new FileOutputStream(targetFile);
             int read = 0;
             byte[] bytes = new byte[1024];
