@@ -14,34 +14,27 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl;
+package me.duncte123.weebJava.web;
 
-import me.duncte123.weebJava.models.ImageTag;
+import me.duncte123.weebJava.models.WeebApi;
+import okhttp3.OkHttpClient;
 
-public class ImageTagImpl implements ImageTag {
+import java.util.concurrent.TimeUnit;
 
-    private final String name;
-    private final boolean hidden;
-    private final String user;
+public final class Requester {
 
-    public ImageTagImpl(String name, boolean hidden, String user) {
-        this.name = name;
-        this.hidden = hidden;
-        this.user = user;
+    private static final OkHttpClient client;
+    private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
+            WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
+
+    static {
+        client = new OkHttpClient.Builder()
+                .readTimeout(10L, TimeUnit.SECONDS)
+                .writeTimeout(10L, TimeUnit.SECONDS)
+                .build();
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 
-    @Override
-    public boolean isHidden() {
-        return hidden;
-    }
 
-    @Override
-    public String getUser() {
-        return user;
-    }
+    private Requester() {}
 }

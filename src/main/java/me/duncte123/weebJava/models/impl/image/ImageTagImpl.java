@@ -14,25 +14,34 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models;
+package me.duncte123.weebJava.models.impl.image;
 
-public interface ImageTag {
-    /**
-     * Returns the name of the tag
-     * @return the name of the tag
-     * example: momiji inubashiri
-     */
-    String getName();
+import me.duncte123.weebJava.models.image.ImageTag;
 
-    /**
-     * Returns if this tag is private and only available to it’s creator
-     * @return if this tag is private and only available to it’s creator
-     */
-    boolean isHidden();
+public class ImageTagImpl implements ImageTag {
 
-    /**
-     * Returns the id of the Api Account that added the tag
-     * @return the id of the Api Account that added the tag
-     */
-    String getUser();
+    private final String name;
+    private final boolean hidden;
+    private final String user;
+
+    public ImageTagImpl(String name, boolean hidden, String user) {
+        this.name = name;
+        this.hidden = hidden;
+        this.user = user;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    @Override
+    public String getUser() {
+        return user;
+    }
 }

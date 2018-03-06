@@ -19,6 +19,7 @@ package me.duncte123.weebJava.models;
 import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
+import me.duncte123.weebJava.models.image.WeebImage;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public interface WeebApi {
      * @return the base url for the api
      */
     default String getAPIBaseUrl() {
-        return "https://api.weeb.sh/images";
+        return "https://api.weeb.sh";
     }
 
     /**

@@ -20,9 +20,11 @@ import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
 import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
-import me.duncte123.weebJava.models.ImageTag;
+import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.WeebImage;
+import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
+import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -70,7 +72,7 @@ public class WeebApiImpl implements WeebApi {
 
             this.tagsCache.clear();
 
-            Ason res = executeRequest(getAPIBaseUrl(), "/tags", "hidden=" + hidden);
+            Ason res = executeRequest(getAPIBaseUrl(), "/images/tags", "hidden=" + hidden);
             if(res == null)
                 return null;
 
@@ -91,7 +93,7 @@ public class WeebApiImpl implements WeebApi {
 
             this.typesCache.clear();
 
-            Ason res = executeRequest(getAPIBaseUrl(), "/types", "hidden=" + hidden);
+            Ason res = executeRequest(getAPIBaseUrl(), "/images/types", "hidden=" + hidden);
             if(res == null)
                 return null;
 
@@ -121,7 +123,7 @@ public class WeebApiImpl implements WeebApi {
         if(filetype != null)
             query.add("filetype=" + filetype);
 
-        Ason response = executeRequest(getAPIBaseUrl(), "/random", query.toArray(new String[0]));
+        Ason response = executeRequest(getAPIBaseUrl(), "/images/random", query.toArray(new String[0]));
 
         if(response == null)
             return null;
@@ -137,7 +139,7 @@ public class WeebApiImpl implements WeebApi {
         if(imageId == null || imageId.isEmpty())
             throw new IllegalArgumentException("imageId cannot be null or empty");
 
-        Ason response = executeRequest(getAPIBaseUrl(), "/info/" + imageId);
+        Ason response = executeRequest(getAPIBaseUrl(), "/images/info/" + imageId);
 
         if(response == null)
             return null;
