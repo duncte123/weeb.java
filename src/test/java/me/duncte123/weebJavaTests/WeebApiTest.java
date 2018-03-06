@@ -16,23 +16,25 @@
 
 package me.duncte123.weebJavaTests;
 
-import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.WeebApiBuilder;
-import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.types.GenerateType;
+import me.duncte123.weebJava.types.TokenType;
 
-import java.util.List;
+import java.io.*;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws ImageNotFoundException {
+    public static void main(String[] args) throws Exception {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
+                .setApiUrl(ApiUrl.STAGING)
                 .build();
+        String myavy = "https://cdn.discordapp.com/avatars/191231307290771456/02c10e1918926a81b58110d6ae902c3b.png";
 
-        //This should get the tags if there are none yet
+        /*//This should get the tags if there are none yet
         List<String> tags = api.getTagsCached();
         //Print the tags
         System.out.println(tags);
@@ -55,8 +57,32 @@ public class WeebApiTest {
         //This should display the same tags but should not make an api request
         List<String> types2 = api.getTypesCached();
         //Print the tags
-        System.out.println(types2);
+        System.out.println(types2);*/
 
-        //initial_d
+        api.getImageGenerator().generateSimple(GenerateType.WON, (img) -> writeToFile(img, "simple") );
+        api.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
+        api.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        api.getImageGenerator().generateLicense("Phan", myavy,
+                new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
+                (img) -> writeToFile(img, "license"));
+
+    }
+
+    private static void writeToFile(InputStream in, String name) {
+        try {
+
+            File targetFile = new File(name + ".png");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = in.read(bytes)) != -1) {
+                outStream.write(bytes, 0, read);
+            }
+            outStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

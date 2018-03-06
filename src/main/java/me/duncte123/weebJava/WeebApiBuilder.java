@@ -18,12 +18,14 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
+import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.TokenType;
 
 public class WeebApiBuilder {
 
     private final TokenType tokenType;
     private String token;
+    private ApiUrl apiUrl = ApiUrl.PRODUCTION;
 
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
@@ -46,11 +48,16 @@ public class WeebApiBuilder {
         return this;
     }
 
+    public WeebApiBuilder setApiUrl(ApiUrl apiUrl) {
+        this.apiUrl = apiUrl;
+        return this;
+    }
+
     /**
      * This builds the api and returns the {@link WeebApi WeebApi} interface ready to be used
      * @return the {@link WeebApi WeebApi} interface ready to be used
      */
     public WeebApi build() {
-        return new WeebApiImpl(tokenType, token);
+        return new WeebApiImpl(tokenType, token, apiUrl);
     }
 }

@@ -18,6 +18,9 @@ package me.duncte123.weebJava.models.impl;
 
 import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
+import me.duncte123.weebJava.models.image.ImageGenerator;
+import me.duncte123.weebJava.models.impl.image.ImageGeneratorImpl;
+import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
@@ -41,18 +44,25 @@ public class WeebApiImpl implements WeebApi {
 
     private final TokenType tokenType;
     private final String token;
+    private final ApiUrl apiUrl;
 
 	private final List<String> tagsCache = new ArrayList<>();
 	private final List<String> typesCache = new ArrayList<>();
 
-    public WeebApiImpl(TokenType tokenType, String token) {
+    public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
         this.tokenType = tokenType;
         this.token = token;
+        this.apiUrl = apiUrl;
     }
 
     @Override
     public TokenType getTokenType() {
         return tokenType;
+    }
+
+    @Override
+    public String getAPIBaseUrl() {
+        return apiUrl.getUrl();
     }
 
     @Override
@@ -169,6 +179,10 @@ public class WeebApiImpl implements WeebApi {
         );
     }
 
+    @Override
+    public ImageGenerator getImageGenerator() {
+        return new ImageGeneratorImpl(this);
+    }
     /*private void executeRequestAsync(String apiBase, String path, Consumer<Ason> ason, String... query) {
         requester.requestAsync(new Request.Builder()
                 .url(

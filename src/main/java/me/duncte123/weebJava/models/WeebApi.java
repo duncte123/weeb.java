@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.models;
 
+import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
@@ -280,5 +281,7 @@ public interface WeebApi {
      * @throws ImageNotFoundException when the image is not found
      */
     WeebImage getImageById(String imageId) throws ImageNotFoundException;
+
+    ImageGenerator getImageGenerator();
 
 }
