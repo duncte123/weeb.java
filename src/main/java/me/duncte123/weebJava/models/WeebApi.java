@@ -282,6 +282,11 @@ public interface WeebApi {
      */
     WeebImage getImageById(String imageId) throws ImageNotFoundException;
 
+    /**
+     * Returns the image generator.
+     * You can use the image generator to access the image generate endpoints
+     * @return the {@link ImageGenerator} to generate images with
+     */
     ImageGenerator getImageGenerator();
 
 }

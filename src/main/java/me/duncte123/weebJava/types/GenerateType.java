@@ -18,8 +18,20 @@ package me.duncte123.weebJava.types;
 
 public enum GenerateType {
 
+    /**
+     * This is the awooo type: <br />
+     * <img src="https://camo.githubusercontent.com/feccaf7383796470a6e3928fbe0ea70ae6fc78bf/68747470733a2f2f692e696d6775722e636f6d2f39734a32317a332e706e67" />
+     */
     AWOOO("awooo"),
+    /**
+     * This is the eyes type: <br />
+     * <img src="https://camo.githubusercontent.com/653bf35a8ca176348f809f98722b6b13dc44e379/68747470733a2f2f692e696d6775722e636f6d2f7139554c33664e2e706e67" />
+     */
     EYES("eyes"),
+    /**
+     * This is the won type: <br />
+     * <img src="https://camo.githubusercontent.com/9efe397262c080edd233023b43b890081357433a/68747470733a2f2f692e696d6775722e636f6d2f686461704973422e706e673f31" />
+     */
     WON("won");
 
     private final String type;
@@ -32,6 +44,10 @@ public enum GenerateType {
         return type;
     }
 
+    /**
+     * Returns the type as a string
+     * @return the type as a string
+     */
     public String getType() {
         return type;
     }

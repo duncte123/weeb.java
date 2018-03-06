@@ -17,7 +17,13 @@
 package me.duncte123.weebJava.types;
 
 public enum ApiUrl {
+    /**
+     * This is the normal api.weeb.sh url
+     */
     PRODUCTION("https://api.weeb.sh"),
+    /**
+     * This is the staging.weeb.sh url
+     */
     STAGING("https://staging.weeb.sh");
 
     private final String url;
@@ -25,6 +31,10 @@ public enum ApiUrl {
         this.url = url;
     }
 
+    /**
+     * Returns the url
+     * @return the url as a string
+     */
     public String getUrl() {
         return url;
     }

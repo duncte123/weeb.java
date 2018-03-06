@@ -48,6 +48,11 @@ public class WeebApiBuilder {
         return this;
     }
 
+    /**
+     * This sets the api url that we user to make our requests
+     * @param apiUrl The {@link ApiUrl} that we want to use
+     * @return The current builder, useful for chaining
+     */
     public WeebApiBuilder setApiUrl(ApiUrl apiUrl) {
         this.apiUrl = apiUrl;
         return this;

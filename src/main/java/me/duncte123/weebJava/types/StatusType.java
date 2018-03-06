@@ -18,10 +18,25 @@ package me.duncte123.weebJava.types;
 
 public enum StatusType {
 
+    /**
+     * Tells the api to use the online status (green dot)
+     */
     ONLINE("online"),
+    /**
+     * Tells the api to use the idle status (orange dot)
+     */
     IDLE("idle"),
+    /**
+     * Tells the api to use the dnd status (red dot)
+     */
     DND("dnd"),
+    /**
+     * Tells the api to use the streaming status (purple dot)
+     */
     STREAMING("streaming"),
+    /**
+     * Tells the api to use the offline status (gray dot)
+     */
     OFFLINE("offline");
 
     private final String status;
@@ -29,6 +44,10 @@ public enum StatusType {
         this.status = status;
     }
 
+    /**
+     * Returns the status
+     * @return the status
+     */
     public String getStatus() {
         return status;
     }

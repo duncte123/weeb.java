@@ -64,6 +64,7 @@ public class WeebApiTest {
         api.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
         api.getImageGenerator().generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
+                new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
 
     }
