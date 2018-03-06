@@ -20,12 +20,12 @@ import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
 import me.duncte123.weebJava.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
-import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
 import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
-import okhttp3.OkHttpClient;
+import me.duncte123.weebJava.web.Requester;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -34,25 +34,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class WeebApiImpl implements WeebApi {
 
+    private final Requester requester = new Requester();
+
     private final TokenType tokenType;
     private final String token;
-    private final OkHttpClient client;
-	private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
-            WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
+
 	private final List<String> tagsCache = new ArrayList<>();
 	private final List<String> typesCache = new ArrayList<>();
 
     public WeebApiImpl(TokenType tokenType, String token) {
         this.tokenType = tokenType;
         this.token = token;
-        this.client = new OkHttpClient.Builder()
-                .readTimeout(10L, TimeUnit.SECONDS)
-                .writeTimeout(10L, TimeUnit.SECONDS)
-                .build();
     }
 
     @Override
@@ -72,7 +67,7 @@ public class WeebApiImpl implements WeebApi {
 
             this.tagsCache.clear();
 
-            Ason res = executeRequest(getAPIBaseUrl(), "/images/tags", "hidden=" + hidden);
+            Ason res = executeRequestSync(getAPIBaseUrl(), "/images/tags", "hidden=" + hidden);
             if(res == null)
                 return null;
 
@@ -93,7 +88,7 @@ public class WeebApiImpl implements WeebApi {
 
             this.typesCache.clear();
 
-            Ason res = executeRequest(getAPIBaseUrl(), "/images/types", "hidden=" + hidden);
+            Ason res = executeRequestSync(getAPIBaseUrl(), "/images/types", "hidden=" + hidden);
             if(res == null)
                 return null;
 
@@ -123,7 +118,7 @@ public class WeebApiImpl implements WeebApi {
         if(filetype != null)
             query.add("filetype=" + filetype);
 
-        Ason response = executeRequest(getAPIBaseUrl(), "/images/random", query.toArray(new String[0]));
+        Ason response = executeRequestSync(getAPIBaseUrl(), "/images/random", query.toArray(new String[0]));
 
         if(response == null)
             return null;
@@ -139,7 +134,7 @@ public class WeebApiImpl implements WeebApi {
         if(imageId == null || imageId.isEmpty())
             throw new IllegalArgumentException("imageId cannot be null or empty");
 
-        Ason response = executeRequest(getAPIBaseUrl(), "/images/info/" + imageId);
+        Ason response = executeRequestSync(getAPIBaseUrl(), "/images/info/" + imageId);
 
         if(response == null)
             return null;
@@ -174,10 +169,34 @@ public class WeebApiImpl implements WeebApi {
         );
     }
 
-    private Ason executeRequest(String apiBase, String path, String... query) {
+    /*private void executeRequestAsync(String apiBase, String path, Consumer<Ason> ason, String... query) {
+        requester.requestAsync(new Request.Builder()
+                .url(
+                        String.format("%s%s%s",
+                                apiBase,
+                                path,
+                                query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&")
+                        )
+                )
+                .get()
+                .header("Authorization", getCompiledToken())
+                .addHeader("User-Agent", Requester.USER_AGENT)
+                .build(),
+            (response) -> {
+                try {
+                    ason.accept(new Ason(Objects.requireNonNull(response.body()).string()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            },
+            Throwable::printStackTrace
+        );
+    }*/
+
+    private Ason executeRequestSync(String apiBase, String path, String... query) {
 
         try {
-            Response res = client.newCall(
+            Response res = requester.requestSync(
                     new Request.Builder()
                     .url(
                             String.format("%s%s%s",
@@ -188,9 +207,9 @@ public class WeebApiImpl implements WeebApi {
                     )
                     .get()
                     .header("Authorization", getCompiledToken())
-					.addHeader("User-Agent", USER_AGENT)
+					.addHeader("User-Agent", Requester.USER_AGENT)
                     .build()
-            ).execute();
+            );
 
             return new Ason(Objects.requireNonNull(res.body()).string());
         }

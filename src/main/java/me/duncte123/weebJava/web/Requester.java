@@ -18,23 +18,44 @@ package me.duncte123.weebJava.web;
 
 import me.duncte123.weebJava.models.WeebApi;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public final class Requester {
+public class Requester {
 
-    private static final OkHttpClient client;
-    private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
+    private final OkHttpClient client;
+    public static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
             WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
 
-    static {
-        client = new OkHttpClient.Builder()
+    public Requester() {
+        this.client = new OkHttpClient.Builder()
                 .readTimeout(10L, TimeUnit.SECONDS)
                 .writeTimeout(10L, TimeUnit.SECONDS)
                 .build();
     }
 
+    /*public void requestAsync(Request r, Consumer<Response> success, Consumer<Throwable> fail) {
+        client.newCall(r).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                fail.accept(e);
+            }
 
+            @Override public void onResponse(Call call, Response response) {
+                if (!response.isSuccessful()) fail.accept( new IOException("Unexpected code " + response));
+                else success.accept(response);
+            }
+        });
+    }*/
 
-    private Requester() {}
+    public Response requestSync(Request r) {
+        try {
+            return client.newCall(r).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
