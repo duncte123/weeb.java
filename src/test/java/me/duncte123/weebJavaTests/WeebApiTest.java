@@ -22,6 +22,7 @@ import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.TokenType;
 
+import java.awt.*;
 import java.io.*;
 
 public class WeebApiTest {
@@ -59,7 +60,7 @@ public class WeebApiTest {
         //Print the tags
         System.out.println(types2);*/
 
-        api.getImageGenerator().generateSimple(GenerateType.WON, (img) -> writeToFile(img, "simple") );
+        api.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
         api.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
         api.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
         api.getImageGenerator().generateLicense("Phan", myavy,
