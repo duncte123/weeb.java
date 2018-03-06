@@ -16,7 +16,7 @@
 
 package me.duncte123.weebJavaTests;
 
-import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;

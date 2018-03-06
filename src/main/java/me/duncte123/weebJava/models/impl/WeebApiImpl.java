@@ -18,7 +18,7 @@ package me.duncte123.weebJava.models.impl;
 
 import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
-import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.ImageTag;
@@ -202,7 +202,7 @@ public class WeebApiImpl implements WeebApi {
                             String.format("%s%s%s",
                                 apiBase,
                                 path,
-                                query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&")
+                                requester.toParams(query)
                             )
                     )
                     .get()
@@ -217,5 +217,9 @@ public class WeebApiImpl implements WeebApi {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Requester getRequester() {
+        return requester;
     }
 }

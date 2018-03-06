@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava;
+package me.duncte123.weebJava.types;
 
 public enum TokenType {
 

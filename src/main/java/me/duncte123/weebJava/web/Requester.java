@@ -17,12 +17,12 @@
 package me.duncte123.weebJava.web;
 
 import me.duncte123.weebJava.models.WeebApi;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class Requester {
 
@@ -37,7 +37,7 @@ public class Requester {
                 .build();
     }
 
-    /*public void requestAsync(Request r, Consumer<Response> success, Consumer<Throwable> fail) {
+    public void requestAsync(Request r, Consumer<Response> success, Consumer<Throwable> fail) {
         client.newCall(r).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) {
                 fail.accept(e);
@@ -48,7 +48,7 @@ public class Requester {
                 else success.accept(response);
             }
         });
-    }*/
+    }
 
     public Response requestSync(Request r) {
         try {
@@ -57,5 +57,9 @@ public class Requester {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String toParams(String... query) {
+        return query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&");
     }
 }

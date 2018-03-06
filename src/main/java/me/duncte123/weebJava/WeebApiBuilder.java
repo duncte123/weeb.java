@@ -18,6 +18,7 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
+import me.duncte123.weebJava.types.TokenType;
 
 public class WeebApiBuilder {
 

@@ -14,19 +14,25 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.types;
 
-import me.duncte123.weebJava.types.GenerateType;
+public enum GenerateType {
 
-import java.awt.*;
-import java.io.InputStream;
-import java.util.function.Consumer;
+    AWOOO("awooo"),
+    EYES("eyes"),
+    WON("won");
 
-public interface ImageGenerator {
-
-    default void generateSimple(GenerateType type, Consumer<InputStream>  callback) {
-        generateSimple(type, Color.decode("fff0d3"), Color.decode("cc817c"), callback);
+    private final String type;
+    GenerateType(String type) {
+        this.type = type;
     }
 
-    void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback);
+    @Override
+    public String toString() {
+        return type;
+    }
+
+    public String getType() {
+        return type;
+    }
 }
