@@ -18,12 +18,14 @@ package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.TokenType;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.*;
+import java.util.List;
 
 public class WeebApiTest {
 
@@ -31,11 +33,10 @@ public class WeebApiTest {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
-                .setApiUrl(ApiUrl.STAGING)
                 .build();
         String myavy = "https://cdn.discordapp.com/avatars/191231307290771456/02c10e1918926a81b58110d6ae902c3b.png";
 
-        /*//This should get the tags if there are none yet
+        //This should get the tags if there are none yet
         List<String> tags = api.getTagsCached();
         //Print the tags
         System.out.println(tags);
@@ -58,12 +59,18 @@ public class WeebApiTest {
         //This should display the same tags but should not make an api request
         List<String> types2 = api.getTypesCached();
         //Print the tags
-        System.out.println(types2);*/
+        System.out.println(types2);
 
-        api.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        api.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
-        api.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
-        api.getImageGenerator().generateLicense("Phan", myavy,
+        WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS)
+                //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
+                .setToken(Secrets.WOLKE_TOKEN)
+                .setApiUrl(ApiUrl.STAGING)
+                .build();
+
+        apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
+        apiImg.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
+        apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        apiImg.getImageGenerator().generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
                 new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
