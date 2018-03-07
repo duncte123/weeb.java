@@ -19,6 +19,7 @@ package me.duncte123.weebJava.models.image;
 public interface ImageTag {
     /**
      * Returns the name of the tag
+     *
      * @return the name of the tag
      * example: momiji inubashiri
      */
@@ -26,12 +27,14 @@ public interface ImageTag {
 
     /**
      * Returns if this tag is private and only available to it’s creator
+     *
      * @return if this tag is private and only available to it’s creator
      */
     boolean isHidden();
 
     /**
      * Returns the id of the Api Account that added the tag
+     *
      * @return the id of the Api Account that added the tag
      */
     String getUser();

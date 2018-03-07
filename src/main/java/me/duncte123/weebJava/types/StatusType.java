@@ -45,12 +45,14 @@ public enum StatusType {
     OFFLINE("offline");
 
     private final String status;
+
     StatusType(String status) {
         this.status = status;
     }
 
     /**
      * Returns the status
+     *
      * @return the status
      */
     public String getStatus() {

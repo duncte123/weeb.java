@@ -42,7 +42,7 @@ public class ImageGeneratorImpl implements ImageGenerator {
 
     @Override
     public void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback) {
-        executeGETRequest("generate",api.getRequester().toParams(
+        executeGETRequest("generate", api.getRequester().toParams(
                 "type=" + type,
                 "face=" + String.format("%02x%02x%02x", face.getRed(), face.getGreen(), face.getBlue()),
                 "hair=" + String.format("%02x%02x%02x", hair.getRed(), hair.getGreen(), hair.getBlue())
@@ -68,10 +68,10 @@ public class ImageGeneratorImpl implements ImageGenerator {
                 .put("title", title)
                 .put("avatar", avatar);
 
-        if(badges.length > 0)
+        if (badges.length > 0)
             data.put("badges", badges);
 
-        if(widgets.length > 0)
+        if (widgets.length > 0)
             data.put("widgets", widgets);
 
         executePOSTRequest("license", data, callback);
@@ -94,6 +94,7 @@ public class ImageGeneratorImpl implements ImageGenerator {
                 Throwable::printStackTrace
         );
     }
+
     private void executePOSTRequest(String endpoint, JSONObject json, Consumer<InputStream> callback) {
         api.getRequester().requestAsync(new Request.Builder()
                         .url(
@@ -102,7 +103,7 @@ public class ImageGeneratorImpl implements ImageGenerator {
                                         "/auto-image/" + endpoint
                                 )
                         )
-                        .post(RequestBody.create(MediaType.parse("application/json"), json.toString() ))
+                        .post(RequestBody.create(MediaType.parse("application/json"), json.toString()))
                         .header("Authorization", api.getCompiledToken())
                         .addHeader("User-Agent", Requester.USER_AGENT)
                         .build(),

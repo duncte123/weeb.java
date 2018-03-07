@@ -27,12 +27,14 @@ public enum ApiUrl {
     STAGING("https://staging.weeb.sh");
 
     private final String url;
+
     ApiUrl(String url) {
         this.url = url;
     }
 
     /**
      * Returns the url
+     *
      * @return the url as a string
      */
     public String getUrl() {

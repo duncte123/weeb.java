@@ -29,8 +29,8 @@ public class WeebApiBuilder {
 
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
-     * @param tokenType The type of token that you want to use
      *
+     * @param tokenType The type of token that you want to use
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      */
@@ -40,6 +40,7 @@ public class WeebApiBuilder {
 
     /**
      * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/" target="_blank">weeb.sh</a>
+     *
      * @param token Your token
      * @return The current builder, useful for chaining
      */
@@ -50,6 +51,7 @@ public class WeebApiBuilder {
 
     /**
      * This sets the api url that we user to make our requests
+     *
      * @param apiUrl The {@link ApiUrl} that we want to use
      * @return The current builder, useful for chaining
      */
@@ -60,6 +62,7 @@ public class WeebApiBuilder {
 
     /**
      * This builds the api and returns the {@link WeebApi WeebApi} interface ready to be used
+     *
      * @return the {@link WeebApi WeebApi} interface ready to be used
      */
     public WeebApi build() {

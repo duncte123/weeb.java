@@ -22,6 +22,7 @@ public enum TokenType {
      * This is the Bearer auth token type
      * use this if you have a Bearer token
      * If you have a WolkeTokens use {@link #WOLKETOKENS WOLKETOKENS} instead
+     *
      * @see #WOLKETOKENS
      */
     BEARER("Bearer"),
@@ -30,6 +31,7 @@ public enum TokenType {
      * This is the Wolke auth token type
      * use this if you have a Wolke token
      * If you have a Bearer use {@link #BEARER BEARER} instead
+     *
      * @see #BEARER
      */
     WOLKETOKENS("Wolke");
@@ -42,6 +44,7 @@ public enum TokenType {
 
     /**
      * Returns the token type to be used in the auth requests
+     *
      * @return the token type
      */
     public String getType() {

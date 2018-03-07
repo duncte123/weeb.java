@@ -35,6 +35,7 @@ public enum GenerateType {
     WON("won");
 
     private final String type;
+
     GenerateType(String type) {
         this.type = type;
     }
@@ -46,6 +47,7 @@ public enum GenerateType {
 
     /**
      * Returns the type as a string
+     *
      * @return the type as a string
      */
     public String getType() {

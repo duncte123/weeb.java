@@ -26,9 +26,9 @@ import java.util.function.Consumer;
 
 public class Requester {
 
-    private final OkHttpClient client;
     public static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
             WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
+    private final OkHttpClient client;
 
     public Requester() {
         this.client = new OkHttpClient.Builder()
@@ -39,12 +39,14 @@ public class Requester {
 
     public void requestAsync(Request r, Consumer<Response> success, Consumer<Throwable> fail) {
         client.newCall(r).enqueue(new Callback() {
-            @Override public void onFailure(Call call, IOException e) {
+            @Override
+            public void onFailure(Call call, IOException e) {
                 fail.accept(e);
             }
 
-            @Override public void onResponse(Call call, Response response) {
-                if (!response.isSuccessful()) fail.accept( new IOException("Unexpected code " + response));
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (!response.isSuccessful()) fail.accept(new IOException("Unexpected code " + response));
                 else success.accept(response);
             }
         });

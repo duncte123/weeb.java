@@ -18,20 +18,19 @@ package me.duncte123.weebJava.models.impl;
 
 import com.afollestad.ason.Ason;
 import com.afollestad.ason.AsonArray;
-import me.duncte123.weebJava.models.image.ImageGenerator;
-import me.duncte123.weebJava.models.impl.image.ImageGeneratorImpl;
-import me.duncte123.weebJava.types.ApiUrl;
-import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.models.impl.image.ImageGeneratorImpl;
 import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
 import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
+import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.web.Requester;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +45,8 @@ public class WeebApiImpl implements WeebApi {
     private final String token;
     private final ApiUrl apiUrl;
 
-	private final List<String> tagsCache = new ArrayList<>();
-	private final List<String> typesCache = new ArrayList<>();
+    private final List<String> tagsCache = new ArrayList<>();
+    private final List<String> typesCache = new ArrayList<>();
 
     public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
         this.tokenType = tokenType;
@@ -73,15 +72,15 @@ public class WeebApiImpl implements WeebApi {
     @Override
     public List<String> getTagsCached(boolean hidden, boolean refresh) {
 
-        if(refresh || this.tagsCache.isEmpty()) {
+        if (refresh || this.tagsCache.isEmpty()) {
 
             this.tagsCache.clear();
 
             Ason res = executeRequestSync(getAPIBaseUrl(), "/images/tags", "hidden=" + hidden);
-            if(res == null)
+            if (res == null)
                 return null;
 
-            AsonArray<String> returnData =  res.getJsonArray("tags");
+            AsonArray<String> returnData = res.getJsonArray("tags");
             List<String> tagsReturned = returnData.toList();
             this.tagsCache.addAll(tagsReturned);
             //System.out.println("made api request");
@@ -94,15 +93,15 @@ public class WeebApiImpl implements WeebApi {
     @Override
     public List<String> getTypesCached(boolean hidden, boolean refresh) {
 
-        if(refresh || this.typesCache.isEmpty()) {
+        if (refresh || this.typesCache.isEmpty()) {
 
             this.typesCache.clear();
 
             Ason res = executeRequestSync(getAPIBaseUrl(), "/images/types", "hidden=" + hidden);
-            if(res == null)
+            if (res == null)
                 return null;
 
-            AsonArray<String> returnData =  res.getJsonArray("types");
+            AsonArray<String> returnData = res.getJsonArray("types");
             List<String> typesReturned = returnData.toList();
             this.typesCache.addAll(typesReturned);
             //System.out.println("made api request");
@@ -116,24 +115,24 @@ public class WeebApiImpl implements WeebApi {
     public WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) throws ImageNotFoundException {
         List<String> query = new ArrayList<>();
 
-        if(type != null)
+        if (type != null)
             query.add("type=" + type);
-        if(tags != null)
+        if (tags != null)
             query.add("tags=" + tags);
 
         query.add("hidden=" + hidden);
 
-        if(NSFW != null)
+        if (NSFW != null)
             query.add("nsfw=" + NSFW);
-        if(filetype != null)
+        if (filetype != null)
             query.add("filetype=" + filetype);
 
         Ason response = executeRequestSync(getAPIBaseUrl(), "/images/random", query.toArray(new String[0]));
 
-        if(response == null)
+        if (response == null)
             return null;
 
-        if(response.getInt("status") != 404)
+        if (response.getInt("status") != 404)
             return getImageFromResponse(response);
         else
             throw new ImageNotFoundException(response.getString("message"));
@@ -141,15 +140,15 @@ public class WeebApiImpl implements WeebApi {
 
     @Override
     public WeebImage getImageById(String imageId) throws ImageNotFoundException {
-        if(imageId == null || imageId.isEmpty())
+        if (imageId == null || imageId.isEmpty())
             throw new IllegalArgumentException("imageId cannot be null or empty");
 
         Ason response = executeRequestSync(getAPIBaseUrl(), "/images/info/" + imageId);
 
-        if(response == null)
+        if (response == null)
             return null;
 
-        if(response.getInt("status") != 404)
+        if (response.getInt("status") != 404)
             return getImageFromResponse(response);
         else
             throw new ImageNotFoundException(response.getString("message"));
@@ -212,22 +211,21 @@ public class WeebApiImpl implements WeebApi {
         try {
             Response res = requester.requestSync(
                     new Request.Builder()
-                    .url(
-                            String.format("%s%s%s",
-                                apiBase,
-                                path,
-                                requester.toParams(query)
+                            .url(
+                                    String.format("%s%s%s",
+                                            apiBase,
+                                            path,
+                                            requester.toParams(query)
+                                    )
                             )
-                    )
-                    .get()
-                    .header("Authorization", getCompiledToken())
-					.addHeader("User-Agent", Requester.USER_AGENT)
-                    .build()
+                            .get()
+                            .header("Authorization", getCompiledToken())
+                            .addHeader("User-Agent", Requester.USER_AGENT)
+                            .build()
             );
 
             return new Ason(Objects.requireNonNull(res.body()).string());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
