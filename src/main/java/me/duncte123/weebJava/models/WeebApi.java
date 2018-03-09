@@ -20,6 +20,8 @@ import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.models.image.response.TypesResponse;
+import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
 
 import java.util.List;
@@ -132,8 +134,8 @@ public interface WeebApi {
      * @return a list of all the available types
      * @see #getTypes(boolean)
      */
-    default List<String> getTypes() {
-        return getTypesCached(false, true);
+    default TypesResponse getTypes() {
+        return getTypesCached(false, NSFWType.FALSE, false, true);
     }
 
     /**
@@ -141,10 +143,10 @@ public interface WeebApi {
      *
      * @param hidden if we only should display the hidden types, default {@code false}
      * @return a list of all the available types
-     * @see #getTypesCached(boolean, boolean)
+     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
      */
-    default List<String> getTypes(boolean hidden) {
-        return getTypesCached(hidden, true);
+    default TypesResponse getTypes(boolean hidden) {
+        return getTypesCached(hidden, NSFWType.FALSE, false, true);
     }
 
     /**
@@ -153,8 +155,8 @@ public interface WeebApi {
      * @return A list with the available types that are cached in the system
      * @see #getTypesCached(boolean)
      */
-    default List<String> getTypesCached() {
-        return getTypesCached(false, false);
+    default TypesResponse getTypesCached() {
+        return getTypesCached(false, NSFWType.FALSE, false, false);
     }
 
     /**
@@ -162,20 +164,34 @@ public interface WeebApi {
      *
      * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
      * @return A list with the available types that are cached in the system
-     * @see #getTypesCached(boolean, boolean)
+     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
      */
-    default List<String> getTypesCached(boolean refresh) {
-        return getTypesCached(false, refresh);
+    default TypesResponse getTypesCached(boolean refresh) {
+        return getTypesCached(false, NSFWType.FALSE, false, refresh);
+    }
+
+    default TypesResponse getTypesCached(boolean hidden, NSFWType nsfw) {
+        return getTypesCached(hidden, nsfw, false, false);
+    }
+
+    default TypesResponse getTypesCached(NSFWType nsfw, boolean refresh) {
+        return getTypesCached(false, nsfw, false, refresh);
+    }
+
+    default TypesResponse getTypesCached(boolean refresh, boolean preview) {
+        return getTypesCached(false, NSFWType.FALSE, preview, refresh);
     }
 
     /**
      * This caches the types for you so that you won't have to make an api request all the time when you need the types
      *
      * @param hidden  if we only should display the hidden tags, default {@code false}
+     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
+     * @param preview Get a preview image for each type
      * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
      * @return A list with the available types that are cached in the system
      */
-    List<String> getTypesCached(boolean hidden, boolean refresh);
+    TypesResponse getTypesCached(boolean hidden, NSFWType nsfw, boolean preview, boolean refresh);
 
     /**
      * This gets a random image based on the filter queries
@@ -185,7 +201,7 @@ public interface WeebApi {
      * @throws ImageNotFoundException when the image is not found
      */
     default WeebImage getRandomImageByTags(String tags) throws ImageNotFoundException {
-        return getRandomImage(null, tags, false, "false", null);
+        return getRandomImage(null, tags, false, NSFWType.FALSE, null);
     }
 
     /**
@@ -197,18 +213,18 @@ public interface WeebApi {
      * @throws ImageNotFoundException when the image is not found
      */
     default WeebImage getRandomImageByTags(String tags, boolean hidden) throws ImageNotFoundException {
-        return getRandomImage(null, tags, hidden, "false", null);
+        return getRandomImage(null, tags, hidden, NSFWType.FALSE, null);
     }
 
     /**
      * This gets a random image based on the filter queries
      *
      * @param tags a comma separated list of tags
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
-    default WeebImage getRandomImageByTags(String tags, String NSFW) throws ImageNotFoundException {
+    default WeebImage getRandomImageByTags(String tags, NSFWType NSFW) throws ImageNotFoundException {
         return getRandomImage(null, tags, false, NSFW, null);
     }
 
@@ -217,11 +233,11 @@ public interface WeebApi {
      *
      * @param tags   a comma separated list of tags
      * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
-    default WeebImage getRandomImageByTags(String tags, boolean hidden, String NSFW) throws ImageNotFoundException {
+    default WeebImage getRandomImageByTags(String tags, boolean hidden, NSFWType NSFW) throws ImageNotFoundException {
         return getRandomImage(null, tags, hidden, NSFW, null);
     }
 
@@ -231,10 +247,10 @@ public interface WeebApi {
      * @param type the image type
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, String, String)
+     * @see #getRandomImage(String, String, boolean, NSFWType, String)
      */
     default WeebImage getRandomImage(String type) throws ImageNotFoundException {
-        return getRandomImage(type, null, false, "false", null);
+        return getRandomImage(type, null, false, NSFWType.FALSE, null);
     }
 
     /**
@@ -244,22 +260,22 @@ public interface WeebApi {
      * @param hidden If we should display hidden images, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, String, String)
+     * @see #getRandomImage(String, String, boolean, NSFWType, String)
      */
     default WeebImage getRandomImage(String type, boolean hidden) throws ImageNotFoundException {
-        return getRandomImage(type, null, hidden, "false", null);
+        return getRandomImage(type, null, hidden, NSFWType.FALSE, null);
     }
 
     /**
      * This gets a random image based on the filter queries
      *
      * @param type the image type
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, String, String)
+     * @see #getRandomImage(String, String, boolean, NSFWType, String)
      */
-    default WeebImage getRandomImage(String type, String NSFW) throws ImageNotFoundException {
+    default WeebImage getRandomImage(String type, NSFWType NSFW) throws ImageNotFoundException {
         return getRandomImage(type, null, false, NSFW, null);
     }
 
@@ -268,12 +284,12 @@ public interface WeebApi {
      *
      * @param type   the image type
      * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, String, String)
+     * @see #getRandomImage(String, String, boolean, NSFWType, String)
      */
-    default WeebImage getRandomImage(String type, boolean hidden, String NSFW) throws ImageNotFoundException {
+    default WeebImage getRandomImage(String type, boolean hidden, NSFWType NSFW) throws ImageNotFoundException {
         return getRandomImage(type, null, hidden, NSFW, null);
     }
 
@@ -283,12 +299,12 @@ public interface WeebApi {
      * @param type     the image type
      * @param tags     a comma separated list of tags
      * @param hidden   If we should display hidden images, default {@code false}
-     * @param NSFW     if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW     if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
      * @param filetype Filters by filetype, e.g. gif, jpg and png (jpg and jpeg are treated the same)
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
-    WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) throws ImageNotFoundException;
+    WeebImage getRandomImage(String type, String tags, boolean hidden, NSFWType NSFW, String filetype) throws ImageNotFoundException;
 
     /**
      * Returns an image by the image id

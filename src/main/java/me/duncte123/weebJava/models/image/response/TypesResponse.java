@@ -14,17 +14,30 @@
  *    limitations under the License.
  */
 
-group = 'ml.duncte123'
-version = '0.1.0'
+package me.duncte123.weebJava.models.image.response;
 
-apply plugin: 'java'
-apply plugin: 'application'
+import java.util.List;
 
-sourceCompatibility = 1.8
+public interface TypesResponse {
 
-repositories {
-    jcenter()
-}
-dependencies {
-    compile 'me.duncte123:weebJava:0.1.1'
+    List<String> getTypes();
+
+    List<PartialImage> getPreview();
+
+    interface PartialImage {
+
+        String getUrl();
+
+        String getId();
+
+        String getFileType();
+
+        String getBaseType();
+
+        default String getType() {
+            return getBaseType();
+        }
+
+    }
+
 }

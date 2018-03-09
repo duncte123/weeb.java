@@ -23,35 +23,42 @@ import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.models.image.response.TypesResponse;
 import me.duncte123.weebJava.models.impl.image.ImageGeneratorImpl;
 import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
 import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
+import me.duncte123.weebJava.models.impl.image.response.TypesResponseImpl;
 import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
-import me.duncte123.weebJava.web.Requester;
-import okhttp3.Request;
-import okhttp3.Response;
+import me.duncte123.weebJava.web.RequestManager;
+import okhttp3.OkHttpClient;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class WeebApiImpl implements WeebApi {
 
-    private final Requester requester = new Requester();
+    private final RequestManager requestManager;
 
     private final TokenType tokenType;
     private final String token;
     private final ApiUrl apiUrl;
 
     private final List<String> tagsCache = new ArrayList<>();
-    private final List<String> typesCache = new ArrayList<>();
+    private TypesResponse typesCache = null;
 
     public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
         this.tokenType = tokenType;
         this.token = token;
         this.apiUrl = apiUrl;
+
+        this.requestManager = new RequestManager(new OkHttpClient.Builder()
+                .readTimeout(10L, TimeUnit.SECONDS)
+                .writeTimeout(10L, TimeUnit.SECONDS)
+                .build());
     }
 
     @Override
@@ -76,9 +83,7 @@ public class WeebApiImpl implements WeebApi {
 
             this.tagsCache.clear();
 
-            Ason res = executeRequestSync(getAPIBaseUrl(), "/images/tags", "hidden=" + hidden);
-            if (res == null)
-                return null;
+            Ason res = executeRequestSync("/images/tags", "hidden=" + hidden);
 
             AsonArray<String> returnData = res.getJsonArray("tags");
             List<String> tagsReturned = returnData.toList();
@@ -91,28 +96,46 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public List<String> getTypesCached(boolean hidden, boolean refresh) {
+    public TypesResponse getTypesCached(boolean hidden, NSFWType nsfw, boolean preview, boolean refresh) {
 
-        if (refresh || this.typesCache.isEmpty()) {
+        if (refresh || this.typesCache == null) {
 
-            this.typesCache.clear();
+            List<String> query = new ArrayList<>();
+            query.add("hidden=" + hidden);
 
-            Ason res = executeRequestSync(getAPIBaseUrl(), "/images/types", "hidden=" + hidden);
-            if (res == null)
-                return null;
+            if(nsfw != null)
+                query.add("nsfw=" + nsfw.getType());
+            query.add("preview=" + preview);
+
+            Ason res = executeRequestSync("/images/types", query.toArray(new String[0]));
 
             AsonArray<String> returnData = res.getJsonArray("types");
             List<String> typesReturned = returnData.toList();
-            this.typesCache.addAll(typesReturned);
+            List<TypesResponse.PartialImage> previewData = new ArrayList<>();
+            AsonArray<Ason> previewReturned = res.getJsonArray("preview");
+            previewReturned.forEach(
+                    ason -> previewData.add(
+                            new TypesResponseImpl.PartialImageImpl(
+                                    ason.getString("url"),
+                                    ason.getString("id"),
+                                    ason.getString("fileType"),
+                                    ason.getString("baseType")
+                            )
+                    )
+            );
+            this.typesCache = new TypesResponseImpl(
+                    typesReturned,
+                    previewData
+            );
             //System.out.println("made api request");
-            return typesReturned;
+            return this.typesCache;
         }
 
         return this.typesCache;
     }
 
     @Override
-    public WeebImage getRandomImage(String type, String tags, boolean hidden, String NSFW, String filetype) throws ImageNotFoundException {
+    public WeebImage getRandomImage(String type, String tags, boolean hidden, NSFWType NSFW, String filetype) throws ImageNotFoundException {
         List<String> query = new ArrayList<>();
 
         if (type != null)
@@ -123,14 +146,11 @@ public class WeebApiImpl implements WeebApi {
         query.add("hidden=" + hidden);
 
         if (NSFW != null)
-            query.add("nsfw=" + NSFW);
+            query.add("nsfw=" + NSFW.getType());
         if (filetype != null)
             query.add("filetype=" + filetype);
 
-        Ason response = executeRequestSync(getAPIBaseUrl(), "/images/random", query.toArray(new String[0]));
-
-        if (response == null)
-            return null;
+        Ason response = executeRequestSync("/images/random", query.toArray(new String[0]));
 
         if (response.getInt("status") != 404)
             return getImageFromResponse(response);
@@ -143,10 +163,7 @@ public class WeebApiImpl implements WeebApi {
         if (imageId == null || imageId.isEmpty())
             throw new IllegalArgumentException("imageId cannot be null or empty");
 
-        Ason response = executeRequestSync(getAPIBaseUrl(), "/images/info/" + imageId);
-
-        if (response == null)
-            return null;
+        Ason response = executeRequestSync("/images/info/" + imageId);
 
         if (response.getInt("status") != 404)
             return getImageFromResponse(response);
@@ -173,8 +190,8 @@ public class WeebApiImpl implements WeebApi {
                 response.getBool("hidden"),
                 response.getBool("nsfw"),
                 imageTags,
-                response.getString("url")
-
+                response.getString("url"),
+                response.getString("source", null)
         );
     }
 
@@ -182,56 +199,22 @@ public class WeebApiImpl implements WeebApi {
     public ImageGenerator getImageGenerator() {
         return new ImageGeneratorImpl(this);
     }
-    /*private void executeRequestAsync(String apiBase, String path, Consumer<Ason> ason, String... query) {
-        requester.requestAsync(new Request.Builder()
-                .url(
-                        String.format("%s%s%s",
-                                apiBase,
-                                path,
-                                query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&")
-                        )
-                )
-                .get()
-                .header("Authorization", getCompiledToken())
-                .addHeader("User-Agent", Requester.USER_AGENT)
-                .build(),
-            (response) -> {
-                try {
-                    ason.accept(new Ason(Objects.requireNonNull(response.body()).string()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            },
-            Throwable::printStackTrace
-        );
-    }*/
 
-    private Ason executeRequestSync(String apiBase, String path, String... query) {
-
-        try {
-            Response res = requester.requestSync(
-                    new Request.Builder()
-                            .url(
-                                    String.format("%s%s%s",
-                                            apiBase,
-                                            path,
-                                            requester.toParams(query)
-                                    )
-                            )
-                            .get()
-                            .header("Authorization", getCompiledToken())
-                            .addHeader("User-Agent", Requester.USER_AGENT)
-                            .build()
-            );
-
-            return new Ason(Objects.requireNonNull(res.body()).string());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    private Ason executeRequestSync(String path, String... query) {
+        return requestManager.createRequest(
+                path,
+                requestManager.prepareGet(String.format("%s%s%s",
+                            getAPIBaseUrl(),
+                            path,
+                            requestManager.toParams(query)
+                        ),
+                        getCompiledToken()),
+                200,
+                (body) -> new Ason(Objects.requireNonNull(body).string())
+        ).execute();
     }
 
-    public Requester getRequester() {
-        return requester;
+    public RequestManager getRequestManager() {
+        return requestManager;
     }
 }

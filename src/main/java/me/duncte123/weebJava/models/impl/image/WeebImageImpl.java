@@ -31,9 +31,10 @@ public class WeebImageImpl implements WeebImage {
     private final boolean NSFW;
     private final List<ImageTag> tags;
     private final String url;
+    private final String source;
 
     public WeebImageImpl(String id, String baseType, String mimeType, String account, boolean hidden, boolean NSFW,
-                         List<ImageTag> tags, String url) {
+                         List<ImageTag> tags, String url, String source) {
         this.id = id;
         this.baseType = baseType;
         this.mimeType = mimeType;
@@ -42,6 +43,7 @@ public class WeebImageImpl implements WeebImage {
         this.NSFW = NSFW;
         this.tags = tags;
         this.url = url;
+        this.source = source;
     }
 
 
@@ -83,5 +85,10 @@ public class WeebImageImpl implements WeebImage {
     @Override
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public String getSource() {
+        return source;
     }
 }

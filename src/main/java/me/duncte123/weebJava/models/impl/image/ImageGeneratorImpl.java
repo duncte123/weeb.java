@@ -16,21 +16,17 @@
 
 package me.duncte123.weebJava.models.impl.image;
 
+import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.StatusType;
-import me.duncte123.weebJava.web.Requester;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.InputStream;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 public class ImageGeneratorImpl implements ImageGenerator {
 
@@ -41,29 +37,51 @@ public class ImageGeneratorImpl implements ImageGenerator {
     }
 
     @Override
-    public void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback) {
-        executeGETRequest("generate", api.getRequester().toParams(
-                "type=" + type,
-                "face=" + String.format("%02x%02x%02x", face.getRed(), face.getGreen(), face.getBlue()),
-                "hair=" + String.format("%02x%02x%02x", hair.getRed(), hair.getGreen(), hair.getBlue())
-        ), callback);
+    public PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair) {
+        return api.getRequestManager().createRequest(
+                createRoute("/generate"),
+                api.getRequestManager().prepareGet(
+                        createEndpoint("/generate",
+                                "type=" + type,
+                                "face=" + String.format("%02x%02x%02x", face.getRed(), face.getGreen(), face.getBlue()),
+                                "hair=" + String.format("%02x%02x%02x", hair.getRed(), hair.getGreen(), hair.getBlue())
+                        ),
+                        api.getCompiledToken()
+                ),
+                200,
+                ResponseBody::byteStream
+        );
     }
 
     @Override
-    public void generateDiscordStatus(StatusType status, String avatarUrl, Consumer<InputStream> callback) {
-        executeGETRequest("discord-status", api.getRequester().toParams(
-                "status=" + status,
-                "avatar=" + avatarUrl
-        ), callback);
+    public PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatarUrl) {
+        return api.getRequestManager().createRequest(
+                createRoute("/discord-status"),
+                api.getRequestManager().prepareGet(
+                        createEndpoint("/discord-status", "status=" + status, "avatar=" + avatarUrl),
+                        api.getCompiledToken()
+                ),
+                200,
+                ResponseBody::byteStream
+        );
     }
 
     @Override
-    public void generateWaifuinsult(String avatar, Consumer<InputStream> callback) {
-        executePOSTRequest("waifu-insult", new JSONObject().put("avatar", avatar), callback);
+    public PendingRequest<InputStream> generateWaifuinsult(String avatar) {
+        return api.getRequestManager().createRequest(
+                createRoute("/waifu-insult"),
+                api.getRequestManager().preparePOST(
+                        createEndpoint("/waifu-insult"),
+                        new JSONObject().put("avatar", avatar),
+                        api.getCompiledToken()
+                ),
+                200,
+                ResponseBody::byteStream
+        );
     }
 
     @Override
-    public void generateLicense(String title, String avatar, String[] badges, String[] widgets, Consumer<InputStream> callback) {
+    public PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
         JSONObject data = new JSONObject()
                 .put("title", title)
                 .put("avatar", avatar);
@@ -74,41 +92,28 @@ public class ImageGeneratorImpl implements ImageGenerator {
         if (widgets.length > 0)
             data.put("widgets", widgets);
 
-        executePOSTRequest("license", data, callback);
-    }
-
-    private void executeGETRequest(String endpoint, String params, Consumer<InputStream> callback) {
-        api.getRequester().requestAsync(new Request.Builder()
-                        .url(
-                                String.format("%s%s%s",
-                                        api.getAPIBaseUrl(),
-                                        "/auto-image/" + endpoint,
-                                        params
-                                )
-                        )
-                        .get()
-                        .header("Authorization", api.getCompiledToken())
-                        .addHeader("User-Agent", Requester.USER_AGENT)
-                        .build(),
-                (res) -> callback.accept(Objects.requireNonNull(res.body()).byteStream()),
-                Throwable::printStackTrace
+        return api.getRequestManager().createRequest(
+                createRoute("/license"),
+                api.getRequestManager().preparePOST(
+                        createEndpoint("/license"),
+                        data,
+                        api.getCompiledToken()
+                ),
+                200,
+                ResponseBody::byteStream
         );
     }
 
-    private void executePOSTRequest(String endpoint, JSONObject json, Consumer<InputStream> callback) {
-        api.getRequester().requestAsync(new Request.Builder()
-                        .url(
-                                String.format("%s%s",
-                                        api.getAPIBaseUrl(),
-                                        "/auto-image/" + endpoint
-                                )
-                        )
-                        .post(RequestBody.create(MediaType.parse("application/json"), json.toString()))
-                        .header("Authorization", api.getCompiledToken())
-                        .addHeader("User-Agent", Requester.USER_AGENT)
-                        .build(),
-                (res) -> callback.accept(Objects.requireNonNull(res.body()).byteStream()),
-                Throwable::printStackTrace
-        );
+    private String createRoute(String part) {
+        return "/auto-image" + part;
+    }
+
+    private String createEndpoint(String part) {
+        return api.getAPIBaseUrl() + createRoute(part);
+    }
+
+
+    private String createEndpoint(String part, String... params) {
+        return api.getAPIBaseUrl() + createRoute(part) + api.getRequestManager().toParams(params);
     }
 }

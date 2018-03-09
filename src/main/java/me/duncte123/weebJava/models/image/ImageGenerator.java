@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.models.image;
 
+import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.StatusType;
 
@@ -27,8 +28,8 @@ import java.util.function.Consumer;
 public interface ImageGenerator {
 
     /**
-     * This is the default red discord avatar used for generating images.<br />
-     * Yes I know that the weeb.sh api defaults to the green one but I like red better
+     * This is the default red discord avatar used for generating images.<br>
+     * Yes I know that the weeb.sh api defaults to the green one but I like the red one better
      */
     String DEFAULT_AVATAR = "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png";
 
@@ -51,7 +52,11 @@ public interface ImageGenerator {
      * @param hair     only used with awooo type, defines color of hair/fur
      * @param callback The call back function, we are using callbacks here because this method is async
      */
-    void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback);
+    default void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback) {
+        generateSimple(type, face, hair).async(callback);
+    }
+
+    PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair);
 
     /**
      * This method is used to generate discord statuses
@@ -92,7 +97,11 @@ public interface ImageGenerator {
      * @param avatarUrl uri encoded http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
      * @param callback  The call back function, we are using callbacks here because this method is async
      */
-    void generateDiscordStatus(StatusType status, String avatarUrl, Consumer<InputStream> callback);
+    default void generateDiscordStatus(StatusType status, String avatarUrl, Consumer<InputStream> callback) {
+        generateDiscordStatus(status, avatarUrl).async(callback);
+    }
+
+    PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatarUrl);
 
     /**
      * This method is used to generate waifuinsults
@@ -100,7 +109,11 @@ public interface ImageGenerator {
      * @param avatar   http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @param callback The call back function, we are using callbacks here because this method is async
      */
-    void generateWaifuinsult(String avatar, Consumer<InputStream> callback);
+    default void generateWaifuinsult(String avatar, Consumer<InputStream> callback) {
+        generateWaifuinsult(avatar).async(callback);
+    }
+
+    PendingRequest<InputStream> generateWaifuinsult(String avatar);
 
     /**
      * Generates a license
@@ -136,5 +149,9 @@ public interface ImageGenerator {
      * @param widgets  Array of strings for filling the three boxes with text content
      * @param callback The call back function, we are using callbacks here because this method is async
      */
-    void generateLicense(String title, String avatar, String[] badges, String[] widgets, Consumer<InputStream> callback);
+    default void generateLicense(String title, String avatar, String[] badges, String[] widgets, Consumer<InputStream> callback) {
+        generateLicense(title, avatar, badges, widgets).async(callback);
+    }
+
+    PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets);
 }

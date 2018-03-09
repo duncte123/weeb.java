@@ -18,6 +18,7 @@ package me.duncte123.weebJava.models.image;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface WeebImage {
 
     /**
@@ -91,4 +92,6 @@ public interface WeebImage {
      * example: https://cdn.weeb.sh/images/H1mOU3auZ.jpeg
      */
     String getUrl();
+
+    String getSource();
 }
