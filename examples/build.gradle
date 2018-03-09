@@ -8,12 +8,7 @@ sourceCompatibility = 1.8
 
 repositories {
     jcenter()
-    maven {
-        url = 'https://jitpack.io'
-    }
 }
-
 dependencies {
-    compile group: 'com.github.duncte123', name: 'weeb.java', version: 'dev-SNAPSHOT'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'me.duncte123:weebJava:0.1.1'
 }

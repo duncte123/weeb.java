@@ -16,29 +16,50 @@
 
 package me.duncte123.weebJava.models;
 
-import me.duncte123.weebJava.TokenType;
+import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
+import me.duncte123.weebJava.models.image.ImageGenerator;
+import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.types.TokenType;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface WeebApi {
 
     /**
+     * This holds the current version of the api
+     */
+    String VERSION = WeebInfo.VERSION;
+
+    /**
      * Returns the token type set on the builder
+     *
      * @return the token type set on the builder
      */
     TokenType getTokenType();
 
     /**
      * Returns the token set on the builder
+     *
      * @return the token set on the builder
      */
     String getToken();
 
+    /**
+     * Returns the base url for the api
+     *
+     * @return the base url for the api
+     */
     default String getAPIBaseUrl() {
-        return "https://api.weeb.sh/images";
+        return "https://api.weeb.sh";
     }
 
+    /**
+     * Returns the base url for the cdn
+     *
+     * @return the base url for the cdn
+     */
     default String getCDNBaseUrl() {
         return "https://cdn.weeb.sh/images/";
     }
@@ -47,6 +68,7 @@ public interface WeebApi {
      * Returns the token ready to be passed into the auth header
      * For a Bearer token this will return <code>Bearer TOKEN</code>.
      * For a WolkeToken this will return <code>Wolke TOKEN</code>.
+     *
      * @return the token ready to be passed into the auth header
      */
     default String getCompiledToken() {
@@ -55,36 +77,109 @@ public interface WeebApi {
 
     /**
      * This returns a list of all the available tags
+     *
      * @return a list of all the available tags
+     * @see #getTags(boolean)
      */
     default List<String> getTags() {
-        return getTags(false);
+        return getTagsCached(false, true);
     }
 
     /**
      * This returns a list of all the available tags
+     *
      * @param hidden if we only should display the hidden tags, default {@code false}
      * @return a list of all the available tags
+     * @see #getTagsCached(boolean, boolean)
      */
-    List<String> getTags(boolean hidden);
+    default List<String> getTags(boolean hidden) {
+        return getTagsCached(hidden, true);
+    }
+
+    /**
+     * This cached the tags for you so that you won't have to make an api request all the time when you need the tags
+     *
+     * @return A list of the available tags that are cached in the system
+     * @see #getTagsCached(boolean, boolean)
+     */
+    default List<String> getTagsCached() {
+        return getTagsCached(false, false);
+    }
+
+    /**
+     * This cached the tags for you so that you won't have to make an api request all the time when you need the tags
+     *
+     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
+     * @return A list of the available tags that are cached in the system
+     * @see #getTagsCached(boolean, boolean)
+     */
+    default List<String> getTagsCached(boolean refresh) {
+        return getTagsCached(false, refresh);
+    }
+
+    /**
+     * This caches the tags for you so that you won't have to make an api request all the time when you need the tags
+     *
+     * @param hidden  if we only should display the hidden tags, default {@code false}
+     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
+     * @return A list with the available tags that are cached in the system
+     */
+    List<String> getTagsCached(boolean hidden, boolean refresh);
 
     /**
      * This returns a list of all the available types
+     *
      * @return a list of all the available types
+     * @see #getTypes(boolean)
      */
     default List<String> getTypes() {
-        return getTypes(false);
+        return getTypesCached(false, true);
     }
 
     /**
      * This returns a list of all the available types
+     *
      * @param hidden if we only should display the hidden types, default {@code false}
      * @return a list of all the available types
+     * @see #getTypesCached(boolean, boolean)
      */
-    List<String> getTypes(boolean hidden);
+    default List<String> getTypes(boolean hidden) {
+        return getTypesCached(hidden, true);
+    }
+
+    /**
+     * This caches the types for you so that you won't have to make an api request all the time when you need the types
+     *
+     * @return A list with the available types that are cached in the system
+     * @see #getTypesCached(boolean)
+     */
+    default List<String> getTypesCached() {
+        return getTypesCached(false, false);
+    }
+
+    /**
+     * This caches the types for you so that you won't have to make an api request all the time when you need the types
+     *
+     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
+     * @return A list with the available types that are cached in the system
+     * @see #getTypesCached(boolean, boolean)
+     */
+    default List<String> getTypesCached(boolean refresh) {
+        return getTypesCached(false, refresh);
+    }
+
+    /**
+     * This caches the types for you so that you won't have to make an api request all the time when you need the types
+     *
+     * @param hidden  if we only should display the hidden tags, default {@code false}
+     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
+     * @return A list with the available types that are cached in the system
+     */
+    List<String> getTypesCached(boolean hidden, boolean refresh);
 
     /**
      * This gets a random image based on the filter queries
+     *
      * @param tags a comma separated list of tags
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
@@ -95,7 +190,8 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param tags a comma separated list of tags
+     *
+     * @param tags   a comma separated list of tags
      * @param hidden If we should display hidden images, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
@@ -106,6 +202,7 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
+     *
      * @param tags a comma separated list of tags
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
@@ -117,9 +214,10 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param tags a comma separated list of tags
+     *
+     * @param tags   a comma separated list of tags
      * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
      */
@@ -129,10 +227,11 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
+     *
      * @param type the image type
      * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @see #getRandomImage(String, String, boolean, String, String)
      * @throws ImageNotFoundException when the image is not found
+     * @see #getRandomImage(String, String, boolean, String, String)
      */
     default WeebImage getRandomImage(String type) throws ImageNotFoundException {
         return getRandomImage(type, null, false, "false", null);
@@ -140,11 +239,12 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type the image type
+     *
+     * @param type   the image type
      * @param hidden If we should display hidden images, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @see #getRandomImage(String, String, boolean, String, String)
      * @throws ImageNotFoundException when the image is not found
+     * @see #getRandomImage(String, String, boolean, String, String)
      */
     default WeebImage getRandomImage(String type, boolean hidden) throws ImageNotFoundException {
         return getRandomImage(type, null, hidden, "false", null);
@@ -152,11 +252,12 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
+     *
      * @param type the image type
      * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @see #getRandomImage(String, String, boolean, String, String)
      * @throws ImageNotFoundException when the image is not found
+     * @see #getRandomImage(String, String, boolean, String, String)
      */
     default WeebImage getRandomImage(String type, String NSFW) throws ImageNotFoundException {
         return getRandomImage(type, null, false, NSFW, null);
@@ -164,12 +265,13 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type the image type
+     *
+     * @param type   the image type
      * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @see #getRandomImage(String, String, boolean, String, String)
      * @throws ImageNotFoundException when the image is not found
+     * @see #getRandomImage(String, String, boolean, String, String)
      */
     default WeebImage getRandomImage(String type, boolean hidden, String NSFW) throws ImageNotFoundException {
         return getRandomImage(type, null, hidden, NSFW, null);
@@ -177,10 +279,11 @@ public interface WeebApi {
 
     /**
      * This gets a random image based on the filter queries
-     * @param type the image type
-     * @param tags a comma separated list of tags
-     * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@code false}
+     *
+     * @param type     the image type
+     * @param tags     a comma separated list of tags
+     * @param hidden   If we should display hidden images, default {@code false}
+     * @param NSFW     if we should filter for nsfw images, can be true, false or only, default {@code false}
      * @param filetype Filters by filetype, e.g. gif, jpg and png (jpg and jpeg are treated the same)
      * @return A random {@link WeebImage WeebImage} based on the query filters
      * @throws ImageNotFoundException when the image is not found
@@ -189,10 +292,19 @@ public interface WeebApi {
 
     /**
      * Returns an image by the image id
+     *
      * @param imageId the image id that you want to get
      * @return an image by the image id
      * @throws ImageNotFoundException when the image is not found
      */
     WeebImage getImageById(String imageId) throws ImageNotFoundException;
+
+    /**
+     * Returns the image generator.
+     * You can use the image generator to access the image generate endpoints
+     *
+     * @return the {@link ImageGenerator} to generate images with
+     */
+    ImageGenerator getImageGenerator();
 
 }

@@ -18,16 +18,19 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
+import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.types.TokenType;
 
 public class WeebApiBuilder {
 
     private final TokenType tokenType;
     private String token;
+    private ApiUrl apiUrl = ApiUrl.PRODUCTION;
 
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
-     * @param tokenType The type of token that you want to use
      *
+     * @param tokenType The type of token that you want to use
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      */
@@ -37,6 +40,7 @@ public class WeebApiBuilder {
 
     /**
      * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/" target="_blank">weeb.sh</a>
+     *
      * @param token Your token
      * @return The current builder, useful for chaining
      */
@@ -45,7 +49,23 @@ public class WeebApiBuilder {
         return this;
     }
 
+    /**
+     * This sets the api url that we user to make our requests
+     *
+     * @param apiUrl The {@link ApiUrl} that we want to use
+     * @return The current builder, useful for chaining
+     */
+    public WeebApiBuilder setApiUrl(ApiUrl apiUrl) {
+        this.apiUrl = apiUrl;
+        return this;
+    }
+
+    /**
+     * This builds the api and returns the {@link WeebApi WeebApi} interface ready to be used
+     *
+     * @return the {@link WeebApi WeebApi} interface ready to be used
+     */
     public WeebApi build() {
-        return new WeebApiImpl(tokenType, token);
+        return new WeebApiImpl(tokenType, token, apiUrl);
     }
 }

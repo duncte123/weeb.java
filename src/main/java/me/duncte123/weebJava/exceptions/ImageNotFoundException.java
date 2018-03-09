@@ -35,8 +35,8 @@ public class ImageNotFoundException extends Exception {
      * cause is not initialized, and may subsequently be initialized by
      * a call to {@link #initCause}.
      *
-     * @param   message   the detail message. The detail message is saved for
-     *          later retrieval by the {@link #getMessage()} method.
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
      */
     public ImageNotFoundException(String message) {
         super(message);
@@ -48,12 +48,12 @@ public class ImageNotFoundException extends Exception {
      * {@code cause} is <i>not</i> automatically incorporated in
      * this exception's detail message.
      *
-     * @param  message the detail message (which is saved for later retrieval
-     *         by the {@link #getMessage()} method).
-     * @param  cause the cause (which is saved for later retrieval by the
-     *         {@link #getCause()} method).  (A {@code null} value is
-     *         permitted, and indicates that the cause is nonexistent or
-     *         unknown.)
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A {@code null} value is
+     *                permitted, and indicates that the cause is nonexistent or
+     *                unknown.)
      */
     public ImageNotFoundException(String message, Throwable cause) {
         super(message, cause);
@@ -67,10 +67,10 @@ public class ImageNotFoundException extends Exception {
      * wrappers for other throwables (for example, {@link
      * java.security.PrivilegedActionException}).
      *
-     * @param  cause the cause (which is saved for later retrieval by the
-     *         {@link #getCause()} method).  (A {@code null} value is
-     *         permitted, and indicates that the cause is nonexistent or
-     *         unknown.)
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A {@code null} value is
+     *              permitted, and indicates that the cause is nonexistent or
+     *              unknown.)
      */
     public ImageNotFoundException(Throwable cause) {
         super(cause);
@@ -81,11 +81,11 @@ public class ImageNotFoundException extends Exception {
      * cause, suppression enabled or disabled, and writable stack
      * trace enabled or disabled.
      *
-     * @param  message the detail message.
-     * @param cause the cause.  (A {@code null} value is permitted,
-     * and indicates that the cause is nonexistent or unknown.)
-     * @param enableSuppression whether or not suppression is enabled
-     *                          or disabled
+     * @param message            the detail message.
+     * @param cause              the cause.  (A {@code null} value is permitted,
+     *                           and indicates that the cause is nonexistent or unknown.)
+     * @param enableSuppression  whether or not suppression is enabled
+     *                           or disabled
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */

@@ -14,25 +14,35 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models;
+package me.duncte123.weebJava.types;
 
-public interface ImageTag {
+public enum ApiUrl {
     /**
-     * Returns the name of the tag
-     * @return the name of the tag
-     * example: momiji inubashiri
+     * This is the normal api.weeb.sh url
      */
-    String getName();
+    PRODUCTION("https://api.weeb.sh"),
+    /**
+     * This is the staging.weeb.sh url
+     */
+    STAGING("https://staging.weeb.sh");
+
+    private final String url;
+
+    ApiUrl(String url) {
+        this.url = url;
+    }
 
     /**
-     * Returns if this tag is private and only available to it’s creator
-     * @return if this tag is private and only available to it’s creator
+     * Returns the url
+     *
+     * @return the url as a string
      */
-    boolean isHidden();
+    public String getUrl() {
+        return url;
+    }
 
-    /**
-     * Returns the id of the Api Account that added the tag
-     * @return the id of the Api Account that added the tag
-     */
-    String getUser();
+    @Override
+    public String toString() {
+        return url;
+    }
 }

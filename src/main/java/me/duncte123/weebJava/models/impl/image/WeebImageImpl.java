@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl;
+package me.duncte123.weebJava.models.impl.image;
 
-import me.duncte123.weebJava.models.ImageTag;
-import me.duncte123.weebJava.models.WeebImage;
+import me.duncte123.weebJava.models.image.ImageTag;
+import me.duncte123.weebJava.models.image.WeebImage;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models;
+package me.duncte123.weebJava.models.image;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ public interface WeebImage {
 
     /**
      * Returns the internal document id
+     *
      * @return the internal document id
      * example: H1mOU3auZ
      */
@@ -29,6 +30,7 @@ public interface WeebImage {
 
     /**
      * Returns a category-like type of the image
+     *
      * @return a category-like type of the image
      * example: sumfuk
      * @see #getBaseType()
@@ -39,6 +41,7 @@ public interface WeebImage {
 
     /**
      * Returns a category-like type of the image
+     *
      * @return a category-like type of the image
      * example: sumfuk
      */
@@ -46,6 +49,7 @@ public interface WeebImage {
 
     /**
      * Returns the mime type of the image
+     *
      * @return the mime type of the image
      * example: image/jpeg
      */
@@ -53,6 +57,7 @@ public interface WeebImage {
 
     /**
      * Returns the id of the Api Account that uploaded that image
+     *
      * @return the id of the Api Account that uploaded that image
      * example: BJJUjqjL-
      */
@@ -60,24 +65,28 @@ public interface WeebImage {
 
     /**
      * Returns if this image is private and only available to it’s uploader
+     *
      * @return if this image is private and only available to it’s uploader
      */
     boolean isHidden();
 
     /**
      * Returns if this image contains inappropriate content
+     *
      * @return if this image contains inappropriate content
      */
     boolean isNSFW();
 
     /**
      * Returns the list of tags that this image has
+     *
      * @return the list of tags that this image has
      */
     List<ImageTag> getTags();
 
     /**
      * Returns the URL of the image
+     *
      * @return the URL of the image
      * example: https://cdn.weeb.sh/images/H1mOU3auZ.jpeg
      */

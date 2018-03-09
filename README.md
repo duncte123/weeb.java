@@ -1,25 +1,31 @@
+[version]: https://api.bintray.com/packages/duncte123/weeb.java/weeb.java/images/download.svg
+[download]: https://bintray.com/duncte123/weeb.java/weeb.java/_latestVersion
+
 ## Weeb.java
 A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## Instalation & documentation
-You can install the wrapper with the following dependency managers
-The repo can be downloaded from jitpack
+You can install the wrapper with the following dependency managers.
+
+The repo can be downloaded from jcenter.
+
 The docs are available [here](https://jitpack.io/com/github/duncte123/weeb.java/master-SNAPSHOT/javadoc/)
 
+The current latest version is: [ ![version][] ][download]
 
 #### Maven
 ```XML
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+<repository>
+    <id>jcenter</id>
+    <name>jcenter-bintray</name>
+    <url>http://jcenter.bintray.com</url>
+</repository>
 
 <dependency>
-    <groupId>com.github.duncte123</groupId>
-    <artifactId>weeb.java</artifactId>
-    <version>master-SNAPSHOT</version>
+  <groupId>me.duncte123</groupId>
+  <artifactId>weebJava</artifactId>
+  <version>[LATEST-VERSION]</version>
+  <type>pom</type>
 </dependency>
 ```
 
@@ -27,13 +33,12 @@ The docs are available [here](https://jitpack.io/com/github/duncte123/weeb.java/
 ```GRADLE
 repositories {
     jcenter()
-    maven { url 'https://jitpack.io' }
 }
 dependencies {
-    compile 'com.github.duncte123:weeb.java:master-SNAPSHOT'
+    compile 'me.duncte123:weebJava:[LATEST-VERSION]'
 }
 ```
-To force gradle to get a new download when you build use `gradle build --refresh-dependencies`
+Make sure to replace `[LATEST-VERSION]` with whatever the latest version is
 
 
 ## Examples

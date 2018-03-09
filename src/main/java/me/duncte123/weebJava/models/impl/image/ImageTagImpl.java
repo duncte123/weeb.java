@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl;
+package me.duncte123.weebJava.models.impl.image;
 
-import me.duncte123.weebJava.models.ImageTag;
+import me.duncte123.weebJava.models.image.ImageTag;
 
 public class ImageTagImpl implements ImageTag {
 
