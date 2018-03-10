@@ -15,5 +15,5 @@
  */
 
 rootProject.name = 'weebJava'
-include 'examples'
+//include 'examples'
 
