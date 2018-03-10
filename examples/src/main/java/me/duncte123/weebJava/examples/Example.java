@@ -16,11 +16,16 @@
 
 package me.duncte123.weebJava.examples;
 
-import me.duncte123.weebJava.TokenType;
+
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.WeebImage;
+import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.types.GenerateType;
+import me.duncte123.weebJava.types.TokenType;
+
+import java.awt.*;
+import java.io.*;
 
 public class Example {
     public static void main(String[] args) throws ImageNotFoundException {
@@ -29,7 +34,7 @@ public class Example {
                 .build();
 
         //This prints a list of all the available tags
-        System.out.println(api.getTags());
+        System.out.println(api.getTagsCached());
 
         //This prints a list of all the available types
         System.out.println(api.getTypes());
@@ -43,5 +48,27 @@ public class Example {
         WeebImage imageID = api.getImageById("H1mOU3auZ");
 
         System.out.println(imageID.getUrl());
+
+        //Generate an image and store it into a file
+        api.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "awoo") );
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void writeToFile(InputStream in, String name) {
+        try {
+
+            File targetFile = new File(name + ".png");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            int read;
+            byte[] bytes = new byte[1024];
+
+            while ((read = in.read(bytes)) != -1) {
+                outStream.write(bytes, 0, read);
+            }
+            outStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

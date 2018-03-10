@@ -14,29 +14,34 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.types;
 
 @SuppressWarnings("unused")
-public interface ImageTag {
+public enum NSFWType {
     /**
-     * Returns the name of the tag
-     *
-     * @return the name of the tag
-     * example: momiji inubashiri
+     * Sets the NSFW flag to true, this means that there are NSFW images/tages in the results
      */
-    String getName();
+    TRUE("true"),
+    /**
+     * Sets the NSFW flag to false, this means that there are no NSFW images/tags in the results
+     */
+    FALSE("false"),
+    /**
+     * Sets the NSFW flag to only, this means that there are only NSFW images/tags in the results
+     */
+    ONLY("only");
 
-    /**
-     * Returns if this tag is private and only available to it’s creator
-     *
-     * @return if this tag is private and only available to it’s creator
-     */
-    boolean isHidden();
+    private final String type;
+    NSFWType(String t) {
+        this.type = t;
+    }
 
-    /**
-     * Returns the id of the Api Account that added the tag
-     *
-     * @return the id of the Api Account that added the tag
-     */
-    String getUser();
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return type;
+    }
 }

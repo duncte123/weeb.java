@@ -19,11 +19,12 @@ package me.duncte123.weebJavaTests;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.models.image.response.TypesResponse;
 import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.TokenType;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 
@@ -52,12 +53,13 @@ public class WeebApiTest {
         System.out.println(imageByTag.getUrl());
 
         //This should get the tags if there are none yet
-        List<String> types = api.getTypesCached();
+        TypesResponse types = api.getTypesCached(false, true);
         //Print the tags
-        System.out.println(types);
+        System.out.println(types.getTypes());
+        System.out.println(types.getPreview().get(0).getUrl());
 
         //This should display the same tags but should not make an api request
-        List<String> types2 = api.getTypesCached();
+        TypesResponse types2 = api.getTypesCached();
         //Print the tags
         System.out.println(types2);
 
@@ -67,14 +69,17 @@ public class WeebApiTest {
                 .setApiUrl(ApiUrl.STAGING)
                 .build();
 
+        //Generate Awooo
         apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        apiImg.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
+        //Discord status
+        apiImg.getImageGenerator().generateDiscordStatus(myavy, (img) -> writeToFile(img, "status") );
+        //Insult
         apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        //License
         apiImg.getImageGenerator().generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
                 new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
-
     }
 
     private static void writeToFile(InputStream in, String name) {
@@ -82,7 +87,7 @@ public class WeebApiTest {
 
             File targetFile = new File("image-test-" + name + ".png");
             OutputStream outStream = new FileOutputStream(targetFile);
-            int read = 0;
+            int read;
             byte[] bytes = new byte[1024];
 
             while ((read = in.read(bytes)) != -1) {
