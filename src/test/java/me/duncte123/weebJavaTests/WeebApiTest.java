@@ -56,7 +56,7 @@ public class WeebApiTest {
         TypesResponse types = api.getTypesCached(false, true);
         //Print the tags
         System.out.println(types.getTypes());
-        System.out.println(types.getPreview());
+        System.out.println(types.getPreview().get(0).getUrl());
 
         //This should display the same tags but should not make an api request
         TypesResponse types2 = api.getTypesCached();
@@ -69,14 +69,17 @@ public class WeebApiTest {
                 .setApiUrl(ApiUrl.STAGING)
                 .build();
 
+        //Generate Awooo
         apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        apiImg.getImageGenerator().generateDiscordStatus((img) -> writeToFile(img, "status") );
+        //Discord status
+        apiImg.getImageGenerator().generateDiscordStatus(myavy, (img) -> writeToFile(img, "status") );
+        //Insult
         apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        //License
         apiImg.getImageGenerator().generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
                 new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
-
     }
 
     private static void writeToFile(InputStream in, String name) {
