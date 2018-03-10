@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.types;
 
+@SuppressWarnings("unused")
 public enum NSFWType {
     /**
      * Sets the NSFW flag to true, this means that there are NSFW images/tages in the results

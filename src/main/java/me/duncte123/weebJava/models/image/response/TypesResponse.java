@@ -18,22 +18,51 @@ package me.duncte123.weebJava.models.image.response;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public interface TypesResponse {
 
+    /**
+     * Returns a list of type string with the types that you requested
+     * @return a list of type string with the types that you requested
+     */
     List<String> getTypes();
 
+    /**
+     * Returns a List of {@link PartialImage PartialImages} if you requested the preview
+     * @return a List of {@link PartialImage PartialImages} if you requested the preview
+     */
     List<PartialImage> getPreview();
 
     interface PartialImage {
 
+        /**
+         * Returns the image url
+         * @return the image url
+         */
         String getUrl();
 
+        /**
+         * Returns the image id
+         * @return the image id
+         */
         String getId();
 
+        /**
+         * Returns the file type
+         * @return the file type
+         */
         String getFileType();
 
+        /**
+         * Returns the type/category of the image, this is what's used to show the list of types in /types
+         * @return the type/category of the image, this is what's used to show the list of types in /types
+         */
         String getBaseType();
 
+        /**
+         * Returns the type/category of the image, this is what's used to show the list of types in /types
+         * @return the type/category of the image, this is what's used to show the list of types in /types
+         */
         default String getType() {
             return getBaseType();
         }
