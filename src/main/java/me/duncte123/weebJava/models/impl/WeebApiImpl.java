@@ -77,13 +77,19 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public List<String> getTagsCached(boolean hidden, boolean refresh) {
+    public List<String> getTagsCached(boolean hidden, NSFWType nsfw, boolean refresh) {
 
         if (refresh || this.tagsCache.isEmpty()) {
 
             this.tagsCache.clear();
 
-            Ason res = executeRequestSync("/images/tags", "hidden=" + hidden);
+            List<String> query = new ArrayList<>();
+            query.add("hidden=" + hidden);
+
+            if(nsfw != null)
+                query.add("nsfw=" + nsfw.getType());
+
+            Ason res = executeRequestSync("/images/tags", query.toArray(new String[0]));
 
             AsonArray<String> returnData = res.getJsonArray("tags");
             List<String> tagsReturned = returnData.toList();
