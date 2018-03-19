@@ -104,6 +104,20 @@ public class ImageGeneratorImpl implements ImageGenerator {
         );
     }
 
+    @Override
+    public PendingRequest<InputStream> generateLoveship(String target1, String target2) {
+        return api.getRequestManager().createRequest(
+                createRoute("/love-ship"),
+                api.getRequestManager().preparePOST(
+                        createEndpoint("/love-ship"),
+                        new JSONObject().put("targetOne", target1).put("targetTwo", target2),
+                        api.getCompiledToken()
+                ),
+                200,
+                ResponseBody::byteStream
+        );
+    }
+
     private String createRoute(String part) {
         return "/auto-image" + part;
     }

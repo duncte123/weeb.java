@@ -18,6 +18,7 @@ package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.TypesResponse;
 import me.duncte123.weebJava.types.ApiUrl;
@@ -35,7 +36,7 @@ public class WeebApiTest {
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
                 .build();
-        String myavy = "https://cdn.discordapp.com/avatars/191231307290771456/02c10e1918926a81b58110d6ae902c3b.png";
+        String myavy = "https://cdn.discordapp.com/avatars/191231307290771456/79c89c512f050e356b593a7e7a2564e1.png";
 
         //This should get the tags if there are none yet
         List<String> tags = api.getTagsCached();
@@ -80,6 +81,8 @@ public class WeebApiTest {
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
                 new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
+        //Love ship
+        apiImg.getImageGenerator().generateLoveship(myavy, ImageGenerator.DEFAULT_AVATAR, (img) -> writeToFile(img, "loveship"));
     }
 
     private static void writeToFile(InputStream in, String name) {

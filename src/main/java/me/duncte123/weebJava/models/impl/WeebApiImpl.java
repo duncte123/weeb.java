@@ -50,6 +50,8 @@ public class WeebApiImpl implements WeebApi {
     private final List<String> tagsCache = new ArrayList<>();
     private TypesResponse typesCache = null;
 
+    private ImageGenerator imageGenerator = null;
+
     public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
         this.tokenType = tokenType;
         this.token = token;
@@ -203,7 +205,9 @@ public class WeebApiImpl implements WeebApi {
 
     @Override
     public ImageGenerator getImageGenerator() {
-        return new ImageGeneratorImpl(this);
+        if(imageGenerator == null)
+            imageGenerator = new ImageGeneratorImpl(this);
+        return imageGenerator;
     }
 
     private Ason executeRequestSync(String path, String... query) {

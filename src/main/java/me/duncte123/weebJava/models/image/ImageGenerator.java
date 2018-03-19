@@ -37,7 +37,7 @@ public interface ImageGenerator {
      * This is used to generate simple images
      *
      * @param type     type of the generation to create, possible types are listed in {@link GenerateType}
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateSimple(GenerateType, Color, Color, Consumer)
      */
     default void generateSimple(GenerateType type, Consumer<InputStream> callback) {
@@ -50,7 +50,7 @@ public interface ImageGenerator {
      * @param type     type of the generation to create, possible types are listed in {@link GenerateType}
      * @param face     only used with awooo type, defines color of face
      * @param hair     only used with awooo type, defines color of hair/fur
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      */
     default void generateSimple(GenerateType type, Color face, Color hair, Consumer<InputStream> callback) {
         generateSimple(type, face, hair).async(callback);
@@ -61,7 +61,7 @@ public interface ImageGenerator {
     /**
      * This method is used to generate discord statuses
      *
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateDiscordStatus(StatusType, String, Consumer)
      */
     default void generateDiscordStatus(Consumer<InputStream> callback) {
@@ -72,7 +72,7 @@ public interface ImageGenerator {
      * This method is used to generate discord statuses
      *
      * @param status   discord status of the mock, has to be one of the states listed in {@link StatusType}
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateDiscordStatus(StatusType, String, Consumer)
      */
     default void generateDiscordStatus(StatusType status, Consumer<InputStream> callback) {
@@ -83,7 +83,7 @@ public interface ImageGenerator {
      * This method is used to generate discord statuses
      *
      * @param avatarUrl uri encoded http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
-     * @param callback  The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateDiscordStatus(StatusType, String, Consumer)
      */
     default void generateDiscordStatus(String avatarUrl, Consumer<InputStream> callback) {
@@ -95,7 +95,7 @@ public interface ImageGenerator {
      *
      * @param status    discord status of the mock, has to be one of the states listed in {@link StatusType}
      * @param avatarUrl uri encoded http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
-     * @param callback  The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      */
     default void generateDiscordStatus(StatusType status, String avatarUrl, Consumer<InputStream> callback) {
         generateDiscordStatus(status, avatarUrl).async(callback);
@@ -107,7 +107,7 @@ public interface ImageGenerator {
      * This method is used to generate waifuinsults
      *
      * @param avatar   http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      */
     default void generateWaifuinsult(String avatar, Consumer<InputStream> callback) {
         generateWaifuinsult(avatar).async(callback);
@@ -120,7 +120,7 @@ public interface ImageGenerator {
      *
      * @param title    Title of the license
      * @param avatar   http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateLicense(String, String, String[], String[], Consumer)
      */
     default void generateLicense(String title, String avatar, Consumer<InputStream> callback) {
@@ -133,7 +133,7 @@ public interface ImageGenerator {
      * @param title    Title of the license
      * @param avatar   http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @param badges   Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar apply
-     * @param callback The call back function, we are using callbacks here because this method is async
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
      * @see #generateLicense(String, String, String[], String[], Consumer)
      */
     default void generateLicense(String title, String avatar, String[] badges, Consumer<InputStream> callback) {
@@ -154,4 +154,17 @@ public interface ImageGenerator {
     }
 
     PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets);
+
+    /**
+     * Generates a love ship. <br>
+     *     Example: <img src="https://camo.githubusercontent.com/e4c8b9efd86ef78a3c6c40013281025a40fef7b2/68747470733a2f2f692e696d6775722e636f6d2f375977344c73362e706e67" alt="loveship">
+     * @param target1 http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the left side.
+     * @param target2 http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the right side.
+     * @param callback The callback function with the image data, we are using callbacks here because this method is async
+     */
+    default void generateLoveship(String target1, String target2, Consumer<InputStream> callback) {
+        generateLoveship(target1, target2).async(callback);
+    }
+
+    PendingRequest<InputStream> generateLoveship(String target1, String target2);
 }
