@@ -47,9 +47,6 @@ public class WeebApiImpl implements WeebApi {
     private final String token;
     private final ApiUrl apiUrl;
 
-    private final List<String> tagsCache = new ArrayList<>();
-    private TypesResponse typesCache = null;
-
     private ImageGenerator imageGenerator = null;
 
     public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
