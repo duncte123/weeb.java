@@ -79,67 +79,52 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public List<String> getTagsCached(boolean hidden, NSFWType nsfw, boolean refresh) {
+    public List<String> getTags(boolean hidden, NSFWType nsfw) {
 
-        if (refresh || this.tagsCache.isEmpty()) {
+        List<String> query = new ArrayList<>();
+        query.add("hidden=" + hidden);
 
-            this.tagsCache.clear();
+        if (nsfw != null)
+            query.add("nsfw=" + nsfw.getType());
 
-            List<String> query = new ArrayList<>();
-            query.add("hidden=" + hidden);
+        Ason res = executeRequestSync("/images/tags", query.toArray(new String[0]));
 
-            if(nsfw != null)
-                query.add("nsfw=" + nsfw.getType());
-
-            Ason res = executeRequestSync("/images/tags", query.toArray(new String[0]));
-
-            AsonArray<String> returnData = res.getJsonArray("tags");
-            List<String> tagsReturned = returnData.toList();
-            this.tagsCache.addAll(tagsReturned);
-            //System.out.println("made api request");
-            return tagsReturned;
-        }
-
-        return this.tagsCache;
+        AsonArray<String> returnData = res.getJsonArray("tags");
+        //System.out.println("made api request");
+        return returnData.toList();
     }
 
     @Override
-    public TypesResponse getTypesCached(boolean hidden, NSFWType nsfw, boolean preview, boolean refresh) {
+    public TypesResponse getTypes(boolean hidden, NSFWType nsfw, boolean preview) {
 
-        if (refresh || this.typesCache == null) {
+        List<String> query = new ArrayList<>();
+        query.add("hidden=" + hidden);
 
-            List<String> query = new ArrayList<>();
-            query.add("hidden=" + hidden);
+        if (nsfw != null)
+            query.add("nsfw=" + nsfw.getType());
+        query.add("preview=" + preview);
 
-            if(nsfw != null)
-                query.add("nsfw=" + nsfw.getType());
-            query.add("preview=" + preview);
+        Ason res = executeRequestSync("/images/types", query.toArray(new String[0]));
 
-            Ason res = executeRequestSync("/images/types", query.toArray(new String[0]));
-
-            AsonArray<String> returnData = res.getJsonArray("types");
-            List<String> typesReturned = returnData.toList();
-            List<TypesResponse.PartialImage> previewData = new ArrayList<>();
-            AsonArray<Ason> previewReturned = res.getJsonArray("preview");
-            previewReturned.forEach(
-                    ason -> previewData.add(
-                            new TypesResponseImpl.PartialImageImpl(
-                                    ason.getString("url"),
-                                    ason.getString("id"),
-                                    ason.getString("fileType"),
-                                    ason.getString("baseType")
-                            )
-                    )
-            );
-            this.typesCache = new TypesResponseImpl(
-                    typesReturned,
-                    previewData
-            );
-            //System.out.println("made api request");
-            return this.typesCache;
-        }
-
-        return this.typesCache;
+        AsonArray<String> returnData = res.getJsonArray("types");
+        List<String> typesReturned = returnData.toList();
+        List<TypesResponse.PartialImage> previewData = new ArrayList<>();
+        AsonArray<Ason> previewReturned = res.getJsonArray("preview");
+        previewReturned.forEach(
+                ason -> previewData.add(
+                        new TypesResponseImpl.PartialImageImpl(
+                                ason.getString("url"),
+                                ason.getString("id"),
+                                ason.getString("fileType"),
+                                ason.getString("baseType")
+                        )
+                )
+        );
+        //System.out.println("made api request");
+        return new TypesResponseImpl(
+                typesReturned,
+                previewData
+        );
     }
 
     @Override
@@ -205,7 +190,7 @@ public class WeebApiImpl implements WeebApi {
 
     @Override
     public ImageGenerator getImageGenerator() {
-        if(imageGenerator == null)
+        if (imageGenerator == null)
             imageGenerator = new ImageGeneratorImpl(this);
         return imageGenerator;
     }
@@ -214,9 +199,9 @@ public class WeebApiImpl implements WeebApi {
         return requestManager.createRequest(
                 path,
                 requestManager.prepareGet(String.format("%s%s%s",
-                            getAPIBaseUrl(),
-                            path,
-                            requestManager.toParams(query)
+                        getAPIBaseUrl(),
+                        path,
+                        requestManager.toParams(query)
                         ),
                         getCompiledToken()),
                 200,
