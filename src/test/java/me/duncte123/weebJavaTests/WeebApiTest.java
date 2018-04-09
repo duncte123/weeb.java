@@ -23,6 +23,7 @@ import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.TypesResponse;
 import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.GenerateType;
+import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
 
 import java.awt.*;
@@ -32,21 +33,16 @@ import java.util.List;
 public class WeebApiTest {
 
     public static void main(String[] args) throws Exception {
-        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
                 .build();
-        String myavy = "https://cdn.discordapp.com/avatars/191231307290771456/79c89c512f050e356b593a7e7a2564e1.png";
+        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
         //This should get the tags if there are none yet
-        List<String> tags = api.getTagsCached();
+        List<String> tags = api.getTags();
         //Print the tags
         System.out.println(tags);
-
-        //This should display the same tags but should not make an api request
-        List<String> tags2 = api.getTagsCached();
-        //Print the tags
-        System.out.println(tags2);
 
         //Get an image by a tag
         WeebImage imageByTag = api.getRandomImageByTags("b1nzy");
@@ -54,17 +50,12 @@ public class WeebApiTest {
         System.out.println(imageByTag.getUrl());
 
         //This should get the tags if there are none yet
-        TypesResponse types = api.getTypesCached(false, true);
+        TypesResponse types = api.getTypes(true);
         //Print the tags
         System.out.println(types.getTypes());
         System.out.println(types.getPreview().get(0).getUrl());
 
-        //This should display the same tags but should not make an api request
-        TypesResponse types2 = api.getTypesCached();
-        //Print the tags
-        System.out.println(types2);
-
-        WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS)
+        WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment-staging")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
                 .setApiUrl(ApiUrl.STAGING)

@@ -21,6 +21,7 @@ import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.TypesResponse;
+import me.duncte123.weebJava.types.HiddenMode;
 import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
 
@@ -81,19 +82,19 @@ public interface WeebApi {
      * This returns a list of all the available tags
      *
      * @return a list of all the available tags
-     * @see #getTags(boolean)
+     * @see #getTags(HiddenMode)
      */
     default List<String> getTags() {
-        return getTags(false, NSFWType.FALSE);
+        return getTags(null, null);
     }
 
     /**
      * This returns a list of all the available tags
      *
-     * @param hidden if we only should display the hidden tags, default {@code false}
+     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @return a list of all the available tags
      */
-    default List<String> getTags(boolean hidden) {
+    default List<String> getTags(HiddenMode hidden) {
         return getTags(hidden, NSFWType.FALSE);
     }
 
@@ -104,47 +105,55 @@ public interface WeebApi {
      * @return a list of all the available tags
      */
     default List<String> getTags(NSFWType nsfw) {
-        return getTags(false, nsfw);
+        return getTags(null, nsfw);
     }
 
     /**
      * This returns a list of all the available tags
      *
-     * @param hidden if we only should display the hidden tags, default {@code false}
+     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
      * @return a list of all the available tags
      */
-    List<String> getTags(boolean hidden, NSFWType nsfw);
+    List<String> getTags(HiddenMode hidden, NSFWType nsfw);
 
     /**
      * This returns a list of all the available types
      *
      * @return  The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypes(boolean)
+     * @see #getTypes(HiddenMode)
      */
     default TypesResponse getTypes() {
-        return getTypes(false, NSFWType.FALSE, false);
+        return getTypes(null, null, false);
+    }
+
+    default TypesResponse getTypes(boolean preview) {
+        return getTypes(null, null, preview);
     }
 
     /**
      * This returns a list of all the available types
      *
-     * @param hidden if we only should display the hidden types, default {@code false}
+     * @param hidden if we only should display the hidden types, default {@link HiddenMode#DEFAULT}
      * @return The response from the api wrapped in the {@link TypesResponse} class
      */
-    default TypesResponse getTypes(boolean hidden) {
-        return getTypes(hidden, NSFWType.FALSE, false);
+    default TypesResponse getTypes(HiddenMode hidden) {
+        return getTypes(hidden, null, false);
+    }
+
+    default TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw) {
+        return getTypes(hidden, nsfw, false);
     }
 
     /**
      * This caches the types for you so that you won't have to make an api request all the time when you need the types
      *
-     * @param hidden  if we only should display the hidden tags, default {@code false}
+     * @param hidden  if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @param preview Get a preview image for each type
+     * @param preview Get a preview image for each type, Default {@code false}
      * @return The response from the api wrapped in the {@link TypesResponse} class
      */
-    TypesResponse getTypes(boolean hidden, NSFWType nsfw, boolean preview);
+    TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw, boolean preview);
 
     /**
      * This gets a random image based on the filter queries

@@ -29,6 +29,7 @@ import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
 import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
 import me.duncte123.weebJava.models.impl.image.response.TypesResponseImpl;
 import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.types.HiddenMode;
 import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.web.RequestManager;
@@ -49,15 +50,16 @@ public class WeebApiImpl implements WeebApi {
 
     private ImageGenerator imageGenerator = null;
 
-    public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl) {
+    public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl, String appName) {
         this.tokenType = tokenType;
         this.token = token;
         this.apiUrl = apiUrl;
-
         this.requestManager = new RequestManager(new OkHttpClient.Builder()
                 .readTimeout(10L, TimeUnit.SECONDS)
                 .writeTimeout(10L, TimeUnit.SECONDS)
-                .build());
+                .build(), appName);
+
+        System.out.println(requestManager.USER_AGENT);
     }
 
     @Override
@@ -76,10 +78,12 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public List<String> getTags(boolean hidden, NSFWType nsfw) {
+    public List<String> getTags(HiddenMode hidden, NSFWType nsfw) {
 
         List<String> query = new ArrayList<>();
-        query.add("hidden=" + hidden);
+
+        if(hidden != null)
+            query.add("hidden=" + hidden);
 
         if (nsfw != null)
             query.add("nsfw=" + nsfw.getType());
@@ -92,10 +96,11 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public TypesResponse getTypes(boolean hidden, NSFWType nsfw, boolean preview) {
+    public TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw, boolean preview) {
 
         List<String> query = new ArrayList<>();
-        query.add("hidden=" + hidden);
+        if(hidden != null)
+            query.add("hidden=" + hidden);
 
         if (nsfw != null)
             query.add("nsfw=" + nsfw.getType());

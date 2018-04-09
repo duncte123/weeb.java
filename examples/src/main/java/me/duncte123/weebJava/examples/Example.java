@@ -29,12 +29,12 @@ import java.io.*;
 
 public class Example {
     public static void main(String[] args) throws ImageNotFoundException {
-        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-example/2.0")
                 .setToken("TOKEN")
                 .build();
 
         //This prints a list of all the available tags
-        System.out.println(api.getTagsCached());
+        System.out.println(api.getTags());
 
         //This prints a list of all the available types
         System.out.println(api.getTypes());

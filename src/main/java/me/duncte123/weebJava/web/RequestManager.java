@@ -34,11 +34,14 @@ import javax.annotation.Nullable;
 
 public class RequestManager extends Reliqua {
 
-    private static final String USER_AGENT = "Mozilla/5.0 Weeb.java (v" +
-            WeebApi.VERSION + ", https://github.com/duncte123/weeb.java)";
+    public final String USER_AGENT/* = "Mozilla/5.0 (compatible; Weeb.java v" +
+            WeebApi.VERSION + "; +https://github.com/duncte123/weeb.java)"*/;
 
-    public RequestManager(OkHttpClient client) {
+    public RequestManager(OkHttpClient client, String appName) {
         super(null, client, true);
+
+        USER_AGENT = "Mozilla/5.0 (compatible; " + appName.trim() + " using Weeb.java v" +
+                WeebApi.VERSION + "; +https://github.com/duncte123/weeb.java)";
     }
 
     public Request.Builder prepareGet(String url, String token) {

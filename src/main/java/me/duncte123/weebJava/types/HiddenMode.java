@@ -1,0 +1,43 @@
+/*
+ *    Copyright 2018 Duncan Sterken
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package me.duncte123.weebJava.types;
+
+/**
+ * This sets the hidden mode on the images
+ */
+@SuppressWarnings("unused")
+public enum HiddenMode {
+
+    /**
+     * Only display the images, types, tags that you uploaded
+     */
+    ONLY("true"),
+    /**
+     * Display all images, types, tags including the ones that you uploaded
+     */
+    DEFAULT("false");
+
+    private final String mode;
+    HiddenMode(String mode) {
+        this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        return mode;
+    }
+}
