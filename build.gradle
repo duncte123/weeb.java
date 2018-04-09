@@ -95,14 +95,26 @@ publishing {
     }
 }
 
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url "$buildDir/repo"
+        }
+    }
+}
+
+
 build {
     dependsOn clean
     dependsOn jar
     dependsOn javadocJar
     dependsOn sourcesJar
+    dependsOn publish
 
     jar.mustRunAfter clean
     javadocJar.mustRunAfter jar
     sourcesJar.mustRunAfter javadocJar
+    publish.mustRunAfter sourcesJar
 }
 
