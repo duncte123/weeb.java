@@ -40,8 +40,7 @@ public class RequestManager extends Reliqua {
     public RequestManager(OkHttpClient client, String appName) {
         super(null, client, true);
 
-        USER_AGENT = "Mozilla/5.0 (compatible; " + appName.trim() + " using Weeb.java v" +
-                WeebApi.VERSION + "; +https://github.com/duncte123/weeb.java)";
+        USER_AGENT = appName.trim() + "/Weeb.java/" + WeebApi.VERSION;
     }
 
     public Request.Builder prepareGet(String url, String token) {
