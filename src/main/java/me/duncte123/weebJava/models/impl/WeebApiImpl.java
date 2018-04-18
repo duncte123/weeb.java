@@ -58,8 +58,6 @@ public class WeebApiImpl implements WeebApi {
                 .readTimeout(10L, TimeUnit.SECONDS)
                 .writeTimeout(10L, TimeUnit.SECONDS)
                 .build(), appName);
-
-        System.out.println(requestManager.USER_AGENT);
     }
 
     @Override
@@ -199,15 +197,13 @@ public class WeebApiImpl implements WeebApi {
 
     private Ason executeRequestSync(String path, String... query) {
         return requestManager.createRequest(
-                path,
                 requestManager.prepareGet(String.format("%s%s%s",
                         getAPIBaseUrl(),
                         path,
                         requestManager.toParams(query)
                         ),
                         getCompiledToken()),
-                200,
-                (body) -> new Ason(Objects.requireNonNull(body).string())
+                (body) -> new Ason(Objects.requireNonNull(body.body()).string())
         ).execute();
     }
 

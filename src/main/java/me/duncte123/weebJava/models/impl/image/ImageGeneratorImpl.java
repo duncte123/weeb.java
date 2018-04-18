@@ -22,11 +22,11 @@ import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.StatusType;
-import okhttp3.ResponseBody;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class ImageGeneratorImpl implements ImageGenerator {
 
@@ -39,7 +39,6 @@ public class ImageGeneratorImpl implements ImageGenerator {
     @Override
     public PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair) {
         return api.getRequestManager().createRequest(
-                createRoute("/generate"),
                 api.getRequestManager().prepareGet(
                         createEndpoint("/generate",
                                 "type=" + type,
@@ -48,35 +47,30 @@ public class ImageGeneratorImpl implements ImageGenerator {
                         ),
                         api.getCompiledToken()
                 ),
-                200,
-                ResponseBody::byteStream
+                r -> Objects.requireNonNull(r.body()).byteStream()
         );
     }
 
     @Override
     public PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatarUrl) {
         return api.getRequestManager().createRequest(
-                createRoute("/discord-status"),
                 api.getRequestManager().prepareGet(
                         createEndpoint("/discord-status", "status=" + status, "avatar=" + avatarUrl),
                         api.getCompiledToken()
                 ),
-                200,
-                ResponseBody::byteStream
+                r -> Objects.requireNonNull(r.body()).byteStream()
         );
     }
 
     @Override
     public PendingRequest<InputStream> generateWaifuinsult(String avatar) {
         return api.getRequestManager().createRequest(
-                createRoute("/waifu-insult"),
                 api.getRequestManager().preparePOST(
                         createEndpoint("/waifu-insult"),
                         new JSONObject().put("avatar", avatar),
                         api.getCompiledToken()
                 ),
-                200,
-                ResponseBody::byteStream
+                r -> Objects.requireNonNull(r.body()).byteStream()
         );
     }
 
@@ -93,28 +87,24 @@ public class ImageGeneratorImpl implements ImageGenerator {
             data.put("widgets", widgets);
 
         return api.getRequestManager().createRequest(
-                createRoute("/license"),
                 api.getRequestManager().preparePOST(
                         createEndpoint("/license"),
                         data,
                         api.getCompiledToken()
                 ),
-                200,
-                ResponseBody::byteStream
+                r -> Objects.requireNonNull(r.body()).byteStream()
         );
     }
 
     @Override
     public PendingRequest<InputStream> generateLoveship(String target1, String target2) {
         return api.getRequestManager().createRequest(
-                createRoute("/love-ship"),
                 api.getRequestManager().preparePOST(
                         createEndpoint("/love-ship"),
                         new JSONObject().put("targetOne", target1).put("targetTwo", target2),
                         api.getCompiledToken()
                 ),
-                200,
-                ResponseBody::byteStream
+                r -> Objects.requireNonNull(r.body()).byteStream()
         );
     }
 

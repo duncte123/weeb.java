@@ -58,12 +58,12 @@ public class WeebApiTest {
         WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment-staging")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
-                .setApiUrl(ApiUrl.STAGING)
+                .setApiUrl(ApiUrl.PRODUCTION)
                 .build();
 
         //Generate Awooo
         apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        //Discord status
+        /*//Discord status
         apiImg.getImageGenerator().generateDiscordStatus(myavy, (img) -> writeToFile(img, "status") );
         //Insult
         apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
@@ -73,7 +73,7 @@ public class WeebApiTest {
                 new String[] {"", "", "Discord: duncte123#1245"},
                 (img) -> writeToFile(img, "license"));
         //Love ship
-        apiImg.getImageGenerator().generateLoveship(myavy, ImageGenerator.DEFAULT_AVATAR, (img) -> writeToFile(img, "loveship"));
+        apiImg.getImageGenerator().generateLoveship(myavy, ImageGenerator.DEFAULT_AVATAR, (img) -> writeToFile(img, "loveship"));*/
     }
 
     private static void writeToFile(InputStream in, String name) {
