@@ -18,8 +18,8 @@ package me.duncte123.weebJava.models.image.response;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
-public interface TypesResponse {
+@SuppressWarnings("unused")
+public interface ImageTypesResponse {
 
     /**
      * Returns a list of type string with the types that you requested
@@ -63,9 +63,7 @@ public interface TypesResponse {
          * Returns the type/category of the image, this is what's used to show the list of types in /types
          * @return the type/category of the image, this is what's used to show the list of types in /types
          */
-        default String getType() {
-            return getBaseType();
-        }
+        String getType();
 
     }
 

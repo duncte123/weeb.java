@@ -53,14 +53,19 @@ WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
 
 Getting an image by type:
 ```JAVA
-WeebImage imageByType = api.getRandomImage("hug");
+WeebImage imageByType = api.getRandomImage("hug").execute();
 ```
+
+**NOTE:** `.execute()` is a blocking request, if you prefer asynchronous requests use `.async(Consumer)`
 
 Getting an image by the image id:
 ```JAVA
-WeebImage imageID = api.getImageById("H1mOU3auZ");
+api.getImageById("H1mOU3auZ").async( (image) -> {
+    System.out.println(image.getUrl());
+} );
 ```
 
 ## Libs used
 - Ason: [LINK](https://github.com/afollestad/ason)
 - OkHttp: [LINK](https://github.com/square/okhttp)
+- Reliqua: [LINK](https://github.com/natanbc/reliqua)

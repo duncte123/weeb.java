@@ -16,19 +16,18 @@
 
 package me.duncte123.weebJava.models.impl.image.response;
 
-import me.duncte123.weebJava.models.image.response.TypesResponse;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TypesResponseImpl implements TypesResponse {
+@SuppressWarnings("unused")
+public class ImageTypesResponseImpl implements ImageTypesResponse {
 
-    private final List<String> types;
-    private final List<PartialImage> preview;
+    private List<String> types;
+    private List<PartialImageImpl> preview;
 
-    public TypesResponseImpl(List<String> types, List<PartialImage> preview) {
-        this.types = types;
-        this.preview = preview;
-    }
+    private final List<PartialImage> h = new ArrayList<>();
 
     @Override
     public List<String> getTypes() {
@@ -37,22 +36,18 @@ public class TypesResponseImpl implements TypesResponse {
 
     @Override
     public List<PartialImage> getPreview() {
-        return preview;
+        if(h.isEmpty() && !preview.isEmpty())
+            h.addAll(preview);
+        return h;
     }
 
     public static class PartialImageImpl implements PartialImage {
 
-        private final String url;
-        private final String id;
-        private final String fileType;
-        private final String baseType;
-
-        public PartialImageImpl(String url, String id, String fileType, String baseType) {
-            this.url = url;
-            this.id = id;
-            this.fileType = fileType;
-            this.baseType = baseType;
-        }
+        private String url;
+        private String id;
+        private String fileType;
+        private String baseType;
+        private String type;
 
         @Override
         public String getUrl() {
@@ -72,6 +67,16 @@ public class TypesResponseImpl implements TypesResponse {
         @Override
         public String getBaseType() {
             return baseType;
+        }
+
+        @Override
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return "PartialImage("+getUrl()+")";
         }
     }
 }

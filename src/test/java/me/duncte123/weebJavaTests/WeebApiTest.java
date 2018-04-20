@@ -18,16 +18,17 @@ package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
-import me.duncte123.weebJava.models.image.response.TypesResponse;
-import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.types.GenerateType;
-import me.duncte123.weebJava.types.NSFWType;
+import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeebApiTest {
@@ -40,54 +41,55 @@ public class WeebApiTest {
         String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
         //This should get the tags if there are none yet
-        List<String> tags = api.getTags();
+        List<String> tags = api.getTags().execute();
         //Print the tags
         System.out.println(tags);
 
-        //Get an image by a tag
-        WeebImage imageByTag = api.getRandomImageByTags("b1nzy");
-        //And display the url
-        System.out.println(imageByTag.getUrl());
-
         //This should get the tags if there are none yet
-        TypesResponse types = api.getTypes(true);
+        ImageTypesResponse types = api.getTypes(PreviewMode.TRUE).execute();
         //Print the tags
         System.out.println(types.getTypes());
-        System.out.println(types.getPreview().get(0).getUrl());
+        System.out.println(types.getPreview());
+
+        //Get an image by a type
+        WeebImage imageByType = api.getRandomImage("awoo").execute();
+        //And display the url
+        System.out.println(imageByType.getUrl());
+
+        //Get an image by a tag
+        List<String> typesA = new ArrayList<>();
+        typesA.add("b1nzy");
+        WeebImage imageByTags = api.getRandomImage(typesA).execute();
+        //And display the url
+        System.out.println(imageByTags.getUrl());
+        System.out.println(imageByTags.getTags());
 
         WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment-staging")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
-                .setApiUrl(ApiUrl.PRODUCTION)
                 .build();
 
         //Generate Awooo
-        apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        /*//Discord status
-        apiImg.getImageGenerator().generateDiscordStatus(myavy, (img) -> writeToFile(img, "status") );
+        apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));
+        //Discord status
+        apiImg.generateDiscordStatus(myavy).async( (img) -> writeToFile(img, "status") );
         //Insult
-        apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        apiImg.generateWaifuinsult(myavy).async( (img) -> writeToFile(img, "wifu") );
         //License
-        apiImg.getImageGenerator().generateLicense("Phan", myavy,
+        apiImg.generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
-                new String[] {"", "", "Discord: duncte123#1245"},
-                (img) -> writeToFile(img, "license"));
+                new String[] {"", "", "Discord: duncte123#1245"}).async( (img) -> writeToFile(img, "license") );
         //Love ship
-        apiImg.getImageGenerator().generateLoveship(myavy, ImageGenerator.DEFAULT_AVATAR, (img) -> writeToFile(img, "loveship"));*/
+        apiImg.generateLoveship(myavy, myavy).async( (img) -> writeToFile(img, "loveship") );
     }
 
     private static void writeToFile(InputStream in, String name) {
         try {
 
             File targetFile = new File("image-test-" + name + ".png");
-            OutputStream outStream = new FileOutputStream(targetFile);
-            int read;
-            byte[] bytes = new byte[1024];
 
-            while ((read = in.read(bytes)) != -1) {
-                outStream.write(bytes, 0, read);
-            }
-            outStream.close();
+            Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("writing");
         }
         catch (IOException e) {
             e.printStackTrace();

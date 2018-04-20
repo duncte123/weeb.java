@@ -19,33 +19,28 @@ package me.duncte123.weebJava.types;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.helpers.QueryParam;
 
-public enum GenerateType implements QueryParam {
-
+@SuppressWarnings("unused")
+public enum NSFWMode implements QueryParam {
     /**
-     * This is the awooo type: <br>
-     * <img src="https://i.imgur.com/9sJ21z3.png" alt="awooo">
+     * Sets the NSFW flag to true, this means that there are NSFW images/tages allowed in the results
      */
-    AWOOO("awooo"),
+    ALLOW_NSFW("true"),
     /**
-     * This is the eyes type: <br>
-     * <img src="https://i.imgur.com/q9UL3fN.png" alt="eyes">
+     * Sets the NSFW flag to false, this means that there are no NSFW images/tags allowed in the results
      */
-    EYES("eyes"),
+    DISALLOW_NSFW("false"),
     /**
-     * This is the won type: <br>
-     * <img src="https://i.imgur.com/hdapIsB.png?1" alt="won">
+     * Sets the NSFW flag to only, this means that there are only NSFW images/tags in the results
      */
-    WON("won");
+    ONLY_NSFW("only");
 
     private final String type;
-
-    GenerateType(String type) {
-        this.type = type;
+    NSFWMode(String t) {
+        this.type = t;
     }
-
 
     @Override
     public void appendTo(QueryBuilder builder) {
-        builder.append("type", type);
+        builder.append("nsfw", type);
     }
 }

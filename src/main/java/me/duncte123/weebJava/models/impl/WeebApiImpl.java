@@ -1,63 +1,41 @@
-/*
- *    Copyright 2018 Duncan Sterken
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
 package me.duncte123.weebJava.models.impl;
 
 import com.afollestad.ason.Ason;
-import com.afollestad.ason.AsonArray;
-import me.duncte123.weebJava.exceptions.ImageNotFoundException;
+import com.github.natanbc.reliqua.Reliqua;
+import com.github.natanbc.reliqua.request.PendingRequest;
+import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.image.ImageGenerator;
-import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.image.WeebImage;
-import me.duncte123.weebJava.models.image.response.TypesResponse;
-import me.duncte123.weebJava.models.impl.image.ImageGeneratorImpl;
-import me.duncte123.weebJava.models.impl.image.ImageTagImpl;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
-import me.duncte123.weebJava.models.impl.image.response.TypesResponseImpl;
-import me.duncte123.weebJava.types.ApiUrl;
-import me.duncte123.weebJava.types.HiddenMode;
-import me.duncte123.weebJava.types.NSFWType;
-import me.duncte123.weebJava.types.TokenType;
+import me.duncte123.weebJava.models.impl.image.response.ImageTypesResponseImpl;
+import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
+import java.awt.*;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-public class WeebApiImpl implements WeebApi {
-
-    private final RequestManager requestManager;
+public class WeebApiImpl extends Reliqua implements WeebApi {
 
     private final TokenType tokenType;
     private final String token;
-    private final ApiUrl apiUrl;
+    private final UrlType urlType;
 
-    private ImageGenerator imageGenerator = null;
+    private final RequestManager manager;
 
-    public WeebApiImpl(TokenType tokenType, String token, ApiUrl apiUrl, String appName) {
+    public WeebApiImpl(TokenType tokenType, String token, UrlType urlType, String appName) {
+        super(new OkHttpClient(), null, true);
+
         this.tokenType = tokenType;
         this.token = token;
-        this.apiUrl = apiUrl;
-        this.requestManager = new RequestManager(new OkHttpClient.Builder()
-                .readTimeout(10L, TimeUnit.SECONDS)
-                .writeTimeout(10L, TimeUnit.SECONDS)
-                .build(), appName);
+        this.urlType = urlType;
+
+        this.manager = new RequestManager(appName);
     }
 
     @Override
@@ -66,148 +44,193 @@ public class WeebApiImpl implements WeebApi {
     }
 
     @Override
-    public String getAPIBaseUrl() {
-        return apiUrl.getUrl();
-    }
-
-    @Override
     public String getToken() {
         return token;
     }
 
     @Override
-    public List<String> getTags(HiddenMode hidden, NSFWType nsfw) {
+    public String getAPIBaseUrl() {
+        return urlType.getUrl();
+    }
 
-        List<String> query = new ArrayList<>();
+    @Override
+    public PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview) {
 
-        if(hidden != null)
-            query.add("hidden=" + hidden);
+        QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl()).append("/images/types");
+
+        if (hidden != null)
+            hidden.appendTo(builder);
 
         if (nsfw != null)
-            query.add("nsfw=" + nsfw.getType());
+            nsfw.appendTo(builder);
 
-        Ason res = executeRequestSync("/images/tags", query.toArray(new String[0]));
+        if (preview != null)
+            preview.appendTo(builder);
 
-        AsonArray<String> returnData = res.getJsonArray("tags");
-        //System.out.println("made api request");
-        return returnData.toList();
+        return createRequest(
+                manager.prepareGet(builder.build(), getCompiledToken())
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ImageTypesResponseImpl.class),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
-    public TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw, boolean preview) {
+    public PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw) {
 
-        List<String> query = new ArrayList<>();
+        QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl()).append("/images/tags");
+
         if(hidden != null)
-            query.add("hidden=" + hidden);
+            hidden.appendTo(builder);
 
-        if (nsfw != null)
-            query.add("nsfw=" + nsfw.getType());
-        query.add("preview=" + preview);
+        if(nsfw != null)
+            nsfw.appendTo(builder);
 
-        Ason res = executeRequestSync("/images/types", query.toArray(new String[0]));
+        return createRequest(
+                manager.prepareGet(builder.build(), getCompiledToken())
+        ).build(
+                (response) -> Ason.deserializeList(new Ason(response.body().string()).getJsonArray("tags"), String.class),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
+    }
 
-        AsonArray<String> returnData = res.getJsonArray("types");
-        List<String> typesReturned = returnData.toList();
-        List<TypesResponse.PartialImage> previewData = new ArrayList<>();
-        AsonArray<Ason> previewReturned = res.getJsonArray("preview");
-        previewReturned.forEach(
-                ason -> previewData.add(
-                        new TypesResponseImpl.PartialImageImpl(
-                                ason.getString("url"),
-                                ason.getString("id"),
-                                ason.getString("fileType"),
-                                ason.getString("baseType")
-                        )
+    @Override
+    public PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType) {
+
+        QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl()).append("/images/random");
+
+        if(type != null && !type.isEmpty())
+            builder.append("type", type);
+
+        if(!tags.isEmpty())
+            builder.append("tags", StringUtils.join(tags, ","));
+
+        if(nsfw != null)
+            nsfw.appendTo(builder);
+
+        if(hidden != null)
+            hidden.appendTo(builder);
+
+        if(fileType != null)
+            fileType.appendTo(builder);
+
+        return createRequest(
+                manager.prepareGet(builder.build(), getCompiledToken())
+        ).build(
+                (response) -> extractImageFromJson(response.body().string()),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
+    }
+
+    @Override
+    public PendingRequest<WeebImage> getImageInfo(String imageId) {
+        return createRequest(
+                manager.prepareGet(
+                        new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
+                        getCompiledToken()
                 )
-        );
-        //System.out.println("made api request");
-        return new TypesResponseImpl(
-                typesReturned,
-                previewData
+        ).build(
+                (response) -> extractImageFromJson(response.body().string()),
+                RequestManager.WebUtilsErrorUtils::handleError
         );
     }
 
     @Override
-    public WeebImage getRandomImage(String type, String tags, boolean hidden, NSFWType NSFW, String filetype) throws ImageNotFoundException {
-        List<String> query = new ArrayList<>();
+    public PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair) {
 
-        if (type != null)
-            query.add("type=" + type);
-        if (tags != null)
-            query.add("tags=" + tags);
+        QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl()).append("/auto-image/generate");
 
-        query.add("hidden=" + hidden);
+        if(type != null)
+            type.appendTo(builder);
 
-        if (NSFW != null)
-            query.add("nsfw=" + NSFW.getType());
-        if (filetype != null)
-            query.add("filetype=" + filetype);
+        if(face != null)
+            builder.append("face", colorToHex(face));
 
-        Ason response = executeRequestSync("/images/random", query.toArray(new String[0]));
+        if(hair != null)
+            builder.append("hair", colorToHex(hair));
 
-        if (response.getInt("status") != 404)
-            return getImageFromResponse(response);
-        else
-            throw new ImageNotFoundException(response.getString("message"));
+        return createRequest(
+                manager.prepareGet(builder.build(), getCompiledToken())
+        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
     }
 
     @Override
-    public WeebImage getImageById(String imageId) throws ImageNotFoundException {
-        if (imageId == null || imageId.isEmpty())
-            throw new IllegalArgumentException("imageId cannot be null or empty");
+    public PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatar) {
 
-        Ason response = executeRequestSync("/images/info/" + imageId);
+        QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl()).append("/auto-image/discord-status");
 
-        if (response.getInt("status") != 404)
-            return getImageFromResponse(response);
-        else
-            throw new ImageNotFoundException(response.getString("message"));
+        if(status != null)
+            status.appendTo(builder);
+
+        if(avatar != null && !avatar.isEmpty())
+            builder.append("avatar", avatar);
+
+        return createRequest(
+                manager.prepareGet(builder.build(), getCompiledToken())
+        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
     }
 
-    private WeebImage getImageFromResponse(Ason response) {
-        AsonArray<Ason> responseTags = response.getJsonArray("tags");
-        List<ImageTag> imageTags = new ArrayList<>();
-        responseTags.forEach(it -> imageTags.add(
-                new ImageTagImpl(
-                        it.getString("name"),
-                        it.getBool("hidden"),
-                        it.getString("user")
+    @Override
+    public PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
+        JSONObject data = new JSONObject()
+                .put("title", title)
+                .put("avatar", avatar);
+
+        if(badges.length > 3 || widgets.length > 3)
+            throw new IllegalArgumentException("Size badges and widgets cannot be higher than 3");
+
+        if(badges.length > 0)
+            data.put("badges", badges);
+
+        if(widgets.length > 0)
+            data.put("widgets", widgets);
+
+        return createRequest(
+                manager.preparePOST(
+                        new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/license").build(),
+                        data,
+                        getCompiledToken()
                 )
-        ));
-
-        return new WeebImageImpl(
-                response.getString("id"),
-                response.getString("baseType"),
-                response.getString("mimeType"),
-                response.getString("account"),
-                response.getBool("hidden"),
-                response.getBool("nsfw"),
-                imageTags,
-                response.getString("url"),
-                response.getString("source", null)
-        );
+        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
     }
 
     @Override
-    public ImageGenerator getImageGenerator() {
-        if (imageGenerator == null)
-            imageGenerator = new ImageGeneratorImpl(this);
-        return imageGenerator;
+    public PendingRequest<InputStream> generateWaifuinsult(String avatar) {
+        return createRequest(
+                manager.preparePOST(
+                        new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
+                        new JSONObject().put("avatar", avatar),
+                        getCompiledToken()
+                )
+        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
     }
 
-    private Ason executeRequestSync(String path, String... query) {
-        return requestManager.createRequest(
-                requestManager.prepareGet(String.format("%s%s%s",
-                        getAPIBaseUrl(),
-                        path,
-                        requestManager.toParams(query)
-                        ),
-                        getCompiledToken()),
-                (body) -> new Ason(Objects.requireNonNull(body.body()).string())
-        ).execute();
+    @Override
+    public PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo) {
+
+        JSONObject data = new JSONObject()
+                .put("targetOne", targetOne)
+                .put("targetTwo", targetTwo);
+
+        return createRequest(
+                manager.preparePOST(
+                        new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/love-ship").build(),
+                        data,
+                        getCompiledToken()
+                )
+        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
     }
 
-    public RequestManager getRequestManager() {
-        return requestManager;
+    private String colorToHex(Color color) {
+        return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    private WeebImage extractImageFromJson(String json) {
+        return Ason.deserialize(json, WeebImageImpl.class);
     }
 }

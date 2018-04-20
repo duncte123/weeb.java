@@ -1,30 +1,14 @@
-/*
- *    Copyright 2018 Duncan Sterken
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
 package me.duncte123.weebJava.models;
 
+import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.WeebInfo;
-import me.duncte123.weebJava.exceptions.ImageNotFoundException;
-import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
-import me.duncte123.weebJava.models.image.response.TypesResponse;
-import me.duncte123.weebJava.types.HiddenMode;
-import me.duncte123.weebJava.types.NSFWType;
-import me.duncte123.weebJava.types.TokenType;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.types.*;
 
+import java.awt.*;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -64,7 +48,7 @@ public interface WeebApi {
      * @return the base url for the cdn
      */
     default String getCDNBaseUrl() {
-        return "https://cdn.weeb.sh/images/";
+        return "https://cdn.weeb.sh/";
     }
 
     /**
@@ -78,211 +62,88 @@ public interface WeebApi {
         return getTokenType().getType() + " " + getToken();
     }
 
-    /**
-     * This returns a list of all the available tags
-     *
-     * @return a list of all the available tags
-     * @see #getTags(HiddenMode)
-     */
-    default List<String> getTags() {
-        return getTags(null, null);
+
+    default PendingRequest<ImageTypesResponse> getTypes() {
+        return getTypes(null, null, null);
     }
 
-    /**
-     * This returns a list of all the available tags
-     *
-     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
-     * @return a list of all the available tags
-     */
-    default List<String> getTags(HiddenMode hidden) {
-        return getTags(hidden, NSFWType.FALSE);
+    default PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden) {
+        return getTypes(hidden, null, null);
     }
 
-    /**
-     * This returns a list of all the available tags
-     *
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @return a list of all the available tags
-     */
-    default List<String> getTags(NSFWType nsfw) {
-        return getTags(null, nsfw);
+    default PendingRequest<ImageTypesResponse> getTypes(NSFWMode nsfw) {
+        return getTypes(null, nsfw, null);
     }
 
-    /**
-     * This returns a list of all the available tags
-     *
-     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @return a list of all the available tags
-     */
-    List<String> getTags(HiddenMode hidden, NSFWType nsfw);
-
-    /**
-     * This returns a list of all the available types
-     *
-     * @return  The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypes(HiddenMode)
-     */
-    default TypesResponse getTypes() {
-        return getTypes(null, null, false);
-    }
-
-    default TypesResponse getTypes(boolean preview) {
+    default PendingRequest<ImageTypesResponse> getTypes(PreviewMode preview) {
         return getTypes(null, null, preview);
     }
 
-    /**
-     * This returns a list of all the available types
-     *
-     * @param hidden if we only should display the hidden types, default {@link HiddenMode#DEFAULT}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     */
-    default TypesResponse getTypes(HiddenMode hidden) {
-        return getTypes(hidden, null, false);
+    PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview);
+
+
+    default PendingRequest<List<String>> getTags() {
+        return getTags(null, null);
     }
 
-    default TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw) {
-        return getTypes(hidden, nsfw, false);
+    default PendingRequest<List<String>> getTags(HiddenMode hidden) {
+        return getTags(hidden, null);
     }
 
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param hidden  if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @param preview Get a preview image for each type, Default {@code false}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     */
-    TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw, boolean preview);
-
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param tags a comma separated list of tags
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     */
-    default WeebImage getRandomImageByTags(String tags) throws ImageNotFoundException {
-        return getRandomImage(null, tags, false, NSFWType.FALSE, null);
+    default PendingRequest<List<String>> getTags(NSFWMode nsfw) {
+        return getTags(null, nsfw);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param tags   a comma separated list of tags
-     * @param hidden If we should display hidden images, default {@code false}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     */
-    default WeebImage getRandomImageByTags(String tags, boolean hidden) throws ImageNotFoundException {
-        return getRandomImage(null, tags, hidden, NSFWType.FALSE, null);
+    PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw);
+
+
+    default PendingRequest<WeebImage> getRandomImage(String type) {
+        return getRandomImage(type, new ArrayList<>(), null, null, null);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param tags a comma separated list of tags
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     */
-    default WeebImage getRandomImageByTags(String tags, NSFWType NSFW) throws ImageNotFoundException {
-        return getRandomImage(null, tags, false, NSFW, null);
+    default PendingRequest<WeebImage> getRandomImage(List<String> tags) {
+        return getRandomImage(null, tags, null, null, null);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param tags   a comma separated list of tags
-     * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     */
-    default WeebImage getRandomImageByTags(String tags, boolean hidden, NSFWType NSFW) throws ImageNotFoundException {
-        return getRandomImage(null, tags, hidden, NSFW, null);
+    PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType);
+
+
+    PendingRequest<WeebImage> getImageInfo(String imageId);
+
+
+    default PendingRequest<InputStream> generateSimple(GenerateType type) {
+        return generateSimple(type, null, null);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param type the image type
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, NSFWType, String)
-     */
-    default WeebImage getRandomImage(String type) throws ImageNotFoundException {
-        return getRandomImage(type, null, false, NSFWType.FALSE, null);
+    PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair);
+
+
+    default PendingRequest<InputStream> generateDiscordStatus() {
+        return generateDiscordStatus(null, null);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param type   the image type
-     * @param hidden If we should display hidden images, default {@code false}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, NSFWType, String)
-     */
-    default WeebImage getRandomImage(String type, boolean hidden) throws ImageNotFoundException {
-        return getRandomImage(type, null, hidden, NSFWType.FALSE, null);
+    default PendingRequest<InputStream> generateDiscordStatus(StatusType status) {
+        return generateDiscordStatus(status, null);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param type the image type
-     * @param NSFW if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, NSFWType, String)
-     */
-    default WeebImage getRandomImage(String type, NSFWType NSFW) throws ImageNotFoundException {
-        return getRandomImage(type, null, false, NSFW, null);
+    default PendingRequest<InputStream> generateDiscordStatus(String avatar) {
+        return generateDiscordStatus(null, avatar);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param type   the image type
-     * @param hidden If we should display hidden images, default {@code false}
-     * @param NSFW   if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     * @see #getRandomImage(String, String, boolean, NSFWType, String)
-     */
-    default WeebImage getRandomImage(String type, boolean hidden, NSFWType NSFW) throws ImageNotFoundException {
-        return getRandomImage(type, null, hidden, NSFW, null);
+    PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatar);
+
+
+    default PendingRequest<InputStream> generateLicense(String title, String avatar) {
+        return generateLicense(title, avatar, new String[0], new String[0]);
     }
 
-    /**
-     * This gets a random image based on the filter queries
-     *
-     * @param type     the image type
-     * @param tags     a comma separated list of tags
-     * @param hidden   If we should display hidden images, default {@code false}
-     * @param NSFW     if we should filter for nsfw images, can be true, false or only, default {@link NSFWType#FALSE}
-     * @param filetype Filters by filetype, e.g. gif, jpg and png (jpg and jpeg are treated the same)
-     * @return A random {@link WeebImage WeebImage} based on the query filters
-     * @throws ImageNotFoundException when the image is not found
-     */
-    WeebImage getRandomImage(String type, String tags, boolean hidden, NSFWType NSFW, String filetype) throws ImageNotFoundException;
+    default PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges) {
+        return generateLicense(title, avatar, badges, new String[0]);
+    }
 
-    /**
-     * Returns an image by the image id
-     *
-     * @param imageId the image id that you want to get
-     * @return an image by the image id
-     * @throws ImageNotFoundException when the image is not found
-     */
-    WeebImage getImageById(String imageId) throws ImageNotFoundException;
+    PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets);
 
-    /**
-     * Returns the image generator.
-     * You can use the image generator to access the image generate endpoints
-     *
-     * @return the {@link ImageGenerator} to generate images with
-     */
-    ImageGenerator getImageGenerator();
+    PendingRequest<InputStream> generateWaifuinsult(String avatar);
 
+    PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo);
 }

@@ -19,37 +19,33 @@ package me.duncte123.weebJava.models.impl.image;
 import me.duncte123.weebJava.models.image.ImageTag;
 import me.duncte123.weebJava.models.image.WeebImage;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class WeebImageImpl implements WeebImage {
 
-    private final String id;
-    private final String baseType;
-    private final String mimeType;
-    private final String account;
-    private final boolean hidden;
-    private final boolean NSFW;
-    private final List<ImageTag> tags;
-    private final String url;
-    private final String source;
-
-    public WeebImageImpl(String id, String baseType, String mimeType, String account, boolean hidden, boolean NSFW,
-                         List<ImageTag> tags, String url, String source) {
-        this.id = id;
-        this.baseType = baseType;
-        this.mimeType = mimeType;
-        this.account = account;
-        this.hidden = hidden;
-        this.NSFW = NSFW;
-        this.tags = tags;
-        this.url = url;
-        this.source = source;
-    }
+    private String id;
+    private String type;
+    private String baseType;
+    private boolean nsfw;
+    private String fileType;
+    private String mimeType;
+    private List<ImageTagImpl> tags;
+    private String url;
+    private boolean hidden;
+    private String source;
+    private String account;
 
 
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -73,13 +69,16 @@ public class WeebImageImpl implements WeebImage {
     }
 
     @Override
-    public boolean isNSFW() {
-        return NSFW;
+    public boolean isNsfw() {
+        return nsfw;
     }
 
+    private List<ImageTag> t = new ArrayList<>();
     @Override
     public List<ImageTag> getTags() {
-        return tags;
+        if(t.isEmpty() && tags != null && !tags.isEmpty())
+            t.addAll(tags);
+        return t;
     }
 
     @Override

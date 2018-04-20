@@ -16,15 +16,13 @@
 
 package me.duncte123.weebJava.web;
 
-import com.github.natanbc.reliqua.Reliqua;
-import com.github.natanbc.reliqua.request.PendingRequest;
 import com.github.natanbc.reliqua.request.RequestContext;
 import com.github.natanbc.reliqua.request.RequestException;
-import com.github.natanbc.reliqua.util.ResponseMapper;
+import me.duncte123.weebJava.exceptions.MissingPermissionException;
+import me.duncte123.weebJava.exceptions.NotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -34,13 +32,11 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
-public class RequestManager extends Reliqua {
+public class RequestManager {
 
-    private final String USER_AGENT/* = "Mozilla/5.0 (compatible; Weeb.java v" +
-            WeebApi.VERSION + "; +https://github.com/duncte123/weeb.java)"*/;
+    private final String USER_AGENT;
 
-    public RequestManager(OkHttpClient client, String appName) {
-        super(client, null, true);
+    public RequestManager(String appName) {
 
         USER_AGENT = appName.trim() + "/Weeb.java/" + WeebApi.VERSION;
     }
@@ -61,21 +57,12 @@ public class RequestManager extends Reliqua {
                 .addHeader("User-Agent", USER_AGENT);
     }
 
-    @NotNull
-    public <T> PendingRequest<T> createRequest(Request.Builder requestBuilder, ResponseMapper<T> mapper) {
-        return createRequest(requestBuilder.build()).build(mapper, WebUtilsErrorUtils::handleError);
-    }
-
-    public String toParams(String... query) {
-        return query == null || query.length == 0 ? "" : "?" + StringUtils.join(query, "&");
-    }
-
-    static class WebUtilsErrorUtils {
+    public static class WebUtilsErrorUtils {
         static JSONObject toJSONObject(Response response) {
             return new JSONObject(new JSONTokener(getInputStream(response)));
         }
 
-        static InputStream getInputStream(Response response) {
+        public static InputStream getInputStream(Response response) {
             ResponseBody body = response.body();
             if(body == null) throw new IllegalStateException("Body should never be null");
             String encoding = response.header("Content-Encoding");
@@ -94,7 +81,7 @@ public class RequestManager extends Reliqua {
             return body.byteStream();
         }
 
-        static <T> void handleError(RequestContext<T> context) {
+        public static <T> void handleError(RequestContext<T> context) {
             Response response = context.getResponse();
             ResponseBody body = response.body();
             if(body == null) {
@@ -103,9 +90,10 @@ public class RequestManager extends Reliqua {
             }
             switch(response.code()) {
                 case 403:
-                    context.getErrorConsumer().accept(new RequestException(toJSONObject(response).getString("message"), context.getCallStack()));
+                    context.getErrorConsumer().accept(new MissingPermissionException(toJSONObject(response).getString("message"), context.getCallStack()));
                     break;
                 case 404:
+                    context.getErrorConsumer().accept(new NotFoundException(toJSONObject(response).getString("message"), context.getCallStack()));
                     context.getSuccessConsumer().accept(null);
                     break;
                 default:

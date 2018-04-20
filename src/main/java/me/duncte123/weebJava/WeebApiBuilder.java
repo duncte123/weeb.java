@@ -18,15 +18,15 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
-import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.TokenType;
+import me.duncte123.weebJava.types.UrlType;
 
 @SuppressWarnings("unused")
 public class WeebApiBuilder {
 
     private final TokenType tokenType;
     private String token;
-    private ApiUrl apiUrl = ApiUrl.PRODUCTION;
+    private UrlType urlType = UrlType.PRODUCTION;
     private String appName = "unknown-app";
 
     /**
@@ -46,7 +46,7 @@ public class WeebApiBuilder {
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
      *
      * @param tokenType The type of token that you want to use
-     * @param appName the name of your application
+     * @param appInfo the name of your application
      *      This sets the app name in the user agent when making requests.
      *      This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
      *      Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
@@ -57,9 +57,9 @@ public class WeebApiBuilder {
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      */
-    public WeebApiBuilder(TokenType tokenType, String appName) {
+    public WeebApiBuilder(TokenType tokenType, String appInfo) {
         this.tokenType = tokenType;
-        this.appName = appName;
+        this.appName = appInfo;
     }
 
     /**
@@ -76,11 +76,11 @@ public class WeebApiBuilder {
     /**
      * This sets the api url that we user to make our requests
      *
-     * @param apiUrl The {@link ApiUrl} that we want to use
+     * @param urlType The {@link UrlType} that we want to use
      * @return The current builder, useful for chaining
      */
-    public WeebApiBuilder setApiUrl(ApiUrl apiUrl) {
-        this.apiUrl = apiUrl;
+    public WeebApiBuilder setUrlType(UrlType urlType) {
+        this.urlType = urlType;
         return this;
     }
 
@@ -93,8 +93,11 @@ public class WeebApiBuilder {
      *
      * @param appName the name of your application
      * @return The current builder, useful for chaining
+     *
+     * @deprecated for removal use {@link WeebApiBuilder(TokenType, String)} instead
      */
-    public WeebApiBuilder setAppName(String appName) {
+    @Deprecated
+    public WeebApiBuilder setAppInfo(String appName) {
         this.appName = appName;
         return this;
     }
@@ -105,6 +108,6 @@ public class WeebApiBuilder {
      * @return the {@link WeebApi WeebApi} interface ready to be used
      */
     public WeebApi build() {
-        return new WeebApiImpl(tokenType, token, apiUrl, appName);
+        return new WeebApiImpl(tokenType, token, urlType, appName);
     }
 }

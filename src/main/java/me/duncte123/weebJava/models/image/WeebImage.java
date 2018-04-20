@@ -36,9 +36,7 @@ public interface WeebImage {
      * example: sumfuk
      * @see #getBaseType()
      */
-    default String getType() {
-        return getBaseType();
-    }
+    String getType();
 
     /**
      * Returns a category-like type of the image
@@ -76,7 +74,7 @@ public interface WeebImage {
      *
      * @return if this image contains inappropriate content
      */
-    boolean isNSFW();
+    boolean isNsfw();
 
     /**
      * Returns the list of tags that this image has

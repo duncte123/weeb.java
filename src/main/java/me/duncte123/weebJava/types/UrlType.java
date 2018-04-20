@@ -16,32 +16,33 @@
 
 package me.duncte123.weebJava.types;
 
-@SuppressWarnings("unused")
-public enum NSFWType {
+public enum UrlType {
     /**
-     * Sets the NSFW flag to true, this means that there are NSFW images/tages in the results
+     * This is the normal api.weeb.sh url
      */
-    TRUE("true"),
+    PRODUCTION("https://api.weeb.sh"),
     /**
-     * Sets the NSFW flag to false, this means that there are no NSFW images/tags in the results
+     * This is the staging.weeb.sh url
      */
-    FALSE("false"),
-    /**
-     * Sets the NSFW flag to only, this means that there are only NSFW images/tags in the results
-     */
-    ONLY("only");
+    STAGING("https://staging.weeb.sh");
 
-    private final String type;
-    NSFWType(String t) {
-        this.type = t;
+    private final String url;
+
+    UrlType(String url) {
+        this.url = url;
     }
 
-    public String getType() {
-        return type;
+    /**
+     * Returns the url
+     *
+     * @return the url as a string
+     */
+    public String getUrl() {
+        return url;
     }
 
     @Override
     public String toString() {
-        return type;
+        return url;
     }
 }
