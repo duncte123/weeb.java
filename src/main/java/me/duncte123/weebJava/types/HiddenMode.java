@@ -14,17 +14,30 @@
  *    limitations under the License.
  */
 
-group = 'ml.duncte123'
-version = '0.1.0'
+package me.duncte123.weebJava.types;
 
-apply plugin: 'java'
-apply plugin: 'application'
+/**
+ * This sets the hidden mode on the images
+ */
+@SuppressWarnings("unused")
+public enum HiddenMode {
 
-sourceCompatibility = 1.8
+    /**
+     * Only display the images, types, tags that you uploaded
+     */
+    ONLY("true"),
+    /**
+     * Display all images, types, tags including the ones that you uploaded
+     */
+    DEFAULT("false");
 
-repositories {
-    jcenter()
-}
-dependencies {
-    compile 'me.duncte123:weebJava:1.0.0'
+    private final String mode;
+    HiddenMode(String mode) {
+        this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        return mode;
+    }
 }

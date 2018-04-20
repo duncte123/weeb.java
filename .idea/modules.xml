@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/examples/examples.iml" filepath="$PROJECT_DIR$/.idea/modules/examples/examples.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/examples/examples_main.iml" filepath="$PROJECT_DIR$/.idea/modules/examples/examples_main.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava_main.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava_main.iml" group="weebJava" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava_test.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava_test.iml" group="weebJava" />
     </modules>

@@ -23,7 +23,7 @@ plugins {
 
 group = "me.duncte123"
 archivesBaseName = "weebJava"
-version = "1.2.0"
+version = "1.2.2"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -33,12 +33,9 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.github.natanbc', name: 'reliqua', version: '2.3.2'
     compile group: 'com.afollestad', name: 'ason', version: '1.4.16'
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.1'
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.9.1'
-    compile( group: 'com.github.natanbc', name: 'reliqua', version: '1.2' ) {
-        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-    }
 }
 
 javadoc {
@@ -95,14 +92,26 @@ publishing {
     }
 }
 
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url "$buildDir/repo"
+        }
+    }
+}
+
+
 build {
     dependsOn clean
     dependsOn jar
     dependsOn javadocJar
     dependsOn sourcesJar
+    dependsOn publish
 
     jar.mustRunAfter clean
     javadocJar.mustRunAfter jar
     sourcesJar.mustRunAfter javadocJar
+    publish.mustRunAfter sourcesJar
 }
 

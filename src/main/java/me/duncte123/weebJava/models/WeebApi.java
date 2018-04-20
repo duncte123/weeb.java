@@ -21,6 +21,7 @@ import me.duncte123.weebJava.exceptions.ImageNotFoundException;
 import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.TypesResponse;
+import me.duncte123.weebJava.types.HiddenMode;
 import me.duncte123.weebJava.types.NSFWType;
 import me.duncte123.weebJava.types.TokenType;
 
@@ -81,21 +82,20 @@ public interface WeebApi {
      * This returns a list of all the available tags
      *
      * @return a list of all the available tags
-     * @see #getTags(boolean)
+     * @see #getTags(HiddenMode)
      */
     default List<String> getTags() {
-        return getTagsCached(false, NSFWType.FALSE, true);
+        return getTags(null, null);
     }
 
     /**
      * This returns a list of all the available tags
      *
-     * @param hidden if we only should display the hidden tags, default {@code false}
+     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @return a list of all the available tags
-     * @see #getTagsCached(boolean, NSFWType, boolean)
      */
-    default List<String> getTags(boolean hidden) {
-        return getTagsCached(hidden, NSFWType.FALSE, true);
+    default List<String> getTags(HiddenMode hidden) {
+        return getTags(hidden, NSFWType.FALSE);
     }
 
     /**
@@ -103,154 +103,57 @@ public interface WeebApi {
      *
      * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
      * @return a list of all the available tags
-     * @see #getTagsCached(boolean, NSFWType, boolean)
      */
     default List<String> getTags(NSFWType nsfw) {
-        return getTagsCached(false, nsfw, true);
+        return getTags(null, nsfw);
     }
 
     /**
      * This returns a list of all the available tags
      *
-     * @param hidden if we only should display the hidden tags, default {@code false}
+     * @param hidden if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
      * @return a list of all the available tags
-     * @see #getTagsCached(boolean, NSFWType, boolean)
      */
-    default List<String> getTags(boolean hidden, NSFWType nsfw) {
-        return getTagsCached(hidden, nsfw, true);
-    }
-
-    /**
-     * This cached the tags for you so that you won't have to make an api request all the time when you need the tags
-     *
-     * @return A list of the available tags that are cached in the system
-     * @see #getTagsCached(boolean, NSFWType, boolean)
-     */
-    default List<String> getTagsCached() {
-        return getTagsCached(false, NSFWType.FALSE, false);
-    }
-
-    /**
-     * This cached the tags for you so that you won't have to make an api request all the time when you need the tags
-     *
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
-     * @return A list of the available tags that are cached in the system
-     * @see #getTagsCached(boolean, NSFWType, boolean)
-     */
-    default List<String> getTagsCached(boolean refresh) {
-        return getTagsCached(false, NSFWType.FALSE, refresh);
-    }
-
-    /**
-     * This caches the tags for you so that you won't have to make an api request all the time when you need the tags
-     *
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @return A list with the available tags that are cached in the system
-     * @see #getTagsCached(boolean, NSFWType, boolean)
-     */
-    default List<String> getTagsCached(NSFWType nsfw) {
-        return getTagsCached(false, NSFWType.FALSE, false);
-    }
-
-    /**
-     * This caches the tags for you so that you won't have to make an api request all the time when you need the tags
-     *
-     * @param hidden  if we only should display the hidden tags, default {@code false}
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
-     * @return A list with the available tags that are cached in the system
-     */
-    List<String> getTagsCached(boolean hidden, NSFWType nsfw, boolean refresh);
+    List<String> getTags(HiddenMode hidden, NSFWType nsfw);
 
     /**
      * This returns a list of all the available types
      *
      * @return  The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypes(boolean)
+     * @see #getTypes(HiddenMode)
      */
     default TypesResponse getTypes() {
-        return getTypesCached(false, NSFWType.FALSE, false, true);
+        return getTypes(null, null, false);
+    }
+
+    default TypesResponse getTypes(boolean preview) {
+        return getTypes(null, null, preview);
     }
 
     /**
      * This returns a list of all the available types
      *
-     * @param hidden if we only should display the hidden types, default {@code false}
+     * @param hidden if we only should display the hidden types, default {@link HiddenMode#DEFAULT}
      * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
      */
-    default TypesResponse getTypes(boolean hidden) {
-        return getTypesCached(hidden, NSFWType.FALSE, false, true);
+    default TypesResponse getTypes(HiddenMode hidden) {
+        return getTypes(hidden, null, false);
+    }
+
+    default TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw) {
+        return getTypes(hidden, nsfw, false);
     }
 
     /**
      * This caches the types for you so that you won't have to make an api request all the time when you need the types
      *
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean)
-     */
-    default TypesResponse getTypesCached() {
-        return getTypesCached(false, NSFWType.FALSE, false, false);
-    }
-
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
-     */
-    default TypesResponse getTypesCached(boolean refresh) {
-        return getTypesCached(false, NSFWType.FALSE, false, refresh);
-    }
-
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param hidden  if we only should display the hidden tags, default {@code false}
+     * @param hidden  if we only should display the hidden tags, default {@link HiddenMode#DEFAULT}
      * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
-     */
-    default TypesResponse getTypesCached(boolean hidden, NSFWType nsfw) {
-        return getTypesCached(hidden, nsfw, false, false);
-    }
-
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
-     */
-    default TypesResponse getTypesCached(NSFWType nsfw, boolean refresh) {
-        return getTypesCached(false, nsfw, false, refresh);
-    }
-
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param preview Get a preview image for each type
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
-     * @return The response from the api wrapped in the {@link TypesResponse} class
-     * @see #getTypesCached(boolean, NSFWType, boolean, boolean)
-     */
-    default TypesResponse getTypesCached(boolean refresh, boolean preview) {
-        return getTypesCached(false, NSFWType.FALSE, preview, refresh);
-    }
-
-    /**
-     * This caches the types for you so that you won't have to make an api request all the time when you need the types
-     *
-     * @param hidden  if we only should display the hidden tags, default {@code false}
-     * @param nsfw When false, no types from nsfw images will be returned, true returns types from nsfw and non-nsfw images, only returns only types from nsfw images, default {@link NSFWType#FALSE}
-     * @param preview Get a preview image for each type
-     * @param refresh if we should delete the current cache and get an up-to-date list from weeb.sh, default {@code false}
+     * @param preview Get a preview image for each type, Default {@code false}
      * @return The response from the api wrapped in the {@link TypesResponse} class
      */
-    TypesResponse getTypesCached(boolean hidden, NSFWType nsfw, boolean preview, boolean refresh);
+    TypesResponse getTypes(HiddenMode hidden, NSFWType nsfw, boolean preview);
 
     /**
      * This gets a random image based on the filter queries
