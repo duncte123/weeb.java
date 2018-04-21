@@ -7,8 +7,6 @@ import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
-import me.duncte123.weebJava.models.impl.image.WeebImageImpl;
-import me.duncte123.weebJava.models.impl.image.response.ImageTypesResponseImpl;
 import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
@@ -17,7 +15,6 @@ import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WeebApiImpl extends Reliqua implements WeebApi {
@@ -71,7 +68,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken())
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ImageTypesResponseImpl.class),
+                (response) -> Ason.deserialize(response.body().string(), ImageTypesResponse.class, true),
                 RequestManager.WebUtilsErrorUtils::handleError
         );
     }
@@ -231,6 +228,6 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     private WeebImage extractImageFromJson(String json) {
-        return Ason.deserialize(json, WeebImageImpl.class);
+        return Ason.deserialize(json, WeebImage.class);
     }
 }

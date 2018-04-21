@@ -14,28 +14,27 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models.reputation.responses;
 
-@SuppressWarnings("unused")
-public class ImageTag {
+import me.duncte123.weebJava.helpers.DateParser;
+import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 
-    private String name;
-    private boolean hidden;
-    private String user;
+import java.time.LocalDateTime;
 
-    public String getName() {
-        return name;
-    }
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class BaseReputationResponse extends WeebResponse {
 
-    public boolean isHidden() {
-        return hidden;
-    }
+    private String date;
+    protected ReputationUser user;
 
-    public String getUser() {
+    public ReputationUser getUser() {
         return user;
     }
 
-    public String toString() {
-        return "ImageTag("+name+")";
+    public LocalDateTime getDate() {
+        if(date == null || date.isEmpty())
+            return LocalDateTime.now();
+        return DateParser.parseDate(date);
     }
 }

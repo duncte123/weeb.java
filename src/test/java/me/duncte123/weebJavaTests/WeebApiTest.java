@@ -16,16 +16,23 @@
 
 package me.duncte123.weebJavaTests;
 
+import com.afollestad.ason.Ason;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.models.reputation.responses.BaseReputationResponse;
+import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
+import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
+import me.duncte123.weebJava.types.UrlType;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -33,13 +40,19 @@ import java.util.List;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
+                .setUrlType(UrlType.STAGING)
                 .build();
-        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
+        //testNormalImageThings(api);
+        //testImageGen(api);
+        testReputation(api);
+    }
+
+    private static void testNormalImageThings(WeebApi api) {
         //This should get the tags if there are none yet
         List<String> tags = api.getTags().execute();
         //Print the tags
@@ -48,6 +61,7 @@ public class WeebApiTest {
         //This should get the tags if there are none yet
         ImageTypesResponse types = api.getTypes(PreviewMode.TRUE).execute();
         //Print the tags
+        System.out.println(types.getStatus());
         System.out.println(types.getTypes());
         System.out.println(types.getPreview());
 
@@ -63,11 +77,11 @@ public class WeebApiTest {
         //And display the url
         System.out.println(imageByTags.getUrl());
         System.out.println(imageByTags.getTags());
+    }
 
-        WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment-staging")
-                //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
-                .setToken(Secrets.WOLKE_TOKEN)
-                .build();
+    private static void testImageGen(WeebApi apiImg) {
+
+        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
         //Generate Awooo
         apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));
@@ -81,6 +95,24 @@ public class WeebApiTest {
                 new String[] {"", "", "Discord: duncte123#1245"}).async( (img) -> writeToFile(img, "license") );
         //Love ship
         apiImg.generateLoveship(myavy, myavy).async( (img) -> writeToFile(img, "loveship") );
+    }
+
+    private static void testReputation(WeebApi api) {
+        String json = "{\n" +
+                "    \"settings\": {\n" +
+                "        \"reputationPerDay\": 2,\n" +
+                "        \"maximumReputation\": 0,\n" +
+                "        \"maximumReputationReceivedDay\": 0,\n" +
+                "        \"reputationCooldown\": 86400,\n" +
+                "        \"accountId\": \"S1WJTqQhf\"\n" +
+                "    },\n" +
+                "    \"status\": 200\n" +
+                "}";
+
+        ReputationSettingsResponse response = Ason.deserialize(json, ReputationSettingsResponse.class, true);
+
+        System.out.println(response.getSettings().getReputationPerDay());
+
     }
 
     private static void writeToFile(InputStream in, String name) {

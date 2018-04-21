@@ -16,55 +16,56 @@
 
 package me.duncte123.weebJava.models.image.response;
 
+import me.duncte123.weebJava.models.WeebResponse;
+
 import java.util.List;
 
 @SuppressWarnings("unused")
-public interface ImageTypesResponse {
+public class ImageTypesResponse extends WeebResponse  {
 
-    /**
-     * Returns a list of type string with the types that you requested
-     * @return a list of type string with the types that you requested
-     */
-    List<String> getTypes();
 
-    /**
-     * Returns a List of {@link PartialImage PartialImages} if you requested the preview
-     * @return a List of {@link PartialImage PartialImages} if you requested the preview
-     */
-    List<PartialImage> getPreview();
+    private List<String> types;
+    private List<PartialImage> preview;
 
-    interface PartialImage {
-
-        /**
-         * Returns the image url
-         * @return the image url
-         */
-        String getUrl();
-
-        /**
-         * Returns the image id
-         * @return the image id
-         */
-        String getId();
-
-        /**
-         * Returns the file type
-         * @return the file type
-         */
-        String getFileType();
-
-        /**
-         * Returns the type/category of the image, this is what's used to show the list of types in /types
-         * @return the type/category of the image, this is what's used to show the list of types in /types
-         */
-        String getBaseType();
-
-        /**
-         * Returns the type/category of the image, this is what's used to show the list of types in /types
-         * @return the type/category of the image, this is what's used to show the list of types in /types
-         */
-        String getType();
-
+    public List<String> getTypes() {
+        return types;
     }
 
+    public List<PartialImage> getPreview() {
+        return preview;
+    }
+
+
+    public static class PartialImage {
+
+        private String url;
+        private String id;
+        private String fileType;
+        private String baseType;
+        private String type;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getFileType() {
+            return fileType;
+        }
+
+        public String getBaseType() {
+            return baseType;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String toString() {
+            return "PartialImage("+url+")";
+        }
+    }
 }

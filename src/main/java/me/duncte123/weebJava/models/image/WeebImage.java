@@ -19,77 +19,58 @@ package me.duncte123.weebJava.models.image;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public interface WeebImage {
+public class WeebImage {
 
-    /**
-     * Returns the internal document id
-     *
-     * @return the internal document id
-     * example: H1mOU3auZ
-     */
-    String getId();
+    private String id;
+    private String type;
+    private String baseType;
+    private boolean nsfw;
+    private String fileType;
+    private String mimeType;
+    private List<ImageTag> tags;
+    private String url;
+    private boolean hidden;
+    private String source;
+    private String account;
 
-    /**
-     * Returns a category-like type of the image
-     *
-     * @return a category-like type of the image
-     * example: sumfuk
-     * @see #getBaseType()
-     */
-    String getType();
 
-    /**
-     * Returns a category-like type of the image
-     *
-     * @return a category-like type of the image
-     * example: sumfuk
-     */
-    String getBaseType();
+    public String getId() {
+        return id;
+    }
 
-    /**
-     * Returns the mime type of the image
-     *
-     * @return the mime type of the image
-     * example: image/jpeg
-     */
-    String getMimeType();
+    public String getType() {
+        return type;
+    }
 
-    /**
-     * Returns the id of the Api Account that uploaded that image
-     *
-     * @return the id of the Api Account that uploaded that image
-     * example: BJJUjqjL-
-     */
-    String getAccount();
+    public String getBaseType() {
+        return baseType;
+    }
 
-    /**
-     * Returns if this image is private and only available to it’s uploader
-     *
-     * @return if this image is private and only available to it’s uploader
-     */
-    boolean isHidden();
+    public String getMimeType() {
+        return mimeType;
+    }
 
-    /**
-     * Returns if this image contains inappropriate content
-     *
-     * @return if this image contains inappropriate content
-     */
-    boolean isNsfw();
+    public String getAccount() {
+        return account;
+    }
 
-    /**
-     * Returns the list of tags that this image has
-     *
-     * @return the list of tags that this image has
-     */
-    List<ImageTag> getTags();
+    public boolean isHidden() {
+        return hidden;
+    }
 
-    /**
-     * Returns the URL of the image
-     *
-     * @return the URL of the image
-     * example: https://cdn.weeb.sh/images/H1mOU3auZ.jpeg
-     */
-    String getUrl();
+    public boolean isNsfw() {
+        return nsfw;
+    }
 
-    String getSource();
+    public List<ImageTag> getTags() {
+        return tags;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getSource() {
+        return source;
+    }
 }

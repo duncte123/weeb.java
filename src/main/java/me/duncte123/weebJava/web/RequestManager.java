@@ -22,7 +22,6 @@ import me.duncte123.weebJava.exceptions.MissingPermissionException;
 import me.duncte123.weebJava.exceptions.NotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
 import okhttp3.*;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;

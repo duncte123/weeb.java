@@ -14,34 +14,14 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl.image;
-
-import me.duncte123.weebJava.models.image.ImageTag;
+package me.duncte123.weebJava.models;
 
 @SuppressWarnings("unused")
-public class ImageTagImpl implements ImageTag {
+public class WeebResponse {
 
-    private String name;
-    private boolean hidden;
-    private String user;
+    private int status;
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    @Override
-    public String getUser() {
-        return user;
-    }
-
-    @Override
-    public String toString() {
-        return "ImageTag("+getName()+")";
+    public int getStatus() {
+        return status;
     }
 }

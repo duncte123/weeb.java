@@ -14,28 +14,29 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models.reputation.objects;
 
 @SuppressWarnings("unused")
-public class ImageTag {
+public class ReputationSettings {
 
-    private String name;
-    private boolean hidden;
-    private String user;
+    private int reputationPerDay;
+    private int maximumReputation;
+    private int maximumReputationReceivedDay;
+    private int reputationCooldown;
 
-    public String getName() {
-        return name;
+    public int getReputationPerDay() {
+        return reputationPerDay;
     }
 
-    public boolean isHidden() {
-        return hidden;
+    public int getMaximumReputation() {
+        return maximumReputation;
     }
 
-    public String getUser() {
-        return user;
+    public int getMaximumReputationReceivedDay() {
+        return maximumReputationReceivedDay;
     }
 
-    public String toString() {
-        return "ImageTag("+name+")";
+    public int getReputationCooldown() {
+        return reputationCooldown;
     }
 }
