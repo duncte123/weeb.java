@@ -16,20 +16,15 @@
 
 package me.duncte123.weebJava.models.reputation.responses;
 
+import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
-import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 
 @SuppressWarnings("unused")
-public class ReputationSettingsResponse extends BaseReputationResponse {
+public class ReputationSettingsResponse extends WeebResponse {
 
     private ReputationSettings settings;
 
     public ReputationSettings getSettings() {
         return settings;
-    }
-
-    @Override
-    public ReputationUser getUser() {
-        return null;
     }
 }

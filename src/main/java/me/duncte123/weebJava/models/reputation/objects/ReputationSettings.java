@@ -22,21 +22,46 @@ public class ReputationSettings {
     private int reputationPerDay;
     private int maximumReputation;
     private int maximumReputationReceivedDay;
-    private int reputationCooldown;
+    private long reputationCooldown;
+    private String accountId;
 
     public int getReputationPerDay() {
         return reputationPerDay;
+    }
+
+    public ReputationSettings setReputationPerDay(int reputationPerDay) {
+        this.reputationPerDay = reputationPerDay;
+        return this;
     }
 
     public int getMaximumReputation() {
         return maximumReputation;
     }
 
+    public ReputationSettings setMaximumReputation(int maximumReputation) {
+        this.maximumReputation = maximumReputation;
+        return this;
+    }
+
     public int getMaximumReputationReceivedDay() {
         return maximumReputationReceivedDay;
     }
 
-    public int getReputationCooldown() {
+    public ReputationSettings setMaximumReputationReceivedDay(int maximumReputationReceivedDay) {
+        this.maximumReputationReceivedDay = maximumReputationReceivedDay;
+        return this;
+    }
+
+    public long getReputationCooldown() {
         return reputationCooldown;
+    }
+
+    public ReputationSettings setReputationCooldown(long reputationCooldown) {
+        this.reputationCooldown = reputationCooldown;
+        return this;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 }

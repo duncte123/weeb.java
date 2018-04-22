@@ -16,15 +16,19 @@
 
 package me.duncte123.weebJava.models.reputation.responses;
 
+import me.duncte123.weebJava.helpers.DateParser;
 import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 
+import java.time.LocalDateTime;
+
 @SuppressWarnings("unused")
-public class GiveUserReputationResponse extends BaseReputationResponse {
+public class GiveUserReputationResponse extends ReputationResponse {
 
     private int code;
     private String message;
     private ReputationUser sourceUser;
     private ReputationUser targetUser;
+    private String date;
 
     public int getCode() {
         return code;
@@ -42,6 +46,12 @@ public class GiveUserReputationResponse extends BaseReputationResponse {
 
     public ReputationUser getTargetUser() {
         return targetUser;
+    }
+
+    public LocalDateTime getDate() {
+        if(date == null || date.isEmpty())
+            return LocalDateTime.now();
+        return DateParser.parseDate(date);
     }
 
     @Override

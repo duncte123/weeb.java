@@ -21,8 +21,7 @@ import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
-import me.duncte123.weebJava.models.reputation.responses.BaseReputationResponse;
-import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
+import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
@@ -98,20 +97,11 @@ public class WeebApiTest {
     }
 
     private static void testReputation(WeebApi api) {
-        String json = "{\n" +
-                "    \"settings\": {\n" +
-                "        \"reputationPerDay\": 2,\n" +
-                "        \"maximumReputation\": 0,\n" +
-                "        \"maximumReputationReceivedDay\": 0,\n" +
-                "        \"reputationCooldown\": 86400,\n" +
-                "        \"accountId\": \"S1WJTqQhf\"\n" +
-                "    },\n" +
-                "    \"status\": 200\n" +
-                "}";
+        ReputationManager manager = api.getReputationManager();
 
-        ReputationSettingsResponse response = Ason.deserialize(json, ReputationSettingsResponse.class, true);
+        manager.setBotId("215011992275124225");
 
-        System.out.println(response.getSettings().getReputationPerDay());
+        manager.getReputationForUser("191231307290771456").async( rep -> System.out.println(rep.getUser()) );
 
     }
 

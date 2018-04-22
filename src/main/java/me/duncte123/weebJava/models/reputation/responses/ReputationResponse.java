@@ -16,25 +16,16 @@
 
 package me.duncte123.weebJava.models.reputation.responses;
 
-import me.duncte123.weebJava.helpers.DateParser;
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 
-import java.time.LocalDateTime;
-
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class BaseReputationResponse extends WeebResponse {
+public class ReputationResponse extends WeebResponse {
 
-    private String date;
     protected ReputationUser user;
 
     public ReputationUser getUser() {
         return user;
     }
 
-    public LocalDateTime getDate() {
-        if(date == null || date.isEmpty())
-            return LocalDateTime.now();
-        return DateParser.parseDate(date);
-    }
 }

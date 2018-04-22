@@ -7,6 +7,8 @@ import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.models.reputation.ReputationManager;
+import me.duncte123.weebJava.models.reputation.impl.ReputationManagerImpl;
 import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
@@ -24,6 +26,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private final UrlType urlType;
 
     private final RequestManager manager;
+
+    private ReputationManager reputationManager/* = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager)*/;
 
     public WeebApiImpl(TokenType tokenType, String token, UrlType urlType, String appName) {
         super(new OkHttpClient(), null, true);
@@ -229,5 +233,12 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     private WeebImage extractImageFromJson(String json) {
         return Ason.deserialize(json, WeebImage.class);
+    }
+
+    @Override
+    public ReputationManager getReputationManager() {
+        if(reputationManager == null)
+            reputationManager = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+        return reputationManager;
     }
 }
