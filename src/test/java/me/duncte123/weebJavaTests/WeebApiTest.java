@@ -16,19 +16,17 @@
 
 package me.duncte123.weebJavaTests;
 
-import com.afollestad.ason.Ason;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
-import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
+import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
-import me.duncte123.weebJava.types.UrlType;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +41,6 @@ public class WeebApiTest {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment")
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
-                .setUrlType(UrlType.STAGING)
                 .build();
 
         //testNormalImageThings(api);
@@ -101,7 +98,13 @@ public class WeebApiTest {
 
         manager.setBotId("215011992275124225");
 
-        manager.getReputationForUser("191231307290771456").async( rep -> System.out.println(rep.getUser()) );
+        ReputationSettings settings = manager.getSettings().execute().getSettings();
+
+        settings.setReputationCooldown(50L);
+
+        manager.setSettings(settings).async(settings2 -> {
+            System.out.println(settings2.getSettings().getAccountId());
+        });
 
     }
 

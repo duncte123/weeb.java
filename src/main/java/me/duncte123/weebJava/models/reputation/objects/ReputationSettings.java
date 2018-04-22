@@ -57,6 +57,10 @@ public class ReputationSettings {
     }
 
     public ReputationSettings setReputationCooldown(long reputationCooldown) {
+
+        if(reputationCooldown < 300)
+            throw new IllegalArgumentException("reputationCooldown should be >= 300");
+
         this.reputationCooldown = reputationCooldown;
         return this;
     }

@@ -20,8 +20,13 @@ package me.duncte123.weebJava.models;
 public class WeebResponse {
 
     private int status;
+    private String message;
 
     public int getStatus() {
         return status;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

@@ -33,7 +33,10 @@ public interface ReputationManager {
 
     PendingRequest<GiveUserReputationResponse> giveUserReputation(String sourceUserId, String targetUserId);
 
-    PendingRequest<ReputationResponse> resetUserReputation(String userId);
+    default PendingRequest<ReputationResponse> resetUserReputation(String userId) {
+        return resetUserReputation(userId, false);
+    }
+    PendingRequest<ReputationResponse> resetUserReputation(String userId, boolean resetCooldown);
 
     PendingRequest<ReputationResponse> increaseUserReputation(String userId, int amount);
 

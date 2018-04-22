@@ -19,6 +19,7 @@ package me.duncte123.weebJava.models.reputation.impl;
 import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
@@ -26,6 +27,7 @@ import me.duncte123.weebJava.models.reputation.responses.ReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
+import org.json.JSONObject;
 
 public class ReputationManagerImpl extends Reliqua implements ReputationManager {
 
@@ -77,31 +79,102 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
         String url = apiBase + "/reputation/" + botId + "/" + targetUserId;
 
-        return null;
+        return createRequest(
+                manager.preparePOST(
+                        url,
+                        new JSONObject().put("source_user", sourceUserId),
+                        token
+                )
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), GiveUserReputationResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
-    public PendingRequest<ReputationResponse> resetUserReputation(String userId) {
-        return null;
+    public PendingRequest<ReputationResponse> resetUserReputation(String userId, boolean resetCooldown) {
+        if(userId == null || userId.isEmpty())
+            throw new IllegalArgumentException("userId cannot be null");
+        QueryBuilder builder = new QueryBuilder()
+                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/reset");
+
+        builder.append("cooldown", String.valueOf(resetCooldown));
+
+        return createRequest(
+                manager.prepareGet(builder.build(), token)
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
     public PendingRequest<ReputationResponse> increaseUserReputation(String userId, int amount) {
-        return null;
+        if(userId == null || userId.isEmpty())
+            throw new IllegalArgumentException("userId cannot be null");
+        QueryBuilder builder = new QueryBuilder()
+                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/increase");
+
+        return createRequest(
+                manager.preparePOST(
+                        builder.build(),
+                        new JSONObject().put("increase", amount),
+                        token
+                )
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
     public PendingRequest<ReputationResponse> decreaseUserReputation(String userId, int amount) {
-        return null;
+        if(userId == null || userId.isEmpty())
+            throw new IllegalArgumentException("userId cannot be null");
+        QueryBuilder builder = new QueryBuilder()
+                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/decrease");
+
+        return createRequest(
+                manager.preparePOST(
+                        builder.build(),
+                        new JSONObject().put("decrease", amount),
+                        token
+                )
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
     public PendingRequest<ReputationSettingsResponse> getSettings() {
-        return null;
+        String url = apiBase + "/reputation/settings";
+
+        return createRequest(
+                manager.prepareGet(url, token)
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ReputationSettingsResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 
     @Override
     public PendingRequest<ReputationSettingsResponse> setSettings(ReputationSettings settings) {
-        return null;
+
+        JSONObject data = Ason.serialize(settings).toStockJson();
+        data.remove("accountId");
+
+        String url = apiBase + "/reputation/settings";
+
+        return createRequest(
+                manager.preparePOST(
+                        url,
+                        data,
+                        token
+                )
+        ).build(
+                (response) -> Ason.deserialize(response.body().string(), ReputationSettingsResponse.class, true),
+                RequestManager.WebUtilsErrorUtils::handleError
+        );
     }
 }
