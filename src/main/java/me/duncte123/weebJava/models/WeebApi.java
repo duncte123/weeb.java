@@ -5,6 +5,7 @@ import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
+import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.types.*;
 
 import java.awt.*;
@@ -149,4 +150,6 @@ public interface WeebApi {
     PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo);
 
     ReputationManager getReputationManager();
+
+    SettingsManager getSettingsManager();
 }

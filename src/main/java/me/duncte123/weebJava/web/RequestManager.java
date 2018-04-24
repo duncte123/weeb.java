@@ -48,6 +48,10 @@ public class RequestManager {
                 .addHeader("User-Agent", USER_AGENT);
     }
 
+    public Request.Builder prepareDelete(String url, String token) {
+        return prepareGet(url, token).delete();
+    }
+
     public Request.Builder preparePOST(String url, JSONObject body, String token) {
         return new Request.Builder()
                 .url(url)

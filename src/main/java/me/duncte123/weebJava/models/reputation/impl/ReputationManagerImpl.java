@@ -52,6 +52,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
     @Override
     public String getBotId() {
+        if(botId == null || botId.isEmpty())
+            throw new NullPointerException("botId is not set, use ReputationManager#seteBotId to set it.");
         return botId;
     }
 
@@ -59,7 +61,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     public PendingRequest<ReputationResponse> getReputationForUser(String userId) {
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
-        String url = apiBase + "/reputation/" + botId + "/" + userId;
+        String url = apiBase + "/reputation/" + getBotId() + "/" + userId;
 
         return createRequest(
                 manager.prepareGet(url, token)
@@ -77,7 +79,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         if(targetUserId == null || targetUserId.isEmpty())
             throw new IllegalArgumentException("targetUserId cannot be null");
 
-        String url = apiBase + "/reputation/" + botId + "/" + targetUserId;
+        String url = apiBase + "/reputation/" + getBotId() + "/" + targetUserId;
 
         return createRequest(
                 manager.preparePOST(
@@ -96,7 +98,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
-                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/reset");
+                .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/reset");
 
         builder.append("cooldown", String.valueOf(resetCooldown));
 
@@ -113,7 +115,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
-                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/increase");
+                .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/increase");
 
         return createRequest(
                 manager.preparePOST(
@@ -132,7 +134,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
-                .append(apiBase).append("/reputation/").append(botId).append("/").append(userId).append("/decrease");
+                .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/decrease");
 
         return createRequest(
                 manager.preparePOST(

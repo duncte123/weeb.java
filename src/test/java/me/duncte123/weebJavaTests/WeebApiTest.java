@@ -16,12 +16,15 @@
 
 package me.duncte123.weebJavaTests;
 
+import com.afollestad.ason.Ason;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
+import me.duncte123.weebJava.models.settings.objects.SettingsObject;
+import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
@@ -45,7 +48,8 @@ public class WeebApiTest {
 
         //testNormalImageThings(api);
         //testImageGen(api);
-        testReputation(api);
+        //testReputation(api);
+        testSettings(api);
     }
 
     private static void testNormalImageThings(WeebApi api) {
@@ -106,6 +110,23 @@ public class WeebApiTest {
             System.out.println(settings2.getSettings().getAccountId());
         });
 
+    }
+
+    private static void testSettings(WeebApi api) {
+        String json = "{\n" +
+                "   \"id\":\"339114875769061409\",\n" +
+                "   \"type\":\"guilds\",\n" +
+                "   \"accountId\":\"HyxjFGfPb\",\n" +
+                "   \"data\":{\n" +
+                "      \"name\":\"general\"\n" +
+                "   },\n" +
+                "   \"subId\":\"300407204987666432\",\n" +
+                "   \"subType\":\"channels\"\n" +
+                "}";
+
+        SubSettingsObject settings = Ason.deserialize(json, SubSettingsObject.class, true);
+
+        System.out.println(settings.getData());
     }
 
     private static void writeToFile(InputStream in, String name) {

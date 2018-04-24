@@ -9,6 +9,8 @@ import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.impl.ReputationManagerImpl;
+import me.duncte123.weebJava.models.settings.SettingsManager;
+import me.duncte123.weebJava.models.settings.impl.SettingsManagerImpl;
 import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
@@ -28,6 +30,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private final RequestManager manager;
 
     private ReputationManager reputationManager/* = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager)*/;
+    private SettingsManager settingsManager;
 
     public WeebApiImpl(TokenType tokenType, String token, UrlType urlType, String appName) {
         super(new OkHttpClient(), null, true);
@@ -240,5 +243,12 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         if(reputationManager == null)
             reputationManager = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
         return reputationManager;
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        if(settingsManager == null)
+            settingsManager = new SettingsManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+        return settingsManager;
     }
 }
