@@ -23,13 +23,12 @@ import com.github.natanbc.reliqua.util.PendingRequestBuilder;
 import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
+import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
-import me.duncte123.weebJava.web.RequestManager;
 import me.duncte123.weebJava.web.ErrorUtils;
+import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
 
@@ -50,15 +49,6 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     @Override
     public PendingRequest<SettingsResponse> getSetting(@NotNull String type, @NotNull String id) {
         return getSubSetting(null, null, type, id);
-        /*type = Objects.requireNonNull(type, "type cannot be null");
-        id = Objects.requireNonNull(id, "id cannot be null");
-
-        return createRequest(manager.prepareDelete(generateUrl(type, id), token))
-                .setRateLimiter(getRateLimiter(generateUrl(type, id)))
-                .build(
-                (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
-                ErrorUtils::handleError
-        );*/
     }
 
     @Override
@@ -72,8 +62,15 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     }
 
     @Override
-    public PendingRequest<SubSettingsResponse> listSubSettings(String type, @NotNull String id, @NotNull String subtype) {
-        return null;
+    public PendingRequest<SubSettingsListResponse> listSubSettings(@NotNull String type, @NotNull String id, @NotNull String subtype) {
+        final String url = generateUrl(type, id) + "/" + subtype;
+
+        return createRequest(manager.prepareGet(url, token))
+                .setRateLimiter(getRateLimiter(url))
+                .build(
+                        (response) -> WeebUtils.getClassFromJson(response, SubSettingsListResponse.class),
+                        ErrorUtils::handleError
+                );
     }
 
     @Override
@@ -121,7 +118,23 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     @Override
     public PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId) {
-        return null;
+
+        final String url = generateUrl(type, id, subtype, subId);
+
+        final PendingRequestBuilder builder = createRequest(manager.prepareDelete(url, token))
+                .setRateLimiter(getRateLimiter(url));
+
+        if(isNullOrEmpty(type)) {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        } else {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        }
     }
 
     private String generateUrl(String type, String id, @NotNull String subType, @NotNull String subid) {
@@ -130,5 +143,9 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
             url += type + "/" + id + "/";
         }
         return url + subType + "/" + subid;
+    }
+
+    private String generateUrl(String type, String id) {
+        return generateUrl(null, null, type, id);
     }
 }

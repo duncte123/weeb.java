@@ -19,6 +19,7 @@ package me.duncte123.weebJava.models.settings;
 import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
+import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public interface SettingsManager {
     PendingRequest<SettingsResponse> deleteSetting(@NotNull String type, @NotNull String id);
 
 
-    PendingRequest<SubSettingsResponse> listSubSettings(String type, @NotNull String id, @NotNull String subtype);
+    PendingRequest<SubSettingsListResponse> listSubSettings(@NotNull String type, @NotNull String id, @NotNull String subtype);
 
     PendingRequest<SettingsResponse> getSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId);
 
