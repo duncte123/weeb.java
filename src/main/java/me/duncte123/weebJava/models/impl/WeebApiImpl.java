@@ -4,6 +4,7 @@ import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.helpers.QueryBuilder;
+import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
@@ -13,6 +14,7 @@ import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.impl.SettingsManagerImpl;
 import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.RequestManager;
+import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -73,10 +75,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             preview.appendTo(builder);
 
         return createRequest(
-                manager.prepareGet(builder.build(), getCompiledToken())
-        ).build(
-                (response) -> Ason.deserialize(response.body().string(), ImageTypesResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                manager.prepareGet(builder.build(), getCompiledToken()))
+                .setRateLimiter(getRateLimiter("/images/types"))
+                .build(
+                (response) -> WeebUtils.getClassFromJson(response, ImageTypesResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -93,10 +96,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             nsfw.appendTo(builder);
 
         return createRequest(
-                manager.prepareGet(builder.build(), getCompiledToken())
-        ).build(
-                (response) -> Ason.deserializeList(new Ason(response.body().string()).getJsonArray("tags"), String.class),
-                RequestManager.WebUtilsErrorUtils::handleError
+                manager.prepareGet(builder.build(), getCompiledToken()))
+                .setRateLimiter(getRateLimiter("/images/tags"))
+                .build(
+                (response) -> WeebUtils.getClassFromJsonList(response, String.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -122,10 +126,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             fileType.appendTo(builder);
 
         return createRequest(
-                manager.prepareGet(builder.build(), getCompiledToken())
-        ).build(
+                manager.prepareGet(builder.build(), getCompiledToken()))
+                .setRateLimiter(getRateLimiter("/images/random"))
+                .build(
                 (response) -> extractImageFromJson(response.body().string()),
-                RequestManager.WebUtilsErrorUtils::handleError
+                ErrorUtils::handleError
         );
     }
 
@@ -135,10 +140,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
                         getCompiledToken()
-                )
-        ).build(
+                ))
+                .setRateLimiter(getRateLimiter("/info"))
+                .build(
                 (response) -> extractImageFromJson(response.body().string()),
-                RequestManager.WebUtilsErrorUtils::handleError
+                ErrorUtils::handleError
         );
     }
 
@@ -158,8 +164,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             builder.append("hair", colorToHex(hair));
 
         return createRequest(
-                manager.prepareGet(builder.build(), getCompiledToken())
-        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
+                manager.prepareGet(builder.build(), getCompiledToken()))
+                .setRateLimiter(getRateLimiter("/auto-image/generate"))
+                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
     @Override
@@ -175,8 +182,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             builder.append("avatar", avatar);
 
         return createRequest(
-                manager.prepareGet(builder.build(), getCompiledToken())
-        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
+                manager.prepareGet(builder.build(), getCompiledToken()))
+                .setRateLimiter(getRateLimiter("/auto-image/discord-status"))
+                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
     @Override
@@ -199,8 +207,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/license").build(),
                         data,
                         getCompiledToken()
-                )
-        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
+                ))
+                .setRateLimiter(getRateLimiter("/auto-image/license"))
+                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
     @Override
@@ -210,8 +219,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
                         new JSONObject().put("avatar", avatar),
                         getCompiledToken()
-                )
-        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
+                ))
+                .setRateLimiter(getRateLimiter("/auto-image/waifu-insult"))
+                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
     @Override
@@ -226,8 +236,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/love-ship").build(),
                         data,
                         getCompiledToken()
-                )
-        ).build(RequestManager.WebUtilsErrorUtils::getInputStream, RequestManager.WebUtilsErrorUtils::handleError);
+                ))
+                .setRateLimiter(getRateLimiter("/auto-image/love-ship"))
+                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
     private String colorToHex(Color color) {
@@ -251,4 +262,5 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
             settingsManager = new SettingsManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
         return settingsManager;
     }
+
 }

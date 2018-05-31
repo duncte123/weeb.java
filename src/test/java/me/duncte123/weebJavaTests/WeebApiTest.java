@@ -23,8 +23,6 @@ import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
-import me.duncte123.weebJava.models.settings.objects.SettingsObject;
-import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
@@ -113,20 +111,15 @@ public class WeebApiTest {
     }
 
     private static void testSettings(WeebApi api) {
-        String json = "{\n" +
-                "   \"id\":\"339114875769061409\",\n" +
-                "   \"type\":\"guilds\",\n" +
-                "   \"accountId\":\"HyxjFGfPb\",\n" +
-                "   \"data\":{\n" +
-                "      \"name\":\"general\"\n" +
-                "   },\n" +
-                "   \"subId\":\"300407204987666432\",\n" +
-                "   \"subType\":\"channels\"\n" +
-                "}";
-
-        SubSettingsObject settings = Ason.deserialize(json, SubSettingsObject.class, true);
-
-        System.out.println(settings.getData());
+        /*api.getSettingsManager().updateSetting("guilds", "300407204987666432",
+                new Ason().put("fruit", "apple")).async(response -> {
+            System.out.println(response.getSetting().getData());
+            //should throw error
+            System.out.println(response.getSubsetting().getData());
+        });*/
+        api.getSettingsManager().getSetting("guilds", "300407204987666432").async(response -> {
+            System.out.println(response.getSetting().getData());
+        });
     }
 
     private static void writeToFile(InputStream in, String name) {

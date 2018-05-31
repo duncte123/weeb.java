@@ -16,17 +16,23 @@
 
 package me.duncte123.weebJava.models.settings.responses;
 
-import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class SubSettingsResponse extends WeebResponse {
+public class SubSettingsResponse extends SettingsResponse {
 
-    private List<SubSettingsObject> subsettings;
+    private SubSettingsObject subsetting;
 
-    public List<SubSettingsObject> getSubsettings() {
-        return subsettings;
+    @Override
+    public SubSettingsObject getSubsetting() {
+        return subsetting;
+    }
+
+    @Override
+    public SettingsObject getSetting() {
+        throw new IllegalArgumentException("Cannot get settings on sub-settings");
     }
 }

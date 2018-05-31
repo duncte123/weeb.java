@@ -14,21 +14,24 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.settings.responses;
+package me.duncte123.weebJava.helpers;
 
-import me.duncte123.weebJava.models.WeebResponse;
-import me.duncte123.weebJava.models.settings.objects.SettingsObject;
-import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
+import com.afollestad.ason.Ason;
+import okhttp3.Response;
 
-@SuppressWarnings("unused")
-public class SettingsResponse extends WeebResponse {
-    private SettingsObject setting;
+import java.io.IOException;
+import java.util.List;
 
-    public SettingsObject getSetting() {
-        return setting;
+public class WeebUtils {
+    public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
+        return Ason.deserialize(res.body().string(), cls, true);
     }
 
-    public SubSettingsObject getSubsetting() {
-        throw new IllegalArgumentException("Can't get sub-settings on settings");
+    public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
+        return Ason.deserializeList(res.body().string(), cls, true);
+    }
+
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 }

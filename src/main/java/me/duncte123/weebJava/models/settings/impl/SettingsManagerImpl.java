@@ -19,13 +19,19 @@ package me.duncte123.weebJava.models.settings.impl;
 import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.github.natanbc.reliqua.util.PendingRequestBuilder;
+import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import me.duncte123.weebJava.web.RequestManager;
+import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
 
 public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
@@ -42,53 +48,87 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     }
 
     @Override
-    public PendingRequest<SettingsResponse> getSetting(String type, String id) {
-        type = Objects.requireNonNull(type, "type cannot be null");
+    public PendingRequest<SettingsResponse> getSetting(@NotNull String type, @NotNull String id) {
+        return getSubSetting(null, null, type, id);
+        /*type = Objects.requireNonNull(type, "type cannot be null");
         id = Objects.requireNonNull(id, "id cannot be null");
 
-        return createRequest(
-                manager.prepareDelete(generateUrl(type, id), token)
-        ).build(
-                (response) -> Ason.deserialize(response.body().string(), SettingsResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
-        );
+        return createRequest(manager.prepareDelete(generateUrl(type, id), token))
+                .setRateLimiter(getRateLimiter(generateUrl(type, id)))
+                .build(
+                (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                ErrorUtils::handleError
+        );*/
     }
 
     @Override
-    public PendingRequest<SettingsResponse> updateSetting(String type, String id) {
+    public PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull Ason data) {
+        return updateSubSetting(null, null, type, id, data);
+    }
+
+    @Override
+    public PendingRequest<SettingsResponse> deleteSetting(@NotNull String type, @NotNull String id) {
+        return deleteSubSetting(null, null, type, id);
+    }
+
+    @Override
+    public PendingRequest<SubSettingsResponse> listSubSettings(String type, @NotNull String id, @NotNull String subtype) {
         return null;
     }
 
     @Override
-    public PendingRequest<SettingsResponse> deleteSetting(String type, String id) {
-        return null;
+    public PendingRequest<SettingsResponse> getSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId) {
+        final String url = generateUrl(type, id, subtype, subId);
+
+        final PendingRequestBuilder builder = createRequest(manager.prepareGet(url, token))
+                .setRateLimiter(getRateLimiter(url));
+
+        if(isNullOrEmpty(type)) {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        } else {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        }
     }
 
     @Override
-    public PendingRequest<SubSettingsResponse> listSubSettings(String type, String id, String subtype) {
-        return null;
+    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull Ason data) {
+        final String url = generateUrl(type, id, subtype, subId);
+
+        if(data.toString().length() > 10 * 1024)
+            throw new IllegalArgumentException("Data must be below 10Kib");
+
+        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data.toStockJson(), token))
+                .setRateLimiter(getRateLimiter(url));
+
+        if(isNullOrEmpty(type)) {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        } else {
+            return builder.build(
+                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    ErrorUtils::handleError
+            );
+        }
     }
 
     @Override
-    public PendingRequest<SubSettingsResponse> getSubSetting(String type, String id, String subtype, String subId) {
+    public PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId) {
         return null;
     }
 
-    @Override
-    public PendingRequest<SubSettingsResponse> updateSubSetting(String type, String id, String subtype, String subId) {
-        return null;
-    }
-
-    @Override
-    public PendingRequest<SubSettingsResponse> deleteSubSetting(String type, String id, String subtype, String subId) {
-        return null;
-    }
-
-    private String generateUrl(String type, String id) {
-        return apiBase + "/settings/" + type + "/" + id;
-    }
-
-    private String genereateSubUrl(String type, String id, String subType, String subid) {
-        return generateUrl(type, id) + "/" + subType + "/" + subid;
+    private String generateUrl(String type, String id, @NotNull String subType, @NotNull String subid) {
+        String url = apiBase + "/settings/";
+        if(!isNullOrEmpty(type) && !isNullOrEmpty(id)) {
+            url += type + "/" + id + "/";
+        }
+        return url + subType + "/" + subid;
     }
 }

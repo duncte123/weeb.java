@@ -16,20 +16,11 @@
 
 package me.duncte123.weebJava.web;
 
-import com.github.natanbc.reliqua.request.RequestContext;
-import com.github.natanbc.reliqua.request.RequestException;
-import me.duncte123.weebJava.exceptions.MissingPermissionException;
-import me.duncte123.weebJava.exceptions.NotFoundException;
 import me.duncte123.weebJava.models.WeebApi;
-import okhttp3.*;
-import org.json.JSONException;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.InflaterInputStream;
 
 public class RequestManager {
 
@@ -60,56 +51,4 @@ public class RequestManager {
                 .addHeader("User-Agent", USER_AGENT);
     }
 
-    public static class WebUtilsErrorUtils {
-        static JSONObject toJSONObject(Response response) {
-            return new JSONObject(new JSONTokener(getInputStream(response)));
-        }
-
-        public static InputStream getInputStream(Response response) {
-            ResponseBody body = response.body();
-            if(body == null) throw new IllegalStateException("Body should never be null");
-            String encoding = response.header("Content-Encoding");
-            if (encoding != null) {
-                switch(encoding.toLowerCase()) {
-                    case "gzip":
-                        try {
-                            return new GZIPInputStream(body.byteStream());
-                        } catch(IOException e) {
-                            throw new IllegalStateException("Received Content-Encoding header of gzip, but data is not valid gzip", e);
-                        }
-                    case "deflate":
-                        return new InflaterInputStream(body.byteStream());
-                }
-            }
-            return body.byteStream();
-        }
-
-        public static <T> void handleError(RequestContext<T> context) {
-            Response response = context.getResponse();
-            ResponseBody body = response.body();
-            if(body == null) {
-                context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + " (No body)", context.getCallStack()));
-                return;
-            }
-            switch(response.code()) {
-                case 403:
-                    context.getErrorConsumer().accept(new MissingPermissionException(toJSONObject(response).getString("message"), context.getCallStack()));
-                    break;
-                case 404:
-                    context.getErrorConsumer().accept(new NotFoundException(toJSONObject(response).getString("message"), context.getCallStack()));
-                    context.getSuccessConsumer().accept(null);
-                    break;
-                default:
-                    JSONObject json = null;
-                    try {
-                        json = toJSONObject(response);
-                    } catch(JSONException ignored) {}
-                    if(json != null) {
-                        context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + ": " + json.getString("message"), context.getCallStack()));
-                    } else {
-                        context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code(), context.getCallStack()));
-                    }
-            }
-        }
-    }
 }

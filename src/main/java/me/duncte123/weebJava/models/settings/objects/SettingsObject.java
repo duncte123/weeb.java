@@ -43,4 +43,16 @@ public class SettingsObject {
     public Ason getData() {
         return data;
     }
+
+    /*public void setData(Ason data) {
+        this.data = data;
+    }
+
+    *//**
+     * This allows you to set the data
+     * @param data
+     *//*
+    public void setData(JSONObject data) {
+        this.data = new Ason(data);
+    }*/
 }

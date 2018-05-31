@@ -20,12 +20,14 @@ import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.helpers.QueryBuilder;
+import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
 import me.duncte123.weebJava.web.RequestManager;
+import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
 
@@ -66,8 +68,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -88,8 +90,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
                         token
                 )
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), GiveUserReputationResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, GiveUserReputationResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -105,8 +107,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(builder.build(), token)
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -124,8 +126,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
                         token
                 )
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -143,8 +145,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
                         token
                 )
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -155,8 +157,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationSettingsResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationSettingsResponse.class),
+                ErrorUtils::handleError
         );
     }
 
@@ -175,8 +177,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
                         token
                 )
         ).build(
-                (response) -> Ason.deserialize(response.body().string(), ReputationSettingsResponse.class, true),
-                RequestManager.WebUtilsErrorUtils::handleError
+                (response) -> WeebUtils.getClassFromJson(response, ReputationSettingsResponse.class),
+                ErrorUtils::handleError
         );
     }
 }

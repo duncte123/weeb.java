@@ -16,24 +16,35 @@
 
 package me.duncte123.weebJava.models.settings;
 
+import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 public interface SettingsManager {
 
-    PendingRequest<SettingsResponse> getSetting(String type, String id);
+    PendingRequest<SettingsResponse> getSetting(@NotNull String type, @NotNull String id);
 
-    PendingRequest<SettingsResponse> updateSetting(String type, String id);
+    PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull Ason data);
 
-    PendingRequest<SettingsResponse> deleteSetting(String type, String id);
+    default PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull JSONObject data) {
+        return updateSetting(type, id, new Ason(data));
+    }
+
+    PendingRequest<SettingsResponse> deleteSetting(@NotNull String type, @NotNull String id);
 
 
-    PendingRequest<SubSettingsResponse> listSubSettings(String type, String id, String subtype);
+    PendingRequest<SubSettingsResponse> listSubSettings(String type, @NotNull String id, @NotNull String subtype);
 
-    PendingRequest<SubSettingsResponse> getSubSetting(String type, String id, String subtype, String subId);
+    PendingRequest<SettingsResponse> getSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId);
 
-    PendingRequest<SubSettingsResponse> updateSubSetting(String type, String id, String subtype, String subId);
+    PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull Ason data);
 
-    PendingRequest<SubSettingsResponse> deleteSubSetting(String type, String id, String subtype, String subId);
+    default PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
+        return updateSubSetting(type, id, subtype, subId, new Ason(data));
+    }
+
+    PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId);
 }
