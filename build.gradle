@@ -69,7 +69,7 @@ jar {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.output
-    from sourceSets.main.allSource
+    //from sourceSets.main.allSource
     classifier = null
 }
 
