@@ -20,7 +20,6 @@ import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
-import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 

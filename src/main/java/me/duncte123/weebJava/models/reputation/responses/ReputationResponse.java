@@ -24,6 +24,9 @@ public class ReputationResponse extends WeebResponse {
 
     protected ReputationUser user;
 
+    /**
+     * @return The corresponding user object for the reputation
+     */
     public ReputationUser getUser() {
         return user;
     }

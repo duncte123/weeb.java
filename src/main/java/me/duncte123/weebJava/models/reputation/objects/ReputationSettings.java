@@ -25,37 +25,69 @@ public class ReputationSettings {
     private long reputationCooldown;
     private String accountId;
 
+    /**
+     * @return Number of reputations a user may give out per reputationCooldown
+     */
     public int getReputationPerDay() {
         return reputationPerDay;
     }
 
+    /**
+     *
+     * @param reputationPerDay Number of reputations a user may give out per reputationCooldown, default: {@code 2}
+     * @return The current settings object, useful for chaining
+     */
     public ReputationSettings setReputationPerDay(int reputationPerDay) {
         this.reputationPerDay = reputationPerDay;
         return this;
     }
 
+    /**
+     * @return The maximum reputation a user may receive
+     */
     public int getMaximumReputation() {
         return maximumReputation;
     }
 
+    /**
+     *
+     * @param maximumReputation The maximum reputation a user may receive, default: {@code 0} (disabled)
+     * @return The current settings object, useful for chaining
+     */
     public ReputationSettings setMaximumReputation(int maximumReputation) {
         this.maximumReputation = maximumReputation;
         return this;
     }
 
+    /**
+     * @return The maximum reputation a user may receive per day
+     */
     public int getMaximumReputationReceivedDay() {
         return maximumReputationReceivedDay;
     }
 
+    /**
+     *
+     * @param maximumReputationReceivedDay The maximum reputation a user may receive per day, default: {@code 0} (disabled)
+     * @return The current settings object, useful for chaining
+     */
     public ReputationSettings setMaximumReputationReceivedDay(int maximumReputationReceivedDay) {
         this.maximumReputationReceivedDay = maximumReputationReceivedDay;
         return this;
     }
 
+    /**
+     * @return Cooldown per reputation, this is set to time in seconds
+     */
     public long getReputationCooldown() {
         return reputationCooldown;
     }
 
+    /**
+     *
+     * @param reputationCooldown Cooldown per reputation, this is set to time in seconds, default: {@code 86400} (1 day)
+     * @return The current settings object, useful for chaining
+     */
     public ReputationSettings setReputationCooldown(long reputationCooldown) {
 
         if(reputationCooldown < 300)
@@ -65,6 +97,9 @@ public class ReputationSettings {
         return this;
     }
 
+    /**
+     * @return The account id for the token
+     */
     public String getAccountId() {
         return accountId;
     }
