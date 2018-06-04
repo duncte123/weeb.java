@@ -16,7 +16,6 @@
 
 package me.duncte123.weebJava.models.settings.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import com.github.natanbc.reliqua.util.PendingRequestBuilder;
@@ -29,6 +28,7 @@ import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
 
@@ -52,7 +52,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     }
 
     @Override
-    public PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull Ason data) {
+    public PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull JSONObject data) {
         return updateSubSetting(null, null, type, id, data);
     }
 
@@ -94,13 +94,13 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     }
 
     @Override
-    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull Ason data) {
+    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
         final String url = generateUrl(type, id, subtype, subId);
 
         if(data.toString().length() > 10 * 1024)
             throw new IllegalArgumentException("Data must be below 10Kib");
 
-        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data.toStockJson(), token))
+        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data, token))
                 .setRateLimiter(getRateLimiter(url));
 
         if(isNullOrEmpty(type)) {

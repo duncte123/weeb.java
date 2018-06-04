@@ -21,10 +21,14 @@ import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class SubSettingsListResponse extends WeebResponse {
 
     private List<SubSettingsObject> subsettings;
 
+    /**
+     * @return A list of {@link SubSettingsObject SubSettingsObjects}
+     */
     public List<SubSettingsObject> getSubsettings() {
         return subsettings;
     }

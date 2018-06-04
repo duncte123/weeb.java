@@ -24,10 +24,18 @@ import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 public class SettingsResponse extends WeebResponse {
     private SettingsObject setting;
 
+    /**
+     *
+     * @return The settings object holding your data
+     */
     public SettingsObject getSetting() {
         return setting;
     }
 
+    /**
+     *
+     * @return The sub-setting data if this setting is a sub setting
+     */
     public SubSettingsObject getSubsetting() {
         throw new IllegalArgumentException("Can't get sub-settings on settings");
     }

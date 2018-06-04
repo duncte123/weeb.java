@@ -28,19 +28,35 @@ public class SettingsObject {
     private Ason data;
 
 
+    /**
+     *
+     * @return The id for this setting
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @return The type for this setting
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     *
+     * @return The account id for the token
+     */
     public String getAccountId() {
         return accountId;
     }
 
-    public Ason getData() {
-        return data;
+    /**
+     *
+     * @return The data that you stored
+     */
+    public JSONObject getData() {
+        return data.toStockJson();
     }
 }

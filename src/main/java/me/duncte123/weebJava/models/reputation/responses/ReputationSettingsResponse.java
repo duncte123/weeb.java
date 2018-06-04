@@ -24,6 +24,9 @@ public class ReputationSettingsResponse extends WeebResponse {
 
     private ReputationSettings settings;
 
+    /**
+     * @return The {@link ReputationSettings settings} for your account
+     */
     public ReputationSettings getSettings() {
         return settings;
     }

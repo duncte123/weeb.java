@@ -27,8 +27,7 @@ public class RequestManager {
     private final String USER_AGENT;
 
     public RequestManager(String appName) {
-
-        USER_AGENT = appName.trim() + "/Weeb.java/" + WeebApi.VERSION;
+        USER_AGENT = appName.trim() + " (Weeb.java/" + WeebApi.VERSION + ")";
     }
 
     public Request.Builder prepareGet(String url, String token) {

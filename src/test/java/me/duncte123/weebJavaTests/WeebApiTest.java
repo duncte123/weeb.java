@@ -16,16 +16,19 @@
 
 package me.duncte123.weebJavaTests;
 
-import com.afollestad.ason.Ason;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
+import me.duncte123.weebJava.models.settings.SettingsManager;
+import me.duncte123.weebJava.models.settings.objects.SettingsObject;
+import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.File;
@@ -48,6 +51,8 @@ public class WeebApiTest {
         //testImageGen(api);
         //testReputation(api);
         testSettings(api);
+
+        System.exit(0);
     }
 
     private static void testNormalImageThings(WeebApi api) {
@@ -111,14 +116,17 @@ public class WeebApiTest {
     }
 
     private static void testSettings(WeebApi api) {
-        /*api.getSettingsManager().updateSetting("guilds", "300407204987666432",
-                new Ason().put("fruit", "apple")).async(response -> {
-            System.out.println(response.getSetting().getData());
-            //should throw error
-            System.out.println(response.getSubsetting().getData());
-        });*/
-        api.getSettingsManager().getSetting("guilds", "300407204987666432").async(response -> {
-            System.out.println(response.getSetting().getData());
+        SettingsManager manager = api.getSettingsManager();
+        SettingsResponse response = manager.updateSetting("guilds", "300407204987666432",
+                new JSONObject().put("fruit", "apple")).execute();
+        System.out.print("first response: ");
+        System.out.println(response.getSetting().getData());
+
+        SettingsObject settings = manager.getSetting("guilds", "300407204987666432").execute().getSetting();
+        System.out.println(settings.getData());
+        api.getSettingsManager().deleteSetting("guilds", "300407204987666432").async(res -> {
+            System.out.println("deleted");
+            System.out.println(res.getSetting().getData());
         });
     }
 

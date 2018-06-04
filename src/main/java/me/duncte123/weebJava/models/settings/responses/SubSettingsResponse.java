@@ -26,11 +26,17 @@ public class SubSettingsResponse extends SettingsResponse {
 
     private SubSettingsObject subsetting;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SubSettingsObject getSubsetting() {
         return subsetting;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SettingsObject getSetting() {
         throw new IllegalArgumentException("Cannot get settings on sub-settings");
