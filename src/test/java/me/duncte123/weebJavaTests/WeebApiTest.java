@@ -42,9 +42,10 @@ import java.util.List;
 public class WeebApiTest {
 
     public static void main(String[] args) {
-        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment")
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
+                .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
         //testNormalImageThings(api);
