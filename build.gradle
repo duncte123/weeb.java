@@ -64,7 +64,7 @@ compileJava {
 }
 
 jar {
-    classifier = "jar"
+    classifier = null
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
