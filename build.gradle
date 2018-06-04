@@ -63,15 +63,15 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
-jar {
+/*jar {
     classifier = "jar"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.output
-    //from sourceSets.main.allSource
+    from sourceSets.main.allSource
     classifier = null
-}
+}*/
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
