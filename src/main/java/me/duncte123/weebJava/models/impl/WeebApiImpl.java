@@ -31,7 +31,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     private final RequestManager manager;
 
-    private ReputationManager reputationManager/* = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager)*/;
+    private ReputationManager reputationManager;
     private SettingsManager settingsManager;
 
     public WeebApiImpl(TokenType tokenType, String token, UrlType urlType, String appName) {
@@ -42,6 +42,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         this.urlType = urlType;
 
         this.manager = new RequestManager(appName);
+
+        //Add shutdown hook to shut the jvm down
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> getClient().connectionPool().evictAll()));
     }
 
     @Override
