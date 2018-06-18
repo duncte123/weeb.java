@@ -48,6 +48,8 @@ javadoc {
     exclude('me/duncte123/weebJava/models/reputation/impl')
     exclude('me/duncte123/weebJava/models/settings/impl')
     exclude('me/duncte123/weebJava/web')
+    exclude('me/duncte123/weebJava/exceptions')
+    exclude('me/duncte123/weebJava/helpers')
 }
 
 buildConfig {
