@@ -43,6 +43,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
         this.manager = new RequestManager(appName);
 
+        System.out.println(urlType.getUrl());
+
         //Add shutdown hook to shut the jvm down
         Runtime.getRuntime().addShutdownHook(new Thread(() -> getClient().connectionPool().evictAll()));
     }

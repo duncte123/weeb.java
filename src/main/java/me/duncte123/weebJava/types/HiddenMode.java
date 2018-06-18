@@ -35,7 +35,7 @@ public enum HiddenMode implements QueryParam {
         }
     },
     /**
-     * Display all images, types, tags including the ones that you uploaded
+     * Display all the public images
      */
     HIDE {
         @Override
@@ -44,6 +44,9 @@ public enum HiddenMode implements QueryParam {
         }
     },
 
+    /**
+     * Display public images and hidden images you uploaded
+     */
     DEFAULT {
         @Override
         public void appendTo(QueryBuilder builder) { }

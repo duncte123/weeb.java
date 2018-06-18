@@ -63,7 +63,7 @@ public class WeebApiTest {
         System.out.println(tags);
 
         //This should get the tags if there are none yet
-        ImageTypesResponse types = api.getTypes(PreviewMode.TRUE).execute();
+        ImageTypesResponse types = api.getTypes(PreviewMode.PREVIEW).execute();
         //Print the tags
         System.out.println(types.getStatus());
         System.out.println(types.getTypes());

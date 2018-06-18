@@ -5,14 +5,14 @@ import me.duncte123.weebJava.helpers.QueryParam;
 
 public enum PreviewMode implements QueryParam {
 
-    TRUE {
+    PREVIEW {
         @Override
         public void appendTo(QueryBuilder builder) {
             builder.append("preview", "true");
         }
     },
 
-    FALSE {
+    NO_PREVIEW {
         @Override
         public void appendTo(QueryBuilder builder) {
             builder.append("preview", "false");
