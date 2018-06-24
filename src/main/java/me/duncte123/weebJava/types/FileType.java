@@ -19,33 +19,26 @@ package me.duncte123.weebJava.types;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.helpers.QueryParam;
 
-public enum GenerateType implements QueryParam {
+public enum FileType implements QueryParam {
 
-    /**
-     * This is the awooo type: <br>
-     * <img src="https://i.imgur.com/9sJ21z3.png" alt="awooo">
-     */
-    AWOOO("awooo"),
-    /**
-     * This is the eyes type: <br>
-     * <img src="https://i.imgur.com/q9UL3fN.png" alt="eyes">
-     */
-    EYES("eyes"),
-    /**
-     * This is the won type: <br>
-     * <img src="https://i.imgur.com/hdapIsB.png?1" alt="won">
-     */
-    WON("won");
+    JPG {
+        @Override
+        public void appendTo(QueryBuilder builder) {
+            builder.append("filetype", "jpg");
+        }
+    },
 
-    private final String type;
+    PNG {
+        @Override
+        public void appendTo(QueryBuilder builder) {
+            builder.append("filetype", "png");
+        }
+    },
 
-    GenerateType(String type) {
-        this.type = type;
-    }
-
-
-    @Override
-    public void appendTo(QueryBuilder builder) {
-        builder.append("type", type);
+    GIF {
+        @Override
+        public void appendTo(QueryBuilder builder) {
+            builder.append("filetype", "gif");
+        }
     }
 }

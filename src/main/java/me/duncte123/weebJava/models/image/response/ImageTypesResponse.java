@@ -14,64 +14,58 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl.image.response;
+package me.duncte123.weebJava.models.image.response;
 
-import me.duncte123.weebJava.models.image.response.TypesResponse;
+import me.duncte123.weebJava.models.WeebResponse;
 
 import java.util.List;
 
-public class TypesResponseImpl implements TypesResponse {
+@SuppressWarnings("unused")
+public class ImageTypesResponse extends WeebResponse  {
 
-    private final List<String> types;
-    private final List<PartialImage> preview;
 
-    public TypesResponseImpl(List<String> types, List<PartialImage> preview) {
-        this.types = types;
-        this.preview = preview;
-    }
+    private List<String> types;
+    private List<PartialImage> preview;
 
-    @Override
     public List<String> getTypes() {
         return types;
     }
 
-    @Override
     public List<PartialImage> getPreview() {
         return preview;
     }
 
-    public static class PartialImageImpl implements PartialImage {
 
-        private final String url;
-        private final String id;
-        private final String fileType;
-        private final String baseType;
+    public static class PartialImage {
 
-        public PartialImageImpl(String url, String id, String fileType, String baseType) {
-            this.url = url;
-            this.id = id;
-            this.fileType = fileType;
-            this.baseType = baseType;
-        }
+        private String url;
+        private String id;
+        private String fileType;
+        private String baseType;
+        private String type;
 
-        @Override
         public String getUrl() {
             return url;
         }
 
-        @Override
         public String getId() {
             return id;
         }
 
-        @Override
         public String getFileType() {
             return fileType;
         }
 
-        @Override
         public String getBaseType() {
             return baseType;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String toString() {
+            return "PartialImage("+url+")";
         }
     }
 }

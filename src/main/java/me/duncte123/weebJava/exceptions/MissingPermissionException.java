@@ -14,35 +14,12 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.types;
+package me.duncte123.weebJava.exceptions;
 
-public enum ApiUrl {
-    /**
-     * This is the normal api.weeb.sh url
-     */
-    PRODUCTION("https://api.weeb.sh"),
-    /**
-     * This is the staging.weeb.sh url
-     */
-    STAGING("https://staging.weeb.sh");
+import com.github.natanbc.reliqua.request.RequestException;
 
-    private final String url;
-
-    ApiUrl(String url) {
-        this.url = url;
-    }
-
-    /**
-     * Returns the url
-     *
-     * @return the url as a string
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    @Override
-    public String toString() {
-        return url;
+public class MissingPermissionException extends RequestException {
+    public MissingPermissionException(String message, StackTraceElement[] callSite) {
+        super(message, callSite);
     }
 }

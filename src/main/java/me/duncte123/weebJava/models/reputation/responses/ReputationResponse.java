@@ -14,28 +14,21 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models.reputation.responses;
 
-@SuppressWarnings("unused")
-public class ImageTag {
+import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 
-    private String name;
-    private boolean hidden;
-    private String user;
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class ReputationResponse extends WeebResponse {
 
-    public String getName() {
-        return name;
-    }
+    protected ReputationUser user;
 
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public String getUser() {
+    /**
+     * @return The corresponding user object for the reputation
+     */
+    public ReputationUser getUser() {
         return user;
     }
 
-    public String toString() {
-        return "ImageTag("+name+")";
-    }
 }

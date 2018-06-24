@@ -14,28 +14,22 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models.settings.responses;
+
+import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
-public class ImageTag {
+public class SubSettingsListResponse extends WeebResponse {
 
-    private String name;
-    private boolean hidden;
-    private String user;
+    private List<SubSettingsObject> subsettings;
 
-    public String getName() {
-        return name;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String toString() {
-        return "ImageTag("+name+")";
+    /**
+     * @return A list of {@link SubSettingsObject SubSettingsObjects}
+     */
+    public List<SubSettingsObject> getSubsettings() {
+        return subsettings;
     }
 }

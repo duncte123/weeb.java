@@ -14,34 +14,20 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.impl.image;
+package me.duncte123.weebJava.models.reputation.responses;
 
-import me.duncte123.weebJava.models.image.ImageTag;
+import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 
-public class ImageTagImpl implements ImageTag {
+@SuppressWarnings("unused")
+public class ReputationSettingsResponse extends WeebResponse {
 
-    private final String name;
-    private final boolean hidden;
-    private final String user;
+    private ReputationSettings settings;
 
-    public ImageTagImpl(String name, boolean hidden, String user) {
-        this.name = name;
-        this.hidden = hidden;
-        this.user = user;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    @Override
-    public String getUser() {
-        return user;
+    /**
+     * @return The {@link ReputationSettings settings} for your account
+     */
+    public ReputationSettings getSettings() {
+        return settings;
     }
 }

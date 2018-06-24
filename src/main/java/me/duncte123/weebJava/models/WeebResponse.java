@@ -14,28 +14,19 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models;
 
 @SuppressWarnings("unused")
-public class ImageTag {
+public class WeebResponse {
 
-    private String name;
-    private boolean hidden;
-    private String user;
+    private int status;
+    private String message;
 
-    public String getName() {
-        return name;
+    public int getStatus() {
+        return status;
     }
 
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String toString() {
-        return "ImageTag("+name+")";
+    public String getMessage() {
+        return message;
     }
 }

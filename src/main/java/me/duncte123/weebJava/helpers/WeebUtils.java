@@ -14,28 +14,24 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.helpers;
 
-@SuppressWarnings("unused")
-public class ImageTag {
+import com.afollestad.ason.Ason;
+import okhttp3.Response;
 
-    private String name;
-    private boolean hidden;
-    private String user;
+import java.io.IOException;
+import java.util.List;
 
-    public String getName() {
-        return name;
+public class WeebUtils {
+    public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
+        return Ason.deserialize(res.body().string(), cls, true);
     }
 
-    public boolean isHidden() {
-        return hidden;
+    public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
+        return Ason.deserializeList(res.body().string(), cls, true);
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public String toString() {
-        return "ImageTag("+name+")";
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 }

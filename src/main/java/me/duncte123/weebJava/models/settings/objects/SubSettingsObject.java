@@ -14,34 +14,19 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.types;
+package me.duncte123.weebJava.models.settings.objects;
 
 @SuppressWarnings("unused")
-public enum NSFWType {
-    /**
-     * Sets the NSFW flag to true, this means that there are NSFW images/tages in the results
-     */
-    TRUE("true"),
-    /**
-     * Sets the NSFW flag to false, this means that there are no NSFW images/tags in the results
-     */
-    FALSE("false"),
-    /**
-     * Sets the NSFW flag to only, this means that there are only NSFW images/tags in the results
-     */
-    ONLY("only");
+public class SubSettingsObject extends SettingsObject {
 
-    private final String type;
-    NSFWType(String t) {
-        this.type = t;
+    private String subId;
+    private String subType;
+
+    public String getSubId() {
+        return subId;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public String toString() {
-        return type;
+    public String getSubType() {
+        return subType;
     }
 }

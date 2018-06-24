@@ -112,3 +112,5 @@ gradle-app.setting
 src/test/java/me/duncte123/weebJavaTests/Secrets\.java
 
 \.idea/modules/
+
+*.iml

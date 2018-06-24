@@ -14,28 +14,14 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.exceptions;
 
-@SuppressWarnings("unused")
-public class ImageTag {
+import com.github.natanbc.reliqua.request.RequestException;
 
-    private String name;
-    private boolean hidden;
-    private String user;
 
-    public String getName() {
-        return name;
-    }
+public class NotFoundException extends RequestException {
 
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String toString() {
-        return "ImageTag("+name+")";
+    public NotFoundException(String message, StackTraceElement[] callSite) {
+        super(message, callSite);
     }
 }

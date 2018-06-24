@@ -18,16 +18,16 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
-import me.duncte123.weebJava.types.ApiUrl;
 import me.duncte123.weebJava.types.TokenType;
+import me.duncte123.weebJava.types.Endpoint;
 
 @SuppressWarnings("unused")
 public class WeebApiBuilder {
 
     private final TokenType tokenType;
     private String token;
-    private ApiUrl apiUrl = ApiUrl.PRODUCTION;
-    private String appName = "unknown-app";
+    private Endpoint endpoint = Endpoint.PRODUCTION;
+    private String appName = null;
 
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
@@ -35,9 +35,7 @@ public class WeebApiBuilder {
      * @param tokenType The type of token that you want to use
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
-     * @deprecated for removal use {@link WeebApiBuilder(TokenType, String)} instead
      */
-    @Deprecated
     public WeebApiBuilder(TokenType tokenType) {
         this.tokenType = tokenType;
     }
@@ -46,7 +44,7 @@ public class WeebApiBuilder {
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
      *
      * @param tokenType The type of token that you want to use
-     * @param appName the name of your application
+     * @param appInfo the name of your application
      *      This sets the app name in the user agent when making requests.
      *      This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
      *      Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
@@ -56,10 +54,12 @@ public class WeebApiBuilder {
      *
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
+     * @deprecated for removal use {@link WeebApiBuilder(TokenType)} and {@link #setBotInfo(String, String, String)} instead
      */
-    public WeebApiBuilder(TokenType tokenType, String appName) {
+    @Deprecated
+    public WeebApiBuilder(TokenType tokenType, String appInfo) {
         this.tokenType = tokenType;
-        this.appName = appName;
+        this.appName = appInfo;
     }
 
     /**
@@ -76,11 +76,11 @@ public class WeebApiBuilder {
     /**
      * This sets the api url that we user to make our requests
      *
-     * @param apiUrl The {@link ApiUrl} that we want to use
+     * @param endpoint The {@link Endpoint} that we want to use
      * @return The current builder, useful for chaining
      */
-    public WeebApiBuilder setApiUrl(ApiUrl apiUrl) {
-        this.apiUrl = apiUrl;
+    public WeebApiBuilder setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
         return this;
     }
 
@@ -91,11 +91,13 @@ public class WeebApiBuilder {
      * What you set for version and environment is fully up to you, as long as the name is set correctly
      * The reason that this is done is to help weeb.sh identify the users a lot better
      *
-     * @param appName the name of your application
+     * @param botName the name of your application
+     * @param botVersion The version of your application
+     * @param environment Some additional data
      * @return The current builder, useful for chaining
      */
-    public WeebApiBuilder setAppName(String appName) {
-        this.appName = appName;
+    public WeebApiBuilder setBotInfo(String botName, String botVersion, String environment) {
+        this.appName = String.format("%s/%s/%s", botName, botVersion, environment);
         return this;
     }
 
@@ -105,6 +107,8 @@ public class WeebApiBuilder {
      * @return the {@link WeebApi WeebApi} interface ready to be used
      */
     public WeebApi build() {
-        return new WeebApiImpl(tokenType, token, apiUrl, appName);
+        if(appName == null || appName.isEmpty())
+            throw new NullPointerException("Bot info has not been set, please set it via WeebApiBuilder#setBotInfo");
+        return new WeebApiImpl(tokenType, token, endpoint, appName);
     }
 }

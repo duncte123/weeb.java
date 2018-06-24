@@ -23,7 +23,7 @@ plugins {
 
 group = "me.duncte123"
 archivesBaseName = "weebJava"
-version = "1.2.2"
+version = "2.0.0"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -45,9 +45,11 @@ javadoc {
     options.encoding = 'UTF-8'
     options.addStringOption('-html5')
     exclude('me/duncte123/weebJava/models/impl')
-    exclude('me/duncte123/weebJava/models/impl/image')
-    exclude('me/duncte123/weebJava/models/impl/image/response')
+    exclude('me/duncte123/weebJava/models/reputation/impl')
+    exclude('me/duncte123/weebJava/models/settings/impl')
     exclude('me/duncte123/weebJava/web')
+    exclude('me/duncte123/weebJava/exceptions')
+    exclude('me/duncte123/weebJava/helpers')
 }
 
 buildConfig {
@@ -64,13 +66,13 @@ compileJava {
 }
 
 jar {
-    classifier = "jar"
+    classifier = null
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main.output
-    from sourceSets.main.allSource
-    classifier = null
+    /*from sourceSets.main.output
+    from sourceSets.main.allSource*/
+    classifier = "sources"
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -95,8 +97,7 @@ publishing {
 publishing {
     repositories {
         maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url "$buildDir/repo"
+            url "https://dl.bintray.com/duncte123/weeb.java/maven-metadata.xml"
         }
     }
 }
@@ -107,11 +108,9 @@ build {
     dependsOn jar
     dependsOn javadocJar
     dependsOn sourcesJar
-    dependsOn publish
 
     jar.mustRunAfter clean
     javadocJar.mustRunAfter jar
     sourcesJar.mustRunAfter javadocJar
-    publish.mustRunAfter sourcesJar
 }
 

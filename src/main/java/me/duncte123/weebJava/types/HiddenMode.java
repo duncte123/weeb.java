@@ -16,28 +16,39 @@
 
 package me.duncte123.weebJava.types;
 
+import me.duncte123.weebJava.helpers.QueryBuilder;
+import me.duncte123.weebJava.helpers.QueryParam;
+
 /**
  * This sets the hidden mode on the images
  */
 @SuppressWarnings("unused")
-public enum HiddenMode {
+public enum HiddenMode implements QueryParam {
 
     /**
      * Only display the images, types, tags that you uploaded
      */
-    ONLY("true"),
+    ONLY {
+        @Override
+        public void appendTo(QueryBuilder builder) {
+            builder.append("hidden", "true");
+        }
+    },
     /**
-     * Display all images, types, tags including the ones that you uploaded
+     * Display all the public images
      */
-    DEFAULT("false");
+    HIDE {
+        @Override
+        public void appendTo(QueryBuilder builder) {
+            builder.append("hidden", "false");
+        }
+    },
 
-    private final String mode;
-    HiddenMode(String mode) {
-        this.mode = mode;
-    }
-
-    @Override
-    public String toString() {
-        return mode;
+    /**
+     * Display public images and hidden images you uploaded
+     */
+    DEFAULT {
+        @Override
+        public void appendTo(QueryBuilder builder) { }
     }
 }

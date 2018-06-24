@@ -14,63 +14,49 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.models.image;
+package me.duncte123.weebJava.models.settings.objects;
 
-import java.util.List;
+import com.afollestad.ason.Ason;
+import org.json.JSONObject;
 
 @SuppressWarnings("unused")
-public class WeebImage {
+public class SettingsObject {
 
     private String id;
     private String type;
-    private String baseType;
-    private boolean nsfw;
-    private String fileType;
-    private String mimeType;
-    private List<ImageTag> tags;
-    private String url;
-    private boolean hidden;
-    private String source;
-    private String account;
+    private String accountId;
+    private Ason data;
 
 
+    /**
+     *
+     * @return The id for this setting
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @return The type for this setting
+     */
     public String getType() {
         return type;
     }
 
-    public String getBaseType() {
-        return baseType;
+    /**
+     *
+     * @return The account id for the token
+     */
+    public String getAccountId() {
+        return accountId;
     }
 
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public boolean isNsfw() {
-        return nsfw;
-    }
-
-    public List<ImageTag> getTags() {
-        return tags;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getSource() {
-        return source;
+    /**
+     *
+     * @return The data that you stored
+     */
+    public JSONObject getData() {
+        return data.toStockJson();
     }
 }

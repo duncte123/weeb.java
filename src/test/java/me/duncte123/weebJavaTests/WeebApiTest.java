@@ -18,76 +18,125 @@ package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
-import me.duncte123.weebJava.models.image.ImageGenerator;
 import me.duncte123.weebJava.models.image.WeebImage;
-import me.duncte123.weebJava.models.image.response.TypesResponse;
-import me.duncte123.weebJava.types.ApiUrl;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.models.reputation.ReputationManager;
+import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
+import me.duncte123.weebJava.models.settings.SettingsManager;
+import me.duncte123.weebJava.models.settings.objects.SettingsObject;
+import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.types.GenerateType;
-import me.duncte123.weebJava.types.NSFWType;
+import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
+import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws Exception {
-        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment")
+    public static void main(String[] args) throws IOException {
+
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
+                .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
-        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
+        //testNormalImageThings(api);
+        //testImageGen(api);
+        //testReputation(api);
+        testSettings(api);
+    }
+
+    private static void testNormalImageThings(WeebApi api) {
         //This should get the tags if there are none yet
-        List<String> tags = api.getTags();
+        List<String> tags = api.getTags().execute();
         //Print the tags
         System.out.println(tags);
 
-        //Get an image by a tag
-        WeebImage imageByTag = api.getRandomImageByTags("b1nzy");
-        //And display the url
-        System.out.println(imageByTag.getUrl());
-
         //This should get the tags if there are none yet
-        TypesResponse types = api.getTypes(true);
+        ImageTypesResponse types = api.getTypes(PreviewMode.PREVIEW).execute();
         //Print the tags
+        System.out.println(types.getStatus());
         System.out.println(types.getTypes());
-        System.out.println(types.getPreview().get(0).getUrl());
+        System.out.println(types.getPreview());
 
-        WeebApi apiImg = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-test-environment-staging")
-                //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
-                .setToken(Secrets.WOLKE_TOKEN)
-                .setApiUrl(ApiUrl.PRODUCTION)
-                .build();
+        //Get an image by a type
+        WeebImage imageByType = api.getRandomImage("awoo").execute();
+        //And display the url
+        System.out.println(imageByType.getUrl());
+
+        //Get an image by a tag
+        List<String> typesA = new ArrayList<>();
+        typesA.add("b1nzy");
+        WeebImage imageByTags = api.getRandomImage(typesA).execute();
+        //And display the url
+        System.out.println(imageByTags.getUrl());
+        System.out.println(imageByTags.getTags());
+    }
+
+    private static void testImageGen(WeebApi apiImg) {
+
+        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
 
         //Generate Awooo
-        apiImg.getImageGenerator().generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN, (img) -> writeToFile(img, "simple") );
-        /*//Discord status
-        apiImg.getImageGenerator().generateDiscordStatus(myavy, (img) -> writeToFile(img, "status") );
+        apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));
+        //Discord status
+        apiImg.generateDiscordStatus(myavy).async( (img) -> writeToFile(img, "status") );
         //Insult
-        apiImg.getImageGenerator().generateWaifuinsult(myavy, (img) -> writeToFile(img, "wifu"));
+        apiImg.generateWaifuinsult(myavy).async( (img) -> writeToFile(img, "wifu") );
         //License
-        apiImg.getImageGenerator().generateLicense("Phan", myavy,
+        apiImg.generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
-                new String[] {"", "", "Discord: duncte123#1245"},
-                (img) -> writeToFile(img, "license"));
+                new String[] {"", "", "Discord: duncte123#1245"}).async( (img) -> writeToFile(img, "license") );
         //Love ship
-        apiImg.getImageGenerator().generateLoveship(myavy, ImageGenerator.DEFAULT_AVATAR, (img) -> writeToFile(img, "loveship"));*/
+        apiImg.generateLoveship(myavy, myavy).async( (img) -> writeToFile(img, "loveship") );
+    }
+
+    private static void testReputation(WeebApi api) {
+        ReputationManager manager = api.getReputationManager();
+
+        manager.setBotId("215011992275124225");
+
+        ReputationSettings settings = manager.getSettings().execute().getSettings();
+
+        settings.setReputationCooldown(50L);
+
+        manager.setSettings(settings).async(settings2 -> {
+            System.out.println(settings2.getSettings().getAccountId());
+        });
+
+    }
+
+    private static void testSettings(WeebApi api) {
+        SettingsManager manager = api.getSettingsManager();
+        SettingsResponse response = manager.updateSetting("guilds", "300407204987666432",
+                new JSONObject().put("fruit", "apple")).execute();
+        System.out.print("first response: ");
+        System.out.println(response.getSetting().getData());
+
+        SettingsObject settings = manager.getSetting("guilds", "300407204987666432").execute().getSetting();
+        System.out.println(settings.getData());
+        api.getSettingsManager().deleteSetting("guilds", "300407204987666432").async(res -> {
+            System.out.println("deleted");
+            System.out.println(res.getSetting().getData());
+        });
     }
 
     private static void writeToFile(InputStream in, String name) {
         try {
 
             File targetFile = new File("image-test-" + name + ".png");
-            OutputStream outStream = new FileOutputStream(targetFile);
-            int read;
-            byte[] bytes = new byte[1024];
 
-            while ((read = in.read(bytes)) != -1) {
-                outStream.write(bytes, 0, read);
-            }
-            outStream.close();
+            Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("writing");
         }
         catch (IOException e) {
             e.printStackTrace();
