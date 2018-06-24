@@ -19,14 +19,14 @@ package me.duncte123.weebJava;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
 import me.duncte123.weebJava.types.TokenType;
-import me.duncte123.weebJava.types.UrlType;
+import me.duncte123.weebJava.types.Endpoint;
 
 @SuppressWarnings("unused")
 public class WeebApiBuilder {
 
     private final TokenType tokenType;
     private String token;
-    private UrlType urlType = UrlType.PRODUCTION;
+    private Endpoint endpoint = Endpoint.PRODUCTION;
     private String appName = null;
 
     /**
@@ -76,11 +76,11 @@ public class WeebApiBuilder {
     /**
      * This sets the api url that we user to make our requests
      *
-     * @param urlType The {@link UrlType} that we want to use
+     * @param endpoint The {@link Endpoint} that we want to use
      * @return The current builder, useful for chaining
      */
-    public WeebApiBuilder setUrlType(UrlType urlType) {
-        this.urlType = urlType;
+    public WeebApiBuilder setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
         return this;
     }
 
@@ -109,6 +109,6 @@ public class WeebApiBuilder {
     public WeebApi build() {
         if(appName == null || appName.isEmpty())
             throw new NullPointerException("Bot info has not been set, please set it via WeebApiBuilder#setBotInfo");
-        return new WeebApiImpl(tokenType, token, urlType, appName);
+        return new WeebApiImpl(tokenType, token, endpoint, appName);
     }
 }

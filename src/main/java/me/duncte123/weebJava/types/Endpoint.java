@@ -16,19 +16,21 @@
 
 package me.duncte123.weebJava.types;
 
-public enum UrlType {
+import java.net.URL;
+
+public class Endpoint {
     /**
-     * This is the normal api.weeb.sh url
+     * This is the normal api.weeb.sh endpoint
      */
-    PRODUCTION("https://api.weeb.sh"),
+    public static Endpoint PRODUCTION = new Endpoint("https://api.weeb.sh");
     /**
-     * This is the staging.weeb.sh url
+     * This is the staging.weeb.sh endpoint
      */
-    STAGING("https://staging.weeb.sh");
+    public static Endpoint STAGING = new Endpoint("https://staging.weeb.sh");
 
     private final String url;
 
-    UrlType(String url) {
+    private Endpoint(String url) {
         this.url = url;
     }
 
@@ -39,6 +41,15 @@ public enum UrlType {
      */
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * Allows you to set a custom url for when weeb.sh does some experiments
+     * @param url The url for the api
+     * @return The url ready to be used with {@link me.duncte123.weebJava.WeebApiBuilder#setEndpoint(Endpoint)}
+     */
+    public static Endpoint fromUrl(URL url) {
+        return new Endpoint("https://" + url.getHost());
     }
 
     @Override

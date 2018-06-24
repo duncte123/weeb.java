@@ -27,26 +27,21 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     private final TokenType tokenType;
     private final String token;
-    private final UrlType urlType;
+    private final Endpoint endpoint;
 
     private final RequestManager manager;
 
     private ReputationManager reputationManager;
     private SettingsManager settingsManager;
 
-    public WeebApiImpl(TokenType tokenType, String token, UrlType urlType, String appName) {
+    public WeebApiImpl(TokenType tokenType, String token, Endpoint endpoint, String appName) {
         super(new OkHttpClient(), null, true);
 
         this.tokenType = tokenType;
         this.token = token;
-        this.urlType = urlType;
+        this.endpoint = endpoint;
 
         this.manager = new RequestManager(appName);
-
-        System.out.println(urlType.getUrl());
-
-        //Add shutdown hook to shut the jvm down
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> getClient().connectionPool().evictAll()));
     }
 
     @Override
@@ -61,7 +56,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     @Override
     public String getAPIBaseUrl() {
-        return urlType.getUrl();
+        return endpoint.getUrl();
     }
 
     @Override
