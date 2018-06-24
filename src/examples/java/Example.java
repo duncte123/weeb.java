@@ -14,11 +14,10 @@
  *    limitations under the License.
  */
 
-package me.duncte123.weebJava.examples;
-
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
+import me.duncte123.weebJava.types.Endpoint;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
@@ -31,15 +30,22 @@ import java.nio.file.StandardCopyOption;
 public class Example {
 
     public static void main(String[] args) {
-        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS, "Weeb.java-example/2.0")
+        WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
+                .setEndpoint(Endpoint.PRODUCTION) //this is optional
+                .setBotInfo("Weeb.java_examples", "2.0", "Testing")
                 .setToken("TOKEN")
                 .build();
+
+        /*
+         * On all the requests you can use ether .execute() or .async()
+         * Keep in mind that .execute() blocks the thread that you run it in
+         */
 
         //This prints a list of all the available tags
         System.out.println(api.getTags().execute());
 
         //This prints a list of all the available types and the previews
-        api.getTypes(PreviewMode.TRUE).async( (typesResponse) -> {
+        api.getTypes(PreviewMode.PREVIEW).async( (typesResponse) -> {
             System.out.println(typesResponse.getTypes());
             typesResponse.getPreview().forEach( (preview) -> System.out.println(preview.getUrl()) );
         } );
@@ -58,6 +64,13 @@ public class Example {
         api.generateSimple(GenerateType.AWOOO, Color.RED, Color.GREEN ).async((img) -> writeToFile(img, "awoo"));
     }
 
+    /**
+     * Little helper file that writes the input stream to a png file
+     * Feel free to copy it
+     *
+     * @param in The input stream
+     * @param name file name to save the image to
+     */
     @SuppressWarnings("SameParameterValue")
     private static void writeToFile(InputStream in, String name) {
         try {
