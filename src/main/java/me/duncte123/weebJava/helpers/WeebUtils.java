@@ -18,6 +18,8 @@ package me.duncte123.weebJava.helpers;
 
 import com.afollestad.ason.Ason;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,8 +29,17 @@ public class WeebUtils {
         return Ason.deserialize(res.body().string(), cls, true);
     }
 
-    public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
+    /*public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
         return Ason.deserializeList(res.body().string(), cls, true);
+    }*/
+
+    public static <T> List<T> getClassFromJsonList(JSONArray json, Class<T> cls) {
+        System.out.println(json);
+        return Ason.deserializeList(json.toString(), cls, true);
+    }
+
+    public static JSONObject toJsonObject(Response res) throws IOException {
+        return new JSONObject(res.body().string());
     }
 
     public static boolean isNullOrEmpty(String s) {

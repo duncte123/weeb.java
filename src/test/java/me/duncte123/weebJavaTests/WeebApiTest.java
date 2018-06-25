@@ -49,10 +49,10 @@ public class WeebApiTest {
                 .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
-        //testNormalImageThings(api);
-        //testImageGen(api);
-        //testReputation(api);
-        testSettings(api);
+        testNormalImageThings(api);
+//        testImageGen(api);
+//        testReputation(api);
+//        testSettings(api);
     }
 
     private static void testNormalImageThings(WeebApi api) {

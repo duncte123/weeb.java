@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.models.image.response;
 
+import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.WeebResponse;
 
 import java.util.List;
@@ -27,10 +28,18 @@ public class ImageTypesResponse extends WeebResponse  {
     private List<String> types;
     private List<PartialImage> preview;
 
+    /**
+     * Returns a list of the available types
+     * @return A list of the available types
+     */
     public List<String> getTypes() {
         return types;
     }
 
+    /**
+     * Returns a possible empty array of partial images depending on if the preview is enabled
+     * @return a possible empty array of partial images depending on if the preview is enabled
+     */
     public List<PartialImage> getPreview() {
         return preview;
     }
@@ -44,22 +53,42 @@ public class ImageTypesResponse extends WeebResponse  {
         private String baseType;
         private String type;
 
+        /**
+         * Returns the url of the image
+         * @return The url of the image
+         */
         public String getUrl() {
             return url;
         }
 
+        /**
+         * Returns the unique id of the image
+         * @return The unique id of the image
+         */
         public String getId() {
             return id;
         }
 
+        /**
+         * Returns the file type of this image
+         * @return The file type of this image
+         */
         public String getFileType() {
             return fileType;
         }
 
+        /**
+         * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         */
         public String getBaseType() {
             return baseType;
         }
 
+        /**
+         * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         */
         public String getType() {
             return type;
         }
