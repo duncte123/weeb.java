@@ -34,7 +34,6 @@ public class WeebUtils {
     }*/
 
     public static <T> List<T> getClassFromJsonList(JSONArray json, Class<T> cls) {
-        System.out.println(json);
         return Ason.deserializeList(json.toString(), cls, true);
     }
 
