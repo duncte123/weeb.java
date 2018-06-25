@@ -4,7 +4,6 @@ import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.helpers.QueryBuilder;
-import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
@@ -13,8 +12,8 @@ import me.duncte123.weebJava.models.reputation.impl.ReputationManagerImpl;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.impl.SettingsManagerImpl;
 import me.duncte123.weebJava.types.*;
-import me.duncte123.weebJava.web.RequestManager;
 import me.duncte123.weebJava.web.ErrorUtils;
+import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -22,6 +21,8 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
+
+import static me.duncte123.weebJava.helpers.WeebUtils.*;
 
 public class WeebApiImpl extends Reliqua implements WeebApi {
 
@@ -78,7 +79,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/types"))
                 .build(
-                (response) -> WeebUtils.getClassFromJson(response, ImageTypesResponse.class),
+                (response) -> getClassFromJson(response, ImageTypesResponse.class),
                 ErrorUtils::handleError
         );
     }
@@ -99,7 +100,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/tags"))
                 .build(
-                (response) -> WeebUtils.getClassFromJsonList(response, String.class),
+                (response) -> getClassFromJsonList(toJsonObject(response).getJSONArray("tags"), String.class),
                 ErrorUtils::handleError
         );
     }
