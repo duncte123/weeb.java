@@ -19,7 +19,6 @@ package me.duncte123.weebJava.models.settings.impl;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import com.github.natanbc.reliqua.util.PendingRequestBuilder;
-import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
@@ -30,6 +29,7 @@ import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import static me.duncte123.weebJava.helpers.WeebUtils.getClassFromJson;
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
 
 public class SettingsManagerImpl extends Reliqua implements SettingsManager {
@@ -68,7 +68,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         return createRequest(manager.prepareGet(url, token))
                 .setRateLimiter(getRateLimiter(url))
                 .build(
-                        (response) -> WeebUtils.getClassFromJson(response, SubSettingsListResponse.class),
+                        (response) -> getClassFromJson(response, SubSettingsListResponse.class),
                         ErrorUtils::handleError
                 );
     }
@@ -82,12 +82,12 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if(isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    (response) -> getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         } else {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> getClassFromJson(response, SubSettingsResponse.class),
                     ErrorUtils::handleError
             );
         }
@@ -105,12 +105,12 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if(isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    (response) -> getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         } else {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> getClassFromJson(response, SubSettingsResponse.class),
                     ErrorUtils::handleError
             );
         }
@@ -126,12 +126,12 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if(isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
+                    (response) -> getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         } else {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> getClassFromJson(response, SubSettingsResponse.class),
                     ErrorUtils::handleError
             );
         }

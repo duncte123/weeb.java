@@ -130,7 +130,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/random"))
                 .build(
-                (response) -> extractImageFromJson(response.body().string()),
+                (response) -> extractImageFromJson(toJsonObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -144,7 +144,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 ))
                 .setRateLimiter(getRateLimiter("/info"))
                 .build(
-                (response) -> extractImageFromJson(response.body().string()),
+                (response) -> extractImageFromJson(toJsonObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -246,8 +246,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    private WeebImage extractImageFromJson(String json) {
-        return Ason.deserialize(json, WeebImage.class);
+    private WeebImage extractImageFromJson(JSONObject json) {
+        return Ason.deserialize(new Ason(json), WeebImage.class);
     }
 
     @Override
