@@ -264,4 +264,14 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return settingsManager;
     }
 
+    @Override
+    public PendingRequest<Void> deleteImage(String imageId) {
+        return createRequest(
+                manager.prepareDelete(
+                        new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
+                        getCompiledToken()
+                )
+        ).setRateLimiter(getRateLimiter("/info"))
+         .build((m) -> null, ErrorUtils::handleError);
+    }
 }

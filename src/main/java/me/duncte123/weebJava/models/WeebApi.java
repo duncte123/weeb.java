@@ -289,4 +289,11 @@ public interface WeebApi {
      * @return The manager that is responsible for interacting with the settings api
      */
     SettingsManager getSettingsManager();
+
+
+    default PendingRequest<Void> deleteImage(WeebImage image) {
+        return deleteImage(image.getId());
+    }
+
+    PendingRequest<Void> deleteImage(String imageId);
 }
