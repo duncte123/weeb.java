@@ -16,32 +16,41 @@
 
 package me.duncte123.weebJava.helpers;
 
-import com.afollestad.ason.Ason;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.awt.*;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class WeebUtils {
-    public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
-        return Ason.deserialize(res.body().string(), cls, true);
+    public static <T> T getClassFromJson(Response res, Class<T> cls) {
+        return new Gson().fromJson(toJSONObject(res).toString(), cls);
     }
 
     /*public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
-        return Ason.deserializeList(res.body().string(), cls, true);
+        Type listType = new TypeToken<List< T >>() {}.getType();
+        return new Gson().fromJson(toJSONObject(res).toString(), listType);
     }*/
 
-    public static <T> List<T> getClassFromJsonList(JSONArray json, Class<T> cls) {
-        return Ason.deserializeList(json.toString(), cls, true);
+    public static <T> List<T> getClassFromJsonList(JSONArray json, @SuppressWarnings("unused") Class<T> unused) {
+        Type listType = new TypeToken<List< T >>() {}.getType();
+        return new Gson().fromJson(json.toString(), listType);
     }
 
-    public static JSONObject toJsonObject(Response res) throws IOException {
-        return new JSONObject(res.body().string());
+    public static JSONObject toJSONObject(Response res) {
+        return ErrorUtils.toJSONObject(res);
     }
 
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    public static String colorToHex(Color color) {
+        return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 }

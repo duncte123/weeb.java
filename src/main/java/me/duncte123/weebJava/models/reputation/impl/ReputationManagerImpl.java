@@ -16,9 +16,9 @@
 
 package me.duncte123.weebJava.models.reputation.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
@@ -29,6 +29,7 @@ import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsRespo
 import me.duncte123.weebJava.web.RequestManager;
 import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class ReputationManagerImpl extends Reliqua implements ReputationManager {
@@ -47,7 +48,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public ReputationManager setBotId(String botId) {
+    public ReputationManager setBotId(@NotNull String botId) {
         this.botId = botId;
         return this;
     }
@@ -60,7 +61,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<ReputationResponse> getReputationForUser(String userId) {
+    public PendingRequest<ReputationResponse> getReputationForUser(@NotNull String userId) {
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         String url = apiBase + "/reputation/" + getBotId() + "/" + userId;
@@ -74,7 +75,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<GiveUserReputationResponse> giveUserReputation(String sourceUserId, String targetUserId) {
+    public PendingRequest<GiveUserReputationResponse> giveUserReputation(@NotNull String sourceUserId, @NotNull String targetUserId) {
 
         if(sourceUserId == null || sourceUserId.isEmpty())
             throw new IllegalArgumentException("sourceUserId cannot be null");
@@ -96,7 +97,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<ReputationResponse> resetUserReputation(String userId, boolean resetCooldown) {
+    public PendingRequest<ReputationResponse> resetUserReputation(@NotNull String userId, boolean resetCooldown) {
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
@@ -113,7 +114,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<ReputationResponse> increaseUserReputation(String userId, int amount) {
+    public PendingRequest<ReputationResponse> increaseUserReputation(@NotNull String userId, int amount) {
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
@@ -132,7 +133,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<ReputationResponse> decreaseUserReputation(String userId, int amount) {
+    public PendingRequest<ReputationResponse> decreaseUserReputation(@NotNull String userId, int amount) {
         if(userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
@@ -163,9 +164,9 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     }
 
     @Override
-    public PendingRequest<ReputationSettingsResponse> setSettings(ReputationSettings settings) {
+    public PendingRequest<ReputationSettingsResponse> setSettings(@NotNull ReputationSettings settings) {
 
-        JSONObject data = Ason.serialize(settings).toStockJson();
+        JSONObject data = new JSONObject( new Gson().toJson(settings));
         data.remove("accountId");
 
         String url = apiBase + "/reputation/settings";

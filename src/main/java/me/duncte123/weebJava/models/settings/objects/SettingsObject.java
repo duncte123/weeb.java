@@ -16,7 +16,7 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import com.afollestad.ason.Ason;
+import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused")
@@ -25,7 +25,7 @@ public class SettingsObject {
     private String id;
     private String type;
     private String accountId;
-    private Ason data;
+    private JsonObject data;
 
 
     /**
@@ -57,6 +57,6 @@ public class SettingsObject {
      * @return The data that you stored
      */
     public JSONObject getData() {
-        return data.toStockJson();
+        return new JSONObject(data.toString());
     }
 }

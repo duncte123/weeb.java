@@ -49,10 +49,10 @@ public class WeebApiTest {
                 .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
-//        testNormalImageThings(api);
+        testNormalImageThings(api);
 //        testImageGen(api);
-//        testReputation(api);
-//        testSettings(api);
+        testReputation(api);
+        testSettings(api);
     }
 
     private static void testNormalImageThings(WeebApi api) {
@@ -107,7 +107,7 @@ public class WeebApiTest {
 
         ReputationSettings settings = manager.getSettings().execute().getSettings();
 
-        settings.setReputationCooldown(50L);
+        settings.setReputationCooldown(350L);
 
         manager.setSettings(settings).async(settings2 -> {
             System.out.println(settings2.getSettings().getAccountId());

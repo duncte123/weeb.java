@@ -16,9 +16,9 @@
 
 package me.duncte123.weebJava.models.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
@@ -119,7 +119,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/tags"))
                 .build(
-                (response) -> getClassFromJsonList(toJsonObject(response).getJSONArray("tags"), String.class),
+                (response) -> getClassFromJsonList(toJSONObject(response).getJSONArray("tags"), String.class),
                 ErrorUtils::handleError
         );
     }
@@ -149,7 +149,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/random"))
                 .build(
-                (response) -> extractImageFromJson(toJsonObject(response)),
+                (response) -> extractImageFromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -163,7 +163,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 ))
                 .setRateLimiter(getRateLimiter("/info"))
                 .build(
-                (response) -> extractImageFromJson(toJsonObject(response)),
+                (response) -> extractImageFromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -260,12 +260,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
     }
 
-    private String colorToHex(Color color) {
-        return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-    }
-
     private WeebImage extractImageFromJson(JSONObject json) {
-        return Ason.deserialize(new Ason(json), WeebImage.class);
+        return new Gson().fromJson(json.toString(), WeebImage.class);
     }
 
     @Override

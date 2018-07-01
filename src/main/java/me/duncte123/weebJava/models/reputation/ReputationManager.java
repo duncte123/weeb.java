@@ -21,6 +21,7 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface ReputationManager {
@@ -31,7 +32,7 @@ public interface ReputationManager {
      * @param botId the id of your bot
      * @return The current reputation manager
      */
-    ReputationManager setBotId(String botId);
+    ReputationManager setBotId(@NotNull String botId);
 
     /**
      * @return The bot id
@@ -44,7 +45,7 @@ public interface ReputationManager {
      * @param userId The id of the user that you want to get the reputation for
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      */
-    PendingRequest<ReputationResponse> getReputationForUser(String userId);
+    PendingRequest<ReputationResponse> getReputationForUser(@NotNull String userId);
 
     /**
      * Method to give reputation to a user
@@ -53,7 +54,7 @@ public interface ReputationManager {
      * @param targetUserId The user that receives the reputation
      * @return The {@link GiveUserReputationResponse GiveUserReputationResponse} that holds the data that you need
      */
-    PendingRequest<GiveUserReputationResponse> giveUserReputation(String sourceUserId, String targetUserId);
+    PendingRequest<GiveUserReputationResponse> giveUserReputation(@NotNull String sourceUserId, @NotNull String targetUserId);
 
     /**
      * Resets the reputation for a user
@@ -62,7 +63,7 @@ public interface ReputationManager {
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      * @see ReputationManager#resetUserReputation(String, boolean)
      */
-    default PendingRequest<ReputationResponse> resetUserReputation(String userId) {
+    default PendingRequest<ReputationResponse> resetUserReputation(@NotNull String userId) {
         return resetUserReputation(userId, false);
     }
 
@@ -73,7 +74,7 @@ public interface ReputationManager {
      * @param resetCooldown If we should reset the cooldown, default: {@code false}
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      */
-    PendingRequest<ReputationResponse> resetUserReputation(String userId, boolean resetCooldown);
+    PendingRequest<ReputationResponse> resetUserReputation(@NotNull String userId, boolean resetCooldown);
 
     /**
      * Increases the reputation for a user
@@ -82,7 +83,7 @@ public interface ReputationManager {
      * @param amount The amount to increase the reputation with
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      */
-    PendingRequest<ReputationResponse> increaseUserReputation(String userId, int amount);
+    PendingRequest<ReputationResponse> increaseUserReputation(@NotNull String userId, int amount);
 
     /**
      * Decreases the reputation for a user
@@ -91,7 +92,7 @@ public interface ReputationManager {
      * @param amount The amount to decrease the reputation with
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      */
-    PendingRequest<ReputationResponse> decreaseUserReputation(String userId, int amount);
+    PendingRequest<ReputationResponse> decreaseUserReputation(@NotNull String userId, int amount);
 
     /**
      * @return The {@link ReputationSettingsResponse response} from weeb.sh holding the settings for your token
@@ -105,5 +106,5 @@ public interface ReputationManager {
      *                 <p>Hint: Use {@link ReputationSettingsResponse#getSettings()} to get the current settings and to modify them
      * @return The {@link ReputationSettingsResponse response} from weeb.sh holding the settings for your token
      */
-    PendingRequest<ReputationSettingsResponse> setSettings(ReputationSettings settings);
+    PendingRequest<ReputationSettingsResponse> setSettings(@NotNull ReputationSettings settings);
 }
