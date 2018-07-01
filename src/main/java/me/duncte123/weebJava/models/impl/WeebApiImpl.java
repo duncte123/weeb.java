@@ -20,6 +20,7 @@ import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.QueryBuilder;
+import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
@@ -261,7 +262,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     private WeebImage extractImageFromJson(JSONObject json) {
-        return new Gson().fromJson(json.toString(), WeebImage.class);
+        return WeebUtils.getGson().fromJson(json.toString(), WeebImage.class);
     }
 
     @Override

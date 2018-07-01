@@ -28,18 +28,21 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class WeebUtils {
+
+    private static Gson gson = new Gson();
+
     public static <T> T getClassFromJson(Response res, Class<T> cls) {
-        return new Gson().fromJson(toJSONObject(res).toString(), cls);
+        return gson.fromJson(toJSONObject(res).toString(), cls);
     }
 
     /*public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
         Type listType = new TypeToken<List< T >>() {}.getType();
-        return new Gson().fromJson(toJSONObject(res).toString(), listType);
+        return gson.fromJson(toJSONObject(res).toString(), listType);
     }*/
 
     public static <T> List<T> getClassFromJsonList(JSONArray json, @SuppressWarnings("unused") Class<T> unused) {
         Type listType = new TypeToken<List< T >>() {}.getType();
-        return new Gson().fromJson(json.toString(), listType);
+        return gson.fromJson(json.toString(), listType);
     }
 
     public static JSONObject toJSONObject(Response res) {
@@ -48,6 +51,10 @@ public class WeebUtils {
 
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    public static Gson getGson() {
+        return gson;
     }
 
     public static String colorToHex(Color color) {

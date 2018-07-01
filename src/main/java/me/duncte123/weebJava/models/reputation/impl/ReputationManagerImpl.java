@@ -166,7 +166,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     @Override
     public PendingRequest<ReputationSettingsResponse> setSettings(@NotNull ReputationSettings settings) {
 
-        JSONObject data = new JSONObject( new Gson().toJson(settings));
+        JSONObject data = new JSONObject( WeebUtils.getGson().toJson(settings));
         data.remove("accountId");
 
         String url = apiBase + "/reputation/settings";
