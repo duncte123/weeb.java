@@ -41,7 +41,7 @@ import java.util.List;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
@@ -49,7 +49,7 @@ public class WeebApiTest {
                 .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
-        testNormalImageThings(api);
+//        testNormalImageThings(api);
 //        testImageGen(api);
 //        testReputation(api);
 //        testSettings(api);

@@ -1,3 +1,19 @@
+/*
+ *    Copyright 2018 Duncan Sterken
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package me.duncte123.weebJava.models.impl;
 
 import com.afollestad.ason.Ason;
@@ -7,6 +23,7 @@ import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.models.image.response.UploadImageResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.impl.ReputationManagerImpl;
 import me.duncte123.weebJava.models.settings.SettingsManager;
@@ -16,9 +33,11 @@ import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -35,7 +54,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private ReputationManager reputationManager;
     private SettingsManager settingsManager;
 
-    public WeebApiImpl(TokenType tokenType, String token, Endpoint endpoint, String appName) {
+    public WeebApiImpl(Endpoint endpoint, TokenType tokenType, String token, String appName) {
         super(new OkHttpClient(), null, true);
 
         this.tokenType = tokenType;
@@ -136,7 +155,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<WeebImage> getImageInfo(String imageId) {
+    public PendingRequest<WeebImage> getImageInfo(@NotNull String imageId) {
         return createRequest(
                 manager.prepareGet(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
@@ -150,12 +169,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair) {
+    public PendingRequest<InputStream> generateSimple(@NotNull GenerateType type, Color face, Color hair) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
 
-        if(type != null)
             type.appendTo(builder);
 
         if(face != null)
@@ -189,7 +207,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
+    public PendingRequest<InputStream> generateLicense(@NotNull String title, @NotNull String avatar, @NotNull String[] badges, @NotNull String[] widgets) {
         JSONObject data = new JSONObject()
                 .put("title", title)
                 .put("avatar", avatar);
@@ -214,7 +232,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<InputStream> generateWaifuinsult(String avatar) {
+    public PendingRequest<InputStream> generateWaifuinsult(@NotNull String avatar) {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
@@ -226,7 +244,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo) {
+    public PendingRequest<InputStream> generateLoveship(@NotNull String targetOne, @NotNull String targetTwo) {
 
         JSONObject data = new JSONObject()
                 .put("targetOne", targetOne)
@@ -265,7 +283,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<Void> deleteImage(String imageId) {
+    public PendingRequest<Void> deleteImage(@NotNull String imageId) {
         return createRequest(
                 manager.prepareDelete(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
@@ -273,5 +291,15 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 )
         ).setRateLimiter(getRateLimiter("/info"))
          .build((m) -> null, ErrorUtils::handleError);
+    }
+
+    @Override
+    public PendingRequest<UploadImageResponse> uploadImage(@NotNull File file, @NotNull String baseType, boolean hidden, @NotNull List<String> tags, boolean nsf, @NotNull String source) {
+        return null;
+    }
+
+    @Override
+    public PendingRequest<UploadImageResponse> uploadImage(@NotNull String url, @NotNull String baseType, boolean hidden, @NotNull List<String> tags, boolean nsf, @NotNull String source) {
+        return null;
     }
 }

@@ -18,11 +18,12 @@ package me.duncte123.weebJava.models.image.response;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.WeebResponse;
+import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class ImageTypesResponse extends WeebResponse  {
+public class ImageTypesResponse extends WeebResponse {
 
 
     private List<String> types;
@@ -35,6 +36,7 @@ public class ImageTypesResponse extends WeebResponse  {
     public List<String> getTypes() {
         return types;
     }
+
 
     /**
      * Returns a possible empty array of partial images depending on if the preview is enabled
@@ -93,6 +95,7 @@ public class ImageTypesResponse extends WeebResponse  {
             return type;
         }
 
+        @Override
         public String toString() {
             return "PartialImage("+url+")";
         }

@@ -54,7 +54,7 @@ public class WeebApiBuilder {
      *
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
-     * @deprecated for removal use {@link WeebApiBuilder(TokenType)} and {@link #setBotInfo(String, String, String)} instead
+     * @deprecated for removal use {@link WeebApiBuilder (TokenType)} and {@link #setBotInfo(String, String, String)} instead
      */
     @Deprecated
     public WeebApiBuilder(TokenType tokenType, String appInfo) {
@@ -109,6 +109,6 @@ public class WeebApiBuilder {
     public WeebApi build() {
         if(appName == null || appName.isEmpty())
             throw new NullPointerException("Bot info has not been set, please set it via WeebApiBuilder#setBotInfo");
-        return new WeebApiImpl(tokenType, token, endpoint, appName);
+        return new WeebApiImpl(endpoint, tokenType, token, appName);
     }
 }

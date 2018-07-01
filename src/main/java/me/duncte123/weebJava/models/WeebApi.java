@@ -4,11 +4,14 @@ import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.WeebInfo;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
+import me.duncte123.weebJava.models.image.response.UploadImageResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.types.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -177,7 +180,7 @@ public interface WeebApi {
      * @param imageId The id of the image to get the info for
      * @return The information returned from the server
      */
-    PendingRequest<WeebImage> getImageInfo(String imageId);
+    PendingRequest<WeebImage> getImageInfo(@NotNull String imageId);
 
 
     /**
@@ -185,7 +188,7 @@ public interface WeebApi {
      * @param type type of the generation to create
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateSimple(GenerateType type) {
+    default PendingRequest<InputStream> generateSimple(@NotNull GenerateType type) {
         return generateSimple(type, null, null);
     }
 
@@ -196,7 +199,7 @@ public interface WeebApi {
      * @param hair only used with {@link GenerateType#AWOOO awooo} type, defines color of hair/fur
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair);
+    PendingRequest<InputStream> generateSimple(@NotNull GenerateType type, Color face, Color hair);
 
     /**
      * Generates a discord avatar status
@@ -238,7 +241,7 @@ public interface WeebApi {
      * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateLicense(String title, String avatar) {
+    default PendingRequest<InputStream> generateLicense(@NotNull String title, @NotNull String avatar) {
         return generateLicense(title, avatar, new String[0], new String[0]);
     }
 
@@ -249,7 +252,7 @@ public interface WeebApi {
      * @param badges Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar apply
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges) {
+    default PendingRequest<InputStream> generateLicense(@NotNull String title, @NotNull String avatar, @NotNull String[] badges) {
         return generateLicense(title, avatar, badges, new String[0]);
     }
 
@@ -261,14 +264,14 @@ public interface WeebApi {
      * @param widgets Array of strings for filling the three boxes with text content
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets);
+    PendingRequest<InputStream> generateLicense(@NotNull String title, @NotNull String avatar, @NotNull String[] badges, @NotNull String[] widgets);
 
     /**
      * Generates a waifu insult
      * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateWaifuinsult(String avatar);
+    PendingRequest<InputStream> generateWaifuinsult(@NotNull String avatar);
 
     /**
      * Generates a loveship with two images
@@ -276,7 +279,7 @@ public interface WeebApi {
      * @param targetTwo http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the right side.
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo);
+    PendingRequest<InputStream> generateLoveship(@NotNull String targetOne, @NotNull String targetTwo);
 
     /**
      * Returns the manager that is responsible for interacting with the reputation api
@@ -291,9 +294,44 @@ public interface WeebApi {
     SettingsManager getSettingsManager();
 
 
-    default PendingRequest<Void> deleteImage(WeebImage image) {
+    /**
+     * Deletes an image that you uploaded
+     * @param image The image to delete
+     * @return The PendingRequest for you to handle
+     */
+    default PendingRequest<Void> deleteImage(@NotNull WeebImage image) {
         return deleteImage(image.getId());
     }
 
-    PendingRequest<Void> deleteImage(String imageId);
+    /**
+     * Deletes an image that you uploaded by it's id
+     * @param imageId The id of the image to delete
+     * @return The PendingRequest for you to handle
+     */
+    PendingRequest<Void> deleteImage(@NotNull String imageId);
+
+    /**
+     * Uploads an image to weeb.sh
+     * @param file The file to upload, this must be an image
+     * @param baseType Type of the image, this can be viewed as the category of an image
+     * @param hidden If the uploaded image should be hidden
+     * @param tags A list of of tags that should be added to the image, they inherit the hidden property of the image
+     * @param nsf Whether this image has content that could be considered NSFW (not safe for work)
+     * @param source Url pointing to the original source of the image
+     * @return The response from the server containing the image
+     */
+    PendingRequest<UploadImageResponse> uploadImage(@NotNull File file, @NotNull String baseType, boolean hidden, @NotNull List<String> tags, boolean nsf, @NotNull String source);
+
+    /**
+     * Uploads an image to weeb.sh
+     * @param url Url pointing directly at the image you want to upload
+     * @param baseType Type of the image, this can be viewed as the category of an image
+     * @param hidden If the uploaded image should be hidden
+     * @param tags A list of of tags that should be added to the image, they inherit the hidden property of the image
+     * @param nsf Whether this image has content that could be considered NSFW (not safe for work)
+     * @param source Url pointing to the original source of the image
+     * @return The response from the server containing the image
+     */
+    PendingRequest<UploadImageResponse> uploadImage(@NotNull String url, @NotNull String baseType, boolean hidden, @NotNull List<String> tags, boolean nsf, @NotNull String source);
+
 }

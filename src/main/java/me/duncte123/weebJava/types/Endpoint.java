@@ -16,6 +16,8 @@
 
 package me.duncte123.weebJava.types;
 
+import me.duncte123.weebJava.WeebApiBuilder;
+
 import java.net.URL;
 
 public class Endpoint {
@@ -46,7 +48,7 @@ public class Endpoint {
     /**
      * Allows you to set a custom url for when weeb.sh does some experiments
      * @param url The url for the api
-     * @return The url ready to be used with {@link me.duncte123.weebJava.WeebApiBuilder#setEndpoint(Endpoint)}
+     * @return The url ready to be used with {@link WeebApiBuilder#setEndpoint(Endpoint)}
      */
     public static Endpoint fromUrl(URL url) {
         return new Endpoint("https://" + url.getHost());
