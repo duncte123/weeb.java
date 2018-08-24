@@ -185,7 +185,7 @@ public interface WeebApi {
      * @param type type of the generation to create
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateSimple(GenerateType type) {
+    default PendingRequest<byte[]> generateSimple(GenerateType type) {
         return generateSimple(type, null, null);
     }
 
@@ -196,13 +196,13 @@ public interface WeebApi {
      * @param hair only used with {@link GenerateType#AWOOO awooo} type, defines color of hair/fur
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair);
+    PendingRequest<byte[]> generateSimple(GenerateType type, Color face, Color hair);
 
     /**
      * Generates a discord avatar status
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateDiscordStatus() {
+    default PendingRequest<byte[]> generateDiscordStatus() {
         return generateDiscordStatus(null, null);
     }
 
@@ -211,7 +211,7 @@ public interface WeebApi {
      * @param status discord status of the mock
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateDiscordStatus(StatusType status) {
+    default PendingRequest<byte[]> generateDiscordStatus(StatusType status) {
         return generateDiscordStatus(status, null);
     }
 
@@ -220,7 +220,7 @@ public interface WeebApi {
      * @param avatar http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateDiscordStatus(String avatar) {
+    default PendingRequest<byte[]> generateDiscordStatus(String avatar) {
         return generateDiscordStatus(null, avatar);
     }
 
@@ -230,7 +230,7 @@ public interface WeebApi {
      * @param avatar http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatar);
+    PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar);
 
     /**
      * Generates a licence
@@ -238,7 +238,7 @@ public interface WeebApi {
      * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateLicense(String title, String avatar) {
+    default PendingRequest<byte[]> generateLicense(String title, String avatar) {
         return generateLicense(title, avatar, new String[0], new String[0]);
     }
 
@@ -249,7 +249,7 @@ public interface WeebApi {
      * @param badges Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar apply
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges) {
+    default PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges) {
         return generateLicense(title, avatar, badges, new String[0]);
     }
 
@@ -261,14 +261,14 @@ public interface WeebApi {
      * @param widgets Array of strings for filling the three boxes with text content
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets);
+    PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges, String[] widgets);
 
     /**
      * Generates a waifu insult
      * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateWaifuinsult(String avatar);
+    PendingRequest<byte[]> generateWaifuinsult(String avatar);
 
     /**
      * Generates a loveship with two images
@@ -276,7 +276,7 @@ public interface WeebApi {
      * @param targetTwo http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the right side.
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo);
+    PendingRequest<byte[]> generateLoveship(String targetOne, String targetTwo);
 
     /**
      * Returns the manager that is responsible for interacting with the reputation api
