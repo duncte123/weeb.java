@@ -3,6 +3,7 @@ package me.duncte123.weebJava.models.impl;
 import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import me.duncte123.weebJava.helpers.IOHelper;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
@@ -19,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.InputStream;
 import java.util.List;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.*;
@@ -150,7 +150,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     @Override
-    public PendingRequest<InputStream> generateSimple(GenerateType type, Color face, Color hair) {
+    public PendingRequest<byte[]> generateSimple(GenerateType type, Color face, Color hair) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
@@ -167,11 +167,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/auto-image/generate"))
-                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
+                .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     @Override
-    public PendingRequest<InputStream> generateDiscordStatus(StatusType status, String avatar) {
+    public PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/discord-status");
@@ -185,11 +185,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/auto-image/discord-status"))
-                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
+                .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     @Override
-    public PendingRequest<InputStream> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
+    public PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
         JSONObject data = new JSONObject()
                 .put("title", title)
                 .put("avatar", avatar);
@@ -210,11 +210,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/license"))
-                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
+                .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     @Override
-    public PendingRequest<InputStream> generateWaifuinsult(String avatar) {
+    public PendingRequest<byte[]> generateWaifuinsult(String avatar) {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
@@ -222,11 +222,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/waifu-insult"))
-                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
+                .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     @Override
-    public PendingRequest<InputStream> generateLoveship(String targetOne, String targetTwo) {
+    public PendingRequest<byte[]> generateLoveship(String targetOne, String targetTwo) {
 
         JSONObject data = new JSONObject()
                 .put("targetOne", targetOne)
@@ -239,7 +239,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/love-ship"))
-                .build(ErrorUtils::getInputStream, ErrorUtils::handleError);
+                .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     private String colorToHex(Color color) {
