@@ -95,11 +95,11 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-Properties properties = new Properties()
-File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
-properties.load(propFile.newDataInputStream())
-
 bintray {
+    Properties properties = new Properties()
+    File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
+    properties.load(propFile.newDataInputStream())
+
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     publications = ["BintrayRelease"]
