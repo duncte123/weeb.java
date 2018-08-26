@@ -98,20 +98,22 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 bintray {
     Properties properties = new Properties()
     File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
-    properties.load(propFile.newDataInputStream())
+    if(propFile.exists()) {
+        properties.load(propFile.newDataInputStream())
 
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    publications = ["BintrayRelease"]
-    pkg {
-        repo = 'weeb.java'
-        name = 'weeb.java'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/duncte123/weeb.java.git'
-        publish = true
-        version {
-            name = project.version
-            released = new Date()
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+        publications = ["BintrayRelease"]
+        pkg {
+            repo = 'weeb.java'
+            name = 'weeb.java'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/duncte123/weeb.java.git'
+            publish = true
+            version {
+                name = project.version
+                released = new Date()
+            }
         }
     }
 }
