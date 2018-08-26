@@ -35,6 +35,7 @@ public enum NSFWMode implements QueryParam {
     ONLY_NSFW("only");
 
     private final String type;
+
     NSFWMode(String t) {
         this.type = t;
     }

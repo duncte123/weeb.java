@@ -48,6 +48,7 @@ public enum StatusType implements QueryParam {
     OFFLINE("offline");
 
     private final String status;
+
     StatusType(String status) {
         this.status = status;
     }

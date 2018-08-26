@@ -33,7 +33,6 @@ public class ReputationSettings {
     }
 
     /**
-     *
      * @param reputationPerDay Number of reputations a user may give out per reputationCooldown, default: {@code 2}
      * @return The current settings object, useful for chaining
      */
@@ -50,7 +49,6 @@ public class ReputationSettings {
     }
 
     /**
-     *
      * @param maximumReputation The maximum reputation a user may receive, default: {@code 0} (disabled)
      * @return The current settings object, useful for chaining
      */
@@ -67,7 +65,6 @@ public class ReputationSettings {
     }
 
     /**
-     *
      * @param maximumReputationReceivedDay The maximum reputation a user may receive per day, default: {@code 0} (disabled)
      * @return The current settings object, useful for chaining
      */
@@ -84,13 +81,12 @@ public class ReputationSettings {
     }
 
     /**
-     *
      * @param reputationCooldown Cooldown per reputation, this is set to time in seconds, default: {@code 86400} (1 day)
      * @return The current settings object, useful for chaining
      */
     public ReputationSettings setReputationCooldown(long reputationCooldown) {
 
-        if(reputationCooldown < 300)
+        if (reputationCooldown < 300)
             throw new IllegalArgumentException("reputationCooldown should be >= 300");
 
         this.reputationCooldown = reputationCooldown;

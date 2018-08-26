@@ -49,6 +49,7 @@ public enum HiddenMode implements QueryParam {
      */
     DEFAULT {
         @Override
-        public void appendTo(QueryBuilder builder) { }
+        public void appendTo(QueryBuilder builder) {
+        }
     }
 }

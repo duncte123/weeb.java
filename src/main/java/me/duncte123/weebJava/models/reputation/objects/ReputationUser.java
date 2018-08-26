@@ -25,6 +25,11 @@ import java.util.List;
 @SuppressWarnings({"unused", "MismatchedReadAndWriteOfArray"})
 public class ReputationUser {
 
+    /*
+    Variables that contain the parsed time
+     */
+    private final List<LocalDateTime> cooldownParsed = new ArrayList<>();
+    private final List<LocalDateTime> givenReputationParsed = new ArrayList<>();
     private int reputation;
     private String[] cooldown;
     private String[] givenReputation;
@@ -34,26 +39,19 @@ public class ReputationUser {
     private int availableReputations;
     private int[] nextAvailableReputations;
 
-    /*
-    Variables that contain the parsed time
-     */
-    private final List<LocalDateTime> cooldownParsed = new ArrayList<>();
-    private final List<LocalDateTime> givenReputationParsed = new ArrayList<>();
-
-
     public int getReputation() {
         return reputation;
     }
 
     public List<LocalDateTime> getCooldown() {
-        if(cooldownParsed.isEmpty())
+        if (cooldownParsed.isEmpty())
             cooldownParsed.addAll(DateParser.parseDate(cooldown));
 
         return cooldownParsed;
     }
 
     public List<LocalDateTime> getGivenReputation() {
-        if(givenReputationParsed.isEmpty())
+        if (givenReputationParsed.isEmpty())
             givenReputationParsed.addAll(DateParser.parseDate(givenReputation));
 
         return givenReputationParsed;

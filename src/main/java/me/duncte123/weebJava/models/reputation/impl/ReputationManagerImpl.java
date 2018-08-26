@@ -26,17 +26,17 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationResponse;
 import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsResponse;
-import me.duncte123.weebJava.web.RequestManager;
 import me.duncte123.weebJava.web.ErrorUtils;
+import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
 
 public class ReputationManagerImpl extends Reliqua implements ReputationManager {
 
-    private String botId;
     private final String apiBase;
     private final String token;
     private final RequestManager manager;
+    private String botId;
 
     public ReputationManagerImpl(OkHttpClient client, String apiBase, RequestManager manager, String token) {
         super(client, null, true);
@@ -54,14 +54,14 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
     @Override
     public String getBotId() {
-        if(botId == null || botId.isEmpty())
+        if (botId == null || botId.isEmpty())
             throw new NullPointerException("botId is not set, use ReputationManager#seteBotId to set it.");
         return botId;
     }
 
     @Override
     public PendingRequest<ReputationResponse> getReputationForUser(String userId) {
-        if(userId == null || userId.isEmpty())
+        if (userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         String url = apiBase + "/reputation/" + getBotId() + "/" + userId;
 
@@ -76,9 +76,9 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     @Override
     public PendingRequest<GiveUserReputationResponse> giveUserReputation(String sourceUserId, String targetUserId) {
 
-        if(sourceUserId == null || sourceUserId.isEmpty())
+        if (sourceUserId == null || sourceUserId.isEmpty())
             throw new IllegalArgumentException("sourceUserId cannot be null");
-        if(targetUserId == null || targetUserId.isEmpty())
+        if (targetUserId == null || targetUserId.isEmpty())
             throw new IllegalArgumentException("targetUserId cannot be null");
 
         String url = apiBase + "/reputation/" + getBotId() + "/" + targetUserId;
@@ -97,7 +97,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
     @Override
     public PendingRequest<ReputationResponse> resetUserReputation(String userId, boolean resetCooldown) {
-        if(userId == null || userId.isEmpty())
+        if (userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
                 .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/reset");
@@ -114,7 +114,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
     @Override
     public PendingRequest<ReputationResponse> increaseUserReputation(String userId, int amount) {
-        if(userId == null || userId.isEmpty())
+        if (userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
                 .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/increase");
@@ -133,7 +133,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
 
     @Override
     public PendingRequest<ReputationResponse> decreaseUserReputation(String userId, int amount) {
-        if(userId == null || userId.isEmpty())
+        if (userId == null || userId.isEmpty())
             throw new IllegalArgumentException("userId cannot be null");
         QueryBuilder builder = new QueryBuilder()
                 .append(apiBase).append("/reputation/").append(getBotId()).append("/").append(userId).append("/decrease");

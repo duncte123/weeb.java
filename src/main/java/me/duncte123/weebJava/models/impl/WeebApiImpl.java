@@ -79,9 +79,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/types"))
                 .build(
-                (response) -> getClassFromJson(response, ImageTypesResponse.class),
-                ErrorUtils::handleError
-        );
+                        (response) -> getClassFromJson(response, ImageTypesResponse.class),
+                        ErrorUtils::handleError
+                );
     }
 
     @Override
@@ -90,19 +90,19 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/tags");
 
-        if(hidden != null)
+        if (hidden != null)
             hidden.appendTo(builder);
 
-        if(nsfw != null)
+        if (nsfw != null)
             nsfw.appendTo(builder);
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/tags"))
                 .build(
-                (response) -> getClassFromJsonList(toJsonObject(response).getJSONArray("tags"), String.class),
-                ErrorUtils::handleError
-        );
+                        (response) -> getClassFromJsonList(toJsonObject(response).getJSONArray("tags"), String.class),
+                        ErrorUtils::handleError
+                );
     }
 
     @Override
@@ -111,28 +111,28 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/random");
 
-        if(type != null && !type.isEmpty())
+        if (type != null && !type.isEmpty())
             builder.append("type", type);
 
-        if(!tags.isEmpty())
+        if (!tags.isEmpty())
             builder.append("tags", StringUtils.join(tags, ","));
 
-        if(nsfw != null)
+        if (nsfw != null)
             nsfw.appendTo(builder);
 
-        if(hidden != null)
+        if (hidden != null)
             hidden.appendTo(builder);
 
-        if(fileType != null)
+        if (fileType != null)
             fileType.appendTo(builder);
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/random"))
                 .build(
-                (response) -> extractImageFromJson(response.body().string()),
-                ErrorUtils::handleError
-        );
+                        (response) -> extractImageFromJson(response.body().string()),
+                        ErrorUtils::handleError
+                );
     }
 
     @Override
@@ -144,9 +144,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 ))
                 .setRateLimiter(getRateLimiter("/info"))
                 .build(
-                (response) -> extractImageFromJson(response.body().string()),
-                ErrorUtils::handleError
-        );
+                        (response) -> extractImageFromJson(response.body().string()),
+                        ErrorUtils::handleError
+                );
     }
 
     @Override
@@ -155,13 +155,13 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
 
-        if(type != null)
+        if (type != null)
             type.appendTo(builder);
 
-        if(face != null)
+        if (face != null)
             builder.append("face", colorToHex(face));
 
-        if(hair != null)
+        if (hair != null)
             builder.append("hair", colorToHex(hair));
 
         return createRequest(
@@ -176,10 +176,10 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/discord-status");
 
-        if(status != null)
+        if (status != null)
             status.appendTo(builder);
 
-        if(avatar != null && !avatar.isEmpty())
+        if (avatar != null && !avatar.isEmpty())
             builder.append("avatar", avatar);
 
         return createRequest(
@@ -194,13 +194,13 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .put("title", title)
                 .put("avatar", avatar);
 
-        if(badges.length > 3 || widgets.length > 3)
+        if (badges.length > 3 || widgets.length > 3)
             throw new IllegalArgumentException("Size badges and widgets cannot be higher than 3");
 
-        if(badges.length > 0)
+        if (badges.length > 0)
             data.put("badges", badges);
 
-        if(widgets.length > 0)
+        if (widgets.length > 0)
             data.put("widgets", widgets);
 
         return createRequest(
@@ -252,14 +252,14 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     @Override
     public ReputationManager getReputationManager() {
-        if(reputationManager == null)
+        if (reputationManager == null)
             reputationManager = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
         return reputationManager;
     }
 
     @Override
     public SettingsManager getSettingsManager() {
-        if(settingsManager == null)
+        if (settingsManager == null)
             settingsManager = new SettingsManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
         return settingsManager;
     }

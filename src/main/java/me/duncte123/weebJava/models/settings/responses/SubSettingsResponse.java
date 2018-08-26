@@ -19,8 +19,6 @@ package me.duncte123.weebJava.models.settings.responses;
 import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 
-import java.util.List;
-
 @SuppressWarnings("unused")
 public class SubSettingsResponse extends SettingsResponse {
 

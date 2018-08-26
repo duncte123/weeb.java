@@ -25,7 +25,6 @@ public class SettingsResponse extends WeebResponse {
     private SettingsObject setting;
 
     /**
-     *
      * @return The settings object holding your data
      */
     public SettingsObject getSetting() {
@@ -33,7 +32,6 @@ public class SettingsResponse extends WeebResponse {
     }
 
     /**
-     *
      * @return The sub-setting data if this setting is a sub setting
      */
     public SubSettingsObject getSubsetting() {

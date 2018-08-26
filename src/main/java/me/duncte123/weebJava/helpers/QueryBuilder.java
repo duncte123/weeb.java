@@ -15,7 +15,7 @@ public class QueryBuilder {
 
     public QueryBuilder append(String key, String value) {
 
-        if(hasParams == 1) {
+        if (hasParams == 1) {
             builder.append('&').append(key).append('=').append(encodeStr(value));
         } else {
             builder.append('?').append(key).append('=').append(encodeStr(value));

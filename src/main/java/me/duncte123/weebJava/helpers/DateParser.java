@@ -31,7 +31,7 @@ public class DateParser {
 
     public static List<LocalDateTime> parseDate(String[] date) {
         List<LocalDateTime> temp = new ArrayList<>();
-        for(String d : date) {
+        for (String d : date) {
             temp.add(LocalDateTime.parse(d, DATE_FORMAT));
         }
         return temp;

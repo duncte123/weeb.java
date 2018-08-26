@@ -47,7 +47,7 @@ public class IOHelper {
     private static void copyTo(InputStream in, OutputStream out, int bufferSize) throws IOException {
         byte[] buffer = new byte[bufferSize];
         int read;
-        while((read = in.read(buffer)) != -1) {
+        while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
     }

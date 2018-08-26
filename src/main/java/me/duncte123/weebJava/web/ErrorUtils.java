@@ -38,14 +38,14 @@ public class ErrorUtils {
 
     public static InputStream getInputStream(Response response) {
         ResponseBody body = response.body();
-        if(body == null) throw new IllegalStateException("Body should never be null");
+        if (body == null) throw new IllegalStateException("Body should never be null");
         String encoding = response.header("Content-Encoding");
         if (encoding != null) {
-            switch(encoding.toLowerCase()) {
+            switch (encoding.toLowerCase()) {
                 case "gzip":
                     try {
                         return new GZIPInputStream(body.byteStream());
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         throw new IllegalStateException("Received Content-Encoding header of gzip, but data is not valid gzip", e);
                     }
                 case "deflate":
@@ -58,11 +58,11 @@ public class ErrorUtils {
     public static <T> void handleError(RequestContext<T> context) {
         Response response = context.getResponse();
         ResponseBody body = response.body();
-        if(body == null) {
+        if (body == null) {
             context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + " (No body)", context.getCallStack()));
             return;
         }
-        switch(response.code()) {
+        switch (response.code()) {
             case 403:
                 context.getErrorConsumer().accept(new MissingPermissionException(toJSONObject(response).getString("message"), context.getCallStack()));
                 break;
@@ -74,8 +74,9 @@ public class ErrorUtils {
                 JSONObject json = null;
                 try {
                     json = toJSONObject(response);
-                } catch(JSONException ignored) {}
-                if(json != null) {
+                } catch (JSONException ignored) {
+                }
+                if (json != null) {
                     context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + ": " + json.getString("message"), context.getCallStack()));
                 } else {
                     context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code(), context.getCallStack()));

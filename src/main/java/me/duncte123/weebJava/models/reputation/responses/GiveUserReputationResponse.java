@@ -75,7 +75,7 @@ public class GiveUserReputationResponse extends ReputationResponse {
      * @return The user that gave the reputation
      */
     public ReputationUser getSourceUser() {
-        if(sourceUser == null)
+        if (sourceUser == null)
             return user;
         return sourceUser;
     }
@@ -91,7 +91,7 @@ public class GiveUserReputationResponse extends ReputationResponse {
      * @return Current server time in UTC
      */
     public LocalDateTime getDate() {
-        if(date == null || date.isEmpty())
+        if (date == null || date.isEmpty())
             return LocalDateTime.now();
         return DateParser.parseDate(date);
     }

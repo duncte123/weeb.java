@@ -36,6 +36,6 @@ public class ImageTag {
     }
 
     public String toString() {
-        return "ImageTag("+name+")";
+        return "ImageTag(" + name + ")";
     }
 }

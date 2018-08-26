@@ -18,8 +18,8 @@ package me.duncte123.weebJava;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.impl.WeebApiImpl;
-import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.types.Endpoint;
+import me.duncte123.weebJava.types.TokenType;
 
 @SuppressWarnings("unused")
 public class WeebApiBuilder {
@@ -44,14 +44,12 @@ public class WeebApiBuilder {
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
      *
      * @param tokenType The type of token that you want to use
-     * @param appInfo the name of your application
-     *      This sets the app name in the user agent when making requests.
-     *      This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
-     *      Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
-     *      What you set for version and environment is fully up to you, as long as the name is set correctly
-     *      The reason that this is done is to help weeb.sh identify the users a lot better
-     *
-     *
+     * @param appInfo   the name of your application
+     *                  This sets the app name in the user agent when making requests.
+     *                  This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
+     *                  Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
+     *                  What you set for version and environment is fully up to you, as long as the name is set correctly
+     *                  The reason that this is done is to help weeb.sh identify the users a lot better
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      * @deprecated for removal use {@link WeebApiBuilder(TokenType)} and {@link #setBotInfo(String, String, String)} instead
@@ -91,8 +89,8 @@ public class WeebApiBuilder {
      * What you set for version and environment is fully up to you, as long as the name is set correctly
      * The reason that this is done is to help weeb.sh identify the users a lot better
      *
-     * @param botName the name of your application
-     * @param botVersion The version of your application
+     * @param botName     the name of your application
+     * @param botVersion  The version of your application
      * @param environment Some additional data
      * @return The current builder, useful for chaining
      */
@@ -107,7 +105,7 @@ public class WeebApiBuilder {
      * @return the {@link WeebApi WeebApi} interface ready to be used
      */
     public WeebApi build() {
-        if(appName == null || appName.isEmpty())
+        if (appName == null || appName.isEmpty())
             throw new NullPointerException("Bot info has not been set, please set it via WeebApiBuilder#setBotInfo");
         return new WeebApiImpl(tokenType, token, endpoint, appName);
     }

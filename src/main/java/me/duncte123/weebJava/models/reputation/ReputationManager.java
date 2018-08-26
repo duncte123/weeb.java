@@ -26,17 +26,17 @@ import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsRespo
 public interface ReputationManager {
 
     /**
+     * @return The bot id
+     */
+    String getBotId();
+
+    /**
      * Set your bot id
      *
      * @param botId the id of your bot
      * @return The current reputation manager
      */
     ReputationManager setBotId(String botId);
-
-    /**
-     * @return The bot id
-     */
-    String getBotId();
 
     /**
      * This attempts to get the reputation for a user
@@ -69,7 +69,7 @@ public interface ReputationManager {
     /**
      * Resets the reputation for a user
      *
-     * @param userId The id of the user that you want to reset the reputation for
+     * @param userId        The id of the user that you want to reset the reputation for
      * @param resetCooldown If we should reset the cooldown, default: {@code false}
      * @return The {@link ReputationResponse ReputationResponse} holding the user data
      */

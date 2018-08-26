@@ -80,7 +80,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         final PendingRequestBuilder builder = createRequest(manager.prepareGet(url, token))
                 .setRateLimiter(getRateLimiter(url));
 
-        if(isNullOrEmpty(type)) {
+        if (isNullOrEmpty(type)) {
             return builder.build(
                     (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
@@ -97,13 +97,13 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
         final String url = generateUrl(type, id, subtype, subId);
 
-        if(data.toString().length() > 10 * 1024)
+        if (data.toString().length() > 10 * 1024)
             throw new IllegalArgumentException("Data must be below 10Kib");
 
         final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data, token))
                 .setRateLimiter(getRateLimiter(url));
 
-        if(isNullOrEmpty(type)) {
+        if (isNullOrEmpty(type)) {
             return builder.build(
                     (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
@@ -124,7 +124,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         final PendingRequestBuilder builder = createRequest(manager.prepareDelete(url, token))
                 .setRateLimiter(getRateLimiter(url));
 
-        if(isNullOrEmpty(type)) {
+        if (isNullOrEmpty(type)) {
             return builder.build(
                     (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
                     ErrorUtils::handleError
@@ -139,7 +139,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     private String generateUrl(String type, String id, @NotNull String subType, @NotNull String subid) {
         String url = apiBase + "/settings/";
-        if(!isNullOrEmpty(type) && !isNullOrEmpty(id)) {
+        if (!isNullOrEmpty(type) && !isNullOrEmpty(id)) {
             url += type + "/" + id + "/";
         }
         return url + subType + "/" + subid;

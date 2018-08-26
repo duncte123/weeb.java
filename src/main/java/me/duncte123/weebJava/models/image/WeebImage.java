@@ -37,6 +37,7 @@ public class WeebImage {
 
     /**
      * Returns the unique id of the image
+     *
      * @return The unique id of the image
      */
     public String getId() {
@@ -45,6 +46,7 @@ public class WeebImage {
 
     /**
      * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+     *
      * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
      */
     public String getType() {
@@ -53,6 +55,7 @@ public class WeebImage {
 
     /**
      * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+     *
      * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
      */
     public String getBaseType() {
@@ -61,6 +64,7 @@ public class WeebImage {
 
     /**
      * Returns the mime type of the image
+     *
      * @return The mime type of the image
      */
     public String getMimeType() {
@@ -69,6 +73,7 @@ public class WeebImage {
 
     /**
      * Returns the id of the account that uploaded that image
+     *
      * @return The id of the account that uploaded that image
      */
     public String getAccount() {
@@ -77,6 +82,7 @@ public class WeebImage {
 
     /**
      * Returns whether this image can only be seen by the uploader
+     *
      * @return Whether this image can only be seen by the uploader
      */
     public boolean isHidden() {
@@ -85,6 +91,7 @@ public class WeebImage {
 
     /**
      * Returns whether this image has content that could be considered NSFW (not safe for work)
+     *
      * @return Whether this image has content that could be considered NSFW (not safe for work)
      */
     public boolean isNsfw() {
@@ -93,6 +100,7 @@ public class WeebImage {
 
     /**
      * Returns the tags associated with this image
+     *
      * @return The tags associated with this image
      */
     public List<ImageTag> getTags() {
@@ -101,6 +109,7 @@ public class WeebImage {
 
     /**
      * Returns the full url used to load the image, you can safely hotlink the image to your site/service
+     *
      * @return The full url used to load the image, you can safely hotlink the image to your site/service
      */
     public String getUrl() {
@@ -109,6 +118,7 @@ public class WeebImage {
 
     /**
      * Returns the possible null source url of the image
+     *
      * @return The possible null source url of the image
      */
     public String getSource() {

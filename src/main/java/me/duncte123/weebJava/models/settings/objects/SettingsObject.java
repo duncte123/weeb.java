@@ -29,7 +29,6 @@ public class SettingsObject {
 
 
     /**
-     *
      * @return The id for this setting
      */
     public String getId() {
@@ -37,7 +36,6 @@ public class SettingsObject {
     }
 
     /**
-     *
      * @return The type for this setting
      */
     public String getType() {
@@ -45,7 +43,6 @@ public class SettingsObject {
     }
 
     /**
-     *
      * @return The account id for the token
      */
     public String getAccountId() {
@@ -53,7 +50,6 @@ public class SettingsObject {
     }
 
     /**
-     *
      * @return The data that you stored
      */
     public JSONObject getData() {

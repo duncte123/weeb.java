@@ -35,21 +35,22 @@ public class Endpoint {
     }
 
     /**
+     * Allows you to set a custom url for when weeb.sh does some experiments
+     *
+     * @param url The url for the api
+     * @return The url ready to be used with {@link me.duncte123.weebJava.WeebApiBuilder#setEndpoint(Endpoint)}
+     */
+    public static Endpoint fromUrl(URL url) {
+        return new Endpoint("https://" + url.getHost());
+    }
+
+    /**
      * Returns the url
      *
      * @return the url as a string
      */
     public String getUrl() {
         return url;
-    }
-
-    /**
-     * Allows you to set a custom url for when weeb.sh does some experiments
-     * @param url The url for the api
-     * @return The url ready to be used with {@link me.duncte123.weebJava.WeebApiBuilder#setEndpoint(Endpoint)}
-     */
-    public static Endpoint fromUrl(URL url) {
-        return new Endpoint("https://" + url.getHost());
     }
 
     @Override
