@@ -16,7 +16,7 @@
 
 package me.duncte123.weebJava.web;
 
-import me.duncte123.weebJava.models.WeebApi;
+import me.duncte123.weebJava.WeebInfo;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -27,7 +27,7 @@ public class RequestManager {
     private final String USER_AGENT;
 
     public RequestManager(String appName) {
-        USER_AGENT = appName.trim() + " (Weeb.java/" + WeebApi.VERSION + ")";
+        USER_AGENT = appName.trim() + " (Weeb.java/" + WeebInfo.VERSION + ")";
     }
 
     public Request.Builder prepareGet(String url, String token) {

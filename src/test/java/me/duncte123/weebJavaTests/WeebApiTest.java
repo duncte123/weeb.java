@@ -32,10 +32,8 @@ import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,15 +87,15 @@ public class WeebApiTest {
         //Generate Awooo
         apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));
         //Discord status
-        apiImg.generateDiscordStatus(myavy).async( (img) -> writeToFile(img, "status") );
+        apiImg.generateDiscordStatus(myavy).async((img) -> writeToFile(img, "status"));
         //Insult
-        apiImg.generateWaifuinsult(myavy).async( (img) -> writeToFile(img, "wifu") );
+        apiImg.generateWaifuinsult(myavy).async((img) -> writeToFile(img, "wifu"));
         //License
         apiImg.generateLicense("Phan", myavy,
                 new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
-                new String[] {"", "", "Discord: duncte123#1245"}).async( (img) -> writeToFile(img, "license") );
+                new String[]{"", "", "Discord: duncte123#1245"}).async((img) -> writeToFile(img, "license"));
         //Love ship
-        apiImg.generateLoveship(myavy, myavy).async( (img) -> writeToFile(img, "loveship") );
+        apiImg.generateLoveship(myavy, myavy).async((img) -> writeToFile(img, "loveship"));
     }
 
     private static void testReputation(WeebApi api) {
@@ -130,15 +128,16 @@ public class WeebApiTest {
         });
     }
 
-    private static void writeToFile(InputStream in, String name) {
+    private static void writeToFile(byte[] in, String name) {
         try {
 
             File targetFile = new File("image-test-" + name + ".png");
 
-            Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("writing");
-        }
-        catch (IOException e) {
+            try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+                fos.write(in);
+                System.out.println("writing");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

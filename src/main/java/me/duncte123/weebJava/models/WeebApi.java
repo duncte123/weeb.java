@@ -17,11 +17,6 @@ import java.util.List;
 public interface WeebApi {
 
     /**
-     * This holds the current version of the api
-     */
-    String VERSION = WeebInfo.VERSION;
-
-    /**
      * Returns the token type set on the builder
      *
      * @return the token type set on the builder
