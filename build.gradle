@@ -17,6 +17,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
+    id 'com.jfrog.bintray' version '1.7.3'
     id 'java-library'
     id 'idea'
     id 'maven-publish'
@@ -94,8 +95,39 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+Properties properties = new Properties()
+File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
+properties.load(propFile.newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    publications = ["BintrayRelease"]
+    pkg {
+        repo = 'weeb.java'
+        name = 'weeb.java'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/duncte123/weeb.java.git'
+        publish = true
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
+}
+
 publishing {
     publications {
+        BintrayRelease(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version version
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
+    /*publications {
         MavenProject(MavenPublication) {
             from components.java
             groupId group
@@ -105,15 +137,11 @@ publishing {
             artifact javadocJar
             artifact sourcesJar
         }
-    }
+    }*/
 }
 
-publishing {
-    repositories {
-        maven {
-            url "https://dl.bintray.com/duncte123/weeb.java/maven-metadata.xml"
-        }
-    }
+bintrayUpload {
+    dependsOn build
 }
 
 build {
