@@ -28,7 +28,7 @@ plugins {
 
 group = "me.duncte123"
 archivesBaseName = "weebJava"
-version = "2.1.0"
+version = "2.1.1"
 def propFileLoc = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties"
 def shouldRelease = false
 
@@ -154,7 +154,7 @@ publishing {
 }
 
 build {
-//    dependsOn clean
+    dependsOn clean
     dependsOn jar
     dependsOn javadocJar
     dependsOn sourcesJar
