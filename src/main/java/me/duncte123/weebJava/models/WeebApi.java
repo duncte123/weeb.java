@@ -158,11 +158,77 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
+     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param nsfw     When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only types from nsfw images
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(String type, NSFWMode nsfw) {
+        return getRandomImage(type, new ArrayList<>(), nsfw, null, null);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
+     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param hidden   When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you hidden images uploaded by yourself
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(String type, HiddenMode hidden) {
+        return getRandomImage(type, new ArrayList<>(), null, hidden, null);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
+     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param fileType Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(String type, FileType fileType) {
+        return getRandomImage(type, new ArrayList<>(), null, null, fileType);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
      * @param tags list of the tags the image should have
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(List<String> tags) {
         return getRandomImage(null, tags, null, null, null);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
+     * @param tags     list of the tags the image should have
+     * @param nsfw     When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only types from nsfw images
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(List<String> tags, NSFWMode nsfw) {
+        return getRandomImage(null, tags, nsfw, null, null);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
+     * @param tags     list of the tags the image should have
+     * @param hidden   When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you hidden images uploaded by yourself
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(List<String> tags, HiddenMode hidden) {
+        return getRandomImage(null, tags, null, hidden, null);
+    }
+
+    /**
+     * Get a random image based on the information that you provide
+     *
+     * @param tags     list of the tags the image should have
+     * @param fileType Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @return A random image
+     */
+    default PendingRequest<WeebImage> getRandomImage(List<String> tags, FileType fileType) {
+        return getRandomImage(null, tags, null, null, fileType);
     }
 
     /**
