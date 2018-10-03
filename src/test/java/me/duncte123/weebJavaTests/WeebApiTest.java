@@ -43,7 +43,7 @@ public class WeebApiTest {
 
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
-                .setToken(Secrets.WOLKE_TOKEN)
+                .setToken("My token here")
                 .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
