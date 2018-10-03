@@ -22,7 +22,8 @@ import java.io.InputStream;
 /**
  * Inspired by weeb4j's InputStreamFunction
  *
- * @param <T> the type that is returned
+ * @param <T>
+ *         the type that is returned
  */
 public interface InputStreamFunction<T> {
     T accept(InputStream stream) throws IOException;

@@ -83,7 +83,8 @@ public class ImageTypesResponse extends WeebResponse {
         }
 
         /**
-         * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         * Returns the type/category of the image, this is what's used to show the list of types in {@link
+         * WeebApi#getTypes()}
          *
          * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
          */
@@ -92,7 +93,8 @@ public class ImageTypesResponse extends WeebResponse {
         }
 
         /**
-         * Returns the type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
+         * Returns the type/category of the image, this is what's used to show the list of types in {@link
+         * WeebApi#getTypes()}
          *
          * @return The type/category of the image, this is what's used to show the list of types in {@link WeebApi#getTypes()}
          */

@@ -32,7 +32,9 @@ public class WeebApiBuilder {
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
      *
-     * @param tokenType The type of token that you want to use
+     * @param tokenType
+     *         The type of token that you want to use
+     *
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      */
@@ -43,13 +45,17 @@ public class WeebApiBuilder {
     /**
      * This creates the builder for the <a href="https://weeb.sh/" target="_blank">weeb.sh</a> api
      *
-     * @param tokenType The type of token that you want to use
-     * @param appInfo   the name of your application
-     *                  This sets the app name in the user agent when making requests.
-     *                  This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
-     *                  Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
-     *                  What you set for version and environment is fully up to you, as long as the name is set correctly
-     *                  The reason that this is done is to help weeb.sh identify the users a lot better
+     * @param tokenType
+     *         The type of token that you want to use
+     * @param appInfo
+     *         the name of your application
+     *         This sets the app name in the user agent when making requests.
+     *         This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code
+     *         BotName/Version/environment}
+     *         Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
+     *         What you set for version and environment is fully up to you, as long as the name is set correctly
+     *         The reason that this is done is to help weeb.sh identify the users a lot better
+     *
      * @see TokenType#WOLKETOKENS
      * @see TokenType#BEARER
      * @deprecated for removal use {@link WeebApiBuilder(TokenType)} and {@link #setBotInfo(String, String, String)} instead
@@ -61,9 +67,12 @@ public class WeebApiBuilder {
     }
 
     /**
-     * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/" target="_blank">weeb.sh</a>
+     * This sets the token used to authenticate you for all your requests to <a href="https://weeb.sh/"
+     * target="_blank">weeb.sh</a>
      *
-     * @param token Your token
+     * @param token
+     *         Your token
+     *
      * @return The current builder, useful for chaining
      */
     public WeebApiBuilder setToken(String token) {
@@ -74,7 +83,9 @@ public class WeebApiBuilder {
     /**
      * This sets the api url that we user to make our requests
      *
-     * @param endpoint The {@link Endpoint} that we want to use
+     * @param endpoint
+     *         The {@link Endpoint} that we want to use
+     *
      * @return The current builder, useful for chaining
      */
     public WeebApiBuilder setEndpoint(Endpoint endpoint) {
@@ -84,14 +95,19 @@ public class WeebApiBuilder {
 
     /**
      * This sets the app name in the user agent when making requests.
-     * This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code BotName/Version/environment}
+     * This valus is supposed to be in the following format {@code BotName/Version} or alternatively {@code
+     * BotName/Version/environment}
      * Examples {@code DuncteBot/3.2.4} or {@code DuncteBot/3.2.4/beta}
      * What you set for version and environment is fully up to you, as long as the name is set correctly
      * The reason that this is done is to help weeb.sh identify the users a lot better
      *
-     * @param botName     the name of your application
-     * @param botVersion  The version of your application
-     * @param environment Some additional data
+     * @param botName
+     *         the name of your application
+     * @param botVersion
+     *         The version of your application
+     * @param environment
+     *         Some additional data
+     *
      * @return The current builder, useful for chaining
      */
     public WeebApiBuilder setBotInfo(String botName, String botVersion, String environment) {

@@ -70,7 +70,9 @@ public interface WeebApi {
     /**
      * Lists the types for the images
      *
-     * @param hidden if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
+     * @param hidden
+     *         if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
+     *
      * @return The types that match your response
      */
     default PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden) {
@@ -80,7 +82,11 @@ public interface WeebApi {
     /**
      * Lists the types for the images
      *
-     * @param nsfw When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns only types from nsfw images
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns
+     *         only types from nsfw images
+     *
      * @return The types that match your response
      */
     default PendingRequest<ImageTypesResponse> getTypes(NSFWMode nsfw) {
@@ -90,7 +96,9 @@ public interface WeebApi {
     /**
      * Lists the types for the images
      *
-     * @param preview Sets if we should get a preview for each type
+     * @param preview
+     *         Sets if we should get a preview for each type
+     *
      * @return The types that match your response
      */
     default PendingRequest<ImageTypesResponse> getTypes(PreviewMode preview) {
@@ -100,9 +108,15 @@ public interface WeebApi {
     /**
      * Lists the types for the images
      *
-     * @param hidden  if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
-     * @param nsfw    When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns only types from nsfw images
-     * @param preview Sets if we should get a preview for each type
+     * @param hidden
+     *         if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns
+     *         only types from nsfw images
+     * @param preview
+     *         Sets if we should get a preview for each type
+     *
      * @return The types that match your response
      */
     PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview);
@@ -119,7 +133,9 @@ public interface WeebApi {
     /**
      * Get a list of the available tags
      *
-     * @param hidden if {@link HiddenMode#ONLY}, you only get back hidden tags you added
+     * @param hidden
+     *         if {@link HiddenMode#ONLY}, you only get back hidden tags you added
+     *
      * @return A list of tags
      */
     default PendingRequest<List<String>> getTags(HiddenMode hidden) {
@@ -129,7 +145,11 @@ public interface WeebApi {
     /**
      * Get a list of the available tags
      *
-     * @param nsfw When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only tags from nsfw images
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
+     *         tags from nsfw images
+     *
      * @return A list of tags
      */
     default PendingRequest<List<String>> getTags(NSFWMode nsfw) {
@@ -139,8 +159,13 @@ public interface WeebApi {
     /**
      * Get a list of the available tags
      *
-     * @param hidden if {@link HiddenMode#ONLY}, you only get back hidden tags you added
-     * @param nsfw   When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only tags from nsfw images
+     * @param hidden
+     *         if {@link HiddenMode#ONLY}, you only get back hidden tags you added
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
+     *         tags from nsfw images
+     *
      * @return A list of tags
      */
     PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw);
@@ -148,7 +173,9 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param type
+     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(String type) {
@@ -158,8 +185,13 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param nsfw     When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only types from nsfw images
+     * @param type
+     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
+     *         types from nsfw images
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(String type, NSFWMode nsfw) {
@@ -169,8 +201,12 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param hidden   When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you hidden images uploaded by yourself
+     * @param type
+     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param hidden
+     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
+     *         hidden images uploaded by yourself
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(String type, HiddenMode hidden) {
@@ -180,8 +216,11 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param fileType Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @param type
+     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param fileType
+     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(String type, FileType fileType) {
@@ -191,7 +230,9 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param tags list of the tags the image should have
+     * @param tags
+     *         list of the tags the image should have
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(List<String> tags) {
@@ -201,8 +242,13 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param tags     list of the tags the image should have
-     * @param nsfw     When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only types from nsfw images
+     * @param tags
+     *         list of the tags the image should have
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
+     *         types from nsfw images
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(List<String> tags, NSFWMode nsfw) {
@@ -212,8 +258,12 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param tags     list of the tags the image should have
-     * @param hidden   When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you hidden images uploaded by yourself
+     * @param tags
+     *         list of the tags the image should have
+     * @param hidden
+     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
+     *         hidden images uploaded by yourself
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(List<String> tags, HiddenMode hidden) {
@@ -223,8 +273,11 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param tags     list of the tags the image should have
-     * @param fileType Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @param tags
+     *         list of the tags the image should have
+     * @param fileType
+     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     *
      * @return A random image
      */
     default PendingRequest<WeebImage> getRandomImage(List<String> tags, FileType fileType) {
@@ -234,11 +287,20 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type     type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param tags     list of the tags the image should have
-     * @param nsfw     When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only types from nsfw images
-     * @param hidden   When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you hidden images uploaded by yourself
-     * @param fileType Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @param type
+     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
+     * @param tags
+     *         list of the tags the image should have
+     * @param nsfw
+     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
+     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
+     *         types from nsfw images
+     * @param hidden
+     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
+     *         hidden images uploaded by yourself
+     * @param fileType
+     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     *
      * @return A random image
      */
     PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType);
@@ -247,7 +309,9 @@ public interface WeebApi {
     /**
      * Get info about an image
      *
-     * @param imageId The id of the image to get the info for
+     * @param imageId
+     *         The id of the image to get the info for
+     *
      * @return The information returned from the server
      */
     PendingRequest<WeebImage> getImageInfo(String imageId);
@@ -256,7 +320,9 @@ public interface WeebApi {
     /**
      * Generates a simple image
      *
-     * @param type type of the generation to create
+     * @param type
+     *         type of the generation to create
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     default PendingRequest<byte[]> generateSimple(GenerateType type) {
@@ -266,9 +332,13 @@ public interface WeebApi {
     /**
      * Generates a simple image
      *
-     * @param type type of the generation to create
-     * @param face only used with {@link GenerateType#AWOOO awooo} type, defines color of face
-     * @param hair only used with {@link GenerateType#AWOOO awooo} type, defines color of hair/fur
+     * @param type
+     *         type of the generation to create
+     * @param face
+     *         only used with {@link GenerateType#AWOOO awooo} type, defines color of face
+     * @param hair
+     *         only used with {@link GenerateType#AWOOO awooo} type, defines color of hair/fur
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     PendingRequest<byte[]> generateSimple(GenerateType type, Color face, Color hair);
@@ -285,7 +355,9 @@ public interface WeebApi {
     /**
      * Generates a discord avatar status
      *
-     * @param status discord status of the mock
+     * @param status
+     *         discord status of the mock
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     default PendingRequest<byte[]> generateDiscordStatus(StatusType status) {
@@ -295,7 +367,9 @@ public interface WeebApi {
     /**
      * Generates a discord avatar status
      *
-     * @param avatar http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
+     * @param avatar
+     *         http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     default PendingRequest<byte[]> generateDiscordStatus(String avatar) {
@@ -305,8 +379,11 @@ public interface WeebApi {
     /**
      * Generates a discord avatar status
      *
-     * @param status discord status of the mock
-     * @param avatar http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
+     * @param status
+     *         discord status of the mock
+     * @param avatar
+     *         http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar);
@@ -314,8 +391,11 @@ public interface WeebApi {
     /**
      * Generates a licence
      *
-     * @param title  Title of the license
-     * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     * @param title
+     *         Title of the license
+     * @param avatar
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     default PendingRequest<byte[]> generateLicense(String title, String avatar) {
@@ -325,9 +405,14 @@ public interface WeebApi {
     /**
      * Generates a licence
      *
-     * @param title  Title of the license
-     * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param badges Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar apply
+     * @param title
+     *         Title of the license
+     * @param avatar
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     * @param badges
+     *         Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar
+     *         apply
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     default PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges) {
@@ -337,10 +422,16 @@ public interface WeebApi {
     /**
      * Generates a licence
      *
-     * @param title   Title of the license
-     * @param avatar  http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param badges  Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar apply
-     * @param widgets Array of strings for filling the three boxes with text content
+     * @param title
+     *         Title of the license
+     * @param avatar
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     * @param badges
+     *         Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar
+     *         apply
+     * @param widgets
+     *         Array of strings for filling the three boxes with text content
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges, String[] widgets);
@@ -348,7 +439,9 @@ public interface WeebApi {
     /**
      * Generates a waifu insult
      *
-     * @param avatar http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     * @param avatar
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     PendingRequest<byte[]> generateWaifuinsult(String avatar);
@@ -356,8 +449,13 @@ public interface WeebApi {
     /**
      * Generates a loveship with two images
      *
-     * @param targetOne http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the left side.
-     * @param targetTwo http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will be on the right side.
+     * @param targetOne
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will
+     *         be on the left side.
+     * @param targetTwo
+     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image, image will
+     *         be on the right side.
+     *
      * @return The {@link InputStream InputStream} of the generated image
      */
     PendingRequest<byte[]> generateLoveship(String targetOne, String targetTwo);

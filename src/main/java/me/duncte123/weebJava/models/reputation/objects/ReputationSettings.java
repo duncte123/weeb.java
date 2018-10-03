@@ -33,7 +33,9 @@ public class ReputationSettings {
     }
 
     /**
-     * @param reputationPerDay Number of reputations a user may give out per reputationCooldown, default: {@code 2}
+     * @param reputationPerDay
+     *         Number of reputations a user may give out per reputationCooldown, default: {@code 2}
+     *
      * @return The current settings object, useful for chaining
      */
     public ReputationSettings setReputationPerDay(int reputationPerDay) {
@@ -49,7 +51,9 @@ public class ReputationSettings {
     }
 
     /**
-     * @param maximumReputation The maximum reputation a user may receive, default: {@code 0} (disabled)
+     * @param maximumReputation
+     *         The maximum reputation a user may receive, default: {@code 0} (disabled)
+     *
      * @return The current settings object, useful for chaining
      */
     public ReputationSettings setMaximumReputation(int maximumReputation) {
@@ -65,7 +69,9 @@ public class ReputationSettings {
     }
 
     /**
-     * @param maximumReputationReceivedDay The maximum reputation a user may receive per day, default: {@code 0} (disabled)
+     * @param maximumReputationReceivedDay
+     *         The maximum reputation a user may receive per day, default: {@code 0} (disabled)
+     *
      * @return The current settings object, useful for chaining
      */
     public ReputationSettings setMaximumReputationReceivedDay(int maximumReputationReceivedDay) {
@@ -81,7 +87,9 @@ public class ReputationSettings {
     }
 
     /**
-     * @param reputationCooldown Cooldown per reputation, this is set to time in seconds, default: {@code 86400} (1 day)
+     * @param reputationCooldown
+     *         Cooldown per reputation, this is set to time in seconds, default: {@code 86400} (1 day)
+     *
      * @return The current settings object, useful for chaining
      */
     public ReputationSettings setReputationCooldown(long reputationCooldown) {
