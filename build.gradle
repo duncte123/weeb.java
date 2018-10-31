@@ -61,9 +61,10 @@ task sourcesForRelease(type: Copy) {
     from('src/main/java') {
         include '**/WeebInfo.java'
         filter(ReplaceTokens, tokens: [
-                version: version
+                version: version.toString()
         ])
     }
+    
     into 'build/filteredSrc'
 
     includeEmptyDirs = false
