@@ -31,7 +31,6 @@ import me.duncte123.weebJava.types.TokenType;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.List;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
