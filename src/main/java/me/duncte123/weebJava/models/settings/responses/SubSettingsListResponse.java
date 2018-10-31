@@ -49,7 +49,7 @@ public class SubSettingsListResponse extends WeebResponse {
 
         return new SubSettingsListResponse(
                 jsonObject.getInt("status"),
-                jsonObject.getString("message"),
+                jsonObject.optString("message"),
                 objects
         );
 

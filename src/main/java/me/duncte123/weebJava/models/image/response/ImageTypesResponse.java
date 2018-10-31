@@ -18,7 +18,9 @@ package me.duncte123.weebJava.models.image.response;
 
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.WeebResponse;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -28,7 +30,7 @@ public class ImageTypesResponse extends WeebResponse {
     private final List<String> types;
     private final List<PartialImage> preview;
 
-    public ImageTypesResponse(int status, String message, List<String> types, List<PartialImage> preview) {
+    private ImageTypesResponse(int status, String message, List<String> types, List<PartialImage> preview) {
         super(status, message);
         this.types = types;
         this.preview = preview;
@@ -52,14 +54,45 @@ public class ImageTypesResponse extends WeebResponse {
         return preview;
     }
 
+    public static ImageTypesResponse fromJson(JSONObject jsonObject) {
+        List<String> types = new ArrayList<>();
+        List<PartialImage> preview = new ArrayList<>();
+
+        jsonObject.getJSONArray("types").forEach(
+                (type) -> types.add(String.valueOf(type))
+        );
+
+
+        if (jsonObject.has("preview")) {
+            jsonObject.getJSONArray("preview").forEach(
+                    (it) -> preview.add(PartialImage.fromJson((JSONObject) it))
+            );
+        }
+
+        return new ImageTypesResponse(
+                jsonObject.getInt("status"),
+                jsonObject.optString("message"),
+                types,
+                preview
+        );
+    }
+
 
     public static class PartialImage {
 
-        private String url;
-        private String id;
-        private String fileType;
-        private String baseType;
-        private String type;
+        private final String url;
+        private final String id;
+        private final String fileType;
+        private final String baseType;
+        private final String type;
+
+        private PartialImage(String url, String id, String fileType, String baseType, String type) {
+            this.url = url;
+            this.id = id;
+            this.fileType = fileType;
+            this.baseType = baseType;
+            this.type = type;
+        }
 
         /**
          * Returns the url of the image
@@ -110,6 +143,16 @@ public class ImageTypesResponse extends WeebResponse {
 
         public String toString() {
             return "PartialImage(" + url + ")";
+        }
+
+        static PartialImage fromJson(JSONObject jsonObject) {
+            return new PartialImage(
+                    jsonObject.getString("url"),
+                    jsonObject.getString("id"),
+                    jsonObject.getString("fileType"),
+                    jsonObject.getString("baseType"),
+                    jsonObject.getString("type")
+            );
         }
     }
 }

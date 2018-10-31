@@ -21,11 +21,11 @@ import org.json.JSONObject;
 @SuppressWarnings("unused")
 public class ReputationSettings {
 
+    private final String accountId;
     private int reputationPerDay;
     private int maximumReputation;
     private int maximumReputationReceivedDay;
     private long reputationCooldown;
-    private final String accountId;
 
     private ReputationSettings(int reputationPerDay, int maximumReputation, int maximumReputationReceivedDay, long reputationCooldown, String accountId) {
         this.reputationPerDay = reputationPerDay;

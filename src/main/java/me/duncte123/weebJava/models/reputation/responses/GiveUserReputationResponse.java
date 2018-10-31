@@ -113,7 +113,7 @@ public class GiveUserReputationResponse extends ReputationResponse {
     public static GiveUserReputationResponse fromJson(JSONObject jsonObject) {
         return new GiveUserReputationResponse(
                 jsonObject.getInt("status"),
-                jsonObject.getString("message"),
+                jsonObject.optString("message"),
                 null,
                 jsonObject.getInt("code"),
                 ReputationUser.fromJson(jsonObject.getJSONObject("sourceUser")),

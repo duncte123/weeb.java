@@ -40,7 +40,7 @@ public class ReputationSettingsResponse extends WeebResponse {
     public static ReputationSettingsResponse fromJson(JSONObject jsonObject) {
         return new ReputationSettingsResponse(
                 jsonObject.getInt("status"),
-                jsonObject.getString("message"),
+                jsonObject.optString("message"),
                 ReputationSettings.fromJson(jsonObject.getJSONObject("settings"))
         );
     }

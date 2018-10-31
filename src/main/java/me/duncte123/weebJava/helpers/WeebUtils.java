@@ -16,26 +16,10 @@
 
 package me.duncte123.weebJava.helpers;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
-import java.io.IOException;
-import java.util.List;
-
 public class WeebUtils {
-
-    private static final Gson gson = new Gson();
-
-    public static <T> T getClassFromJson(@NotNull Response res, @NotNull Class<T> cls) throws IOException {
-        return gson.fromJson(res.body().string(), cls);
-    }
-
-    public static <T> List<T> getClassFromJsonList(@NotNull JSONArray json) {
-        return gson.fromJson(json.toString(), new TypeToken<List<T>>() {}.getType());
-    }
 
     public static <T> T[] toArray(@NotNull JSONArray array) {
         //noinspection unchecked

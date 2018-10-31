@@ -20,9 +20,6 @@ import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings("unused")
 public class SubSettingsResponse extends SettingsResponse {
 
@@ -52,7 +49,7 @@ public class SubSettingsResponse extends SettingsResponse {
     public static SubSettingsResponse fromJson(JSONObject jsonObject) {
         return new SubSettingsResponse(
                 jsonObject.getInt("status"),
-                jsonObject.getString("message"),
+                jsonObject.optString("message"),
                 null,
                 SubSettingsObject.fromJson(jsonObject.getJSONObject("subsetting"))
         );

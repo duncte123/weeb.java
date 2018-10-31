@@ -47,7 +47,7 @@ public class SettingsResponse extends WeebResponse {
     public static SettingsResponse fromJson(JSONObject jsonObject) {
         return new SettingsResponse(
                 jsonObject.getInt("status"),
-                jsonObject.getString("message"),
+                jsonObject.optString("message"),
                 SettingsObject.fromJson(jsonObject.getJSONObject("setting"))
         );
     }

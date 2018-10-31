@@ -2,7 +2,6 @@ package me.duncte123.weebJava.models.impl;
 
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
-import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.IOHelper;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
@@ -20,10 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import static me.duncte123.weebJava.helpers.WeebUtils.getClassFromJson;
-import static me.duncte123.weebJava.helpers.WeebUtils.getClassFromJsonList;
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
 public class WeebApiImpl extends Reliqua implements WeebApi {
@@ -33,8 +31,6 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private final Endpoint endpoint;
 
     private final RequestManager manager;
-
-    private final Gson gson = new Gson();
 
     private ReputationManager reputationManager;
     private SettingsManager settingsManager;
@@ -83,7 +79,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/types"))
                 .build(
-                        (response) -> getClassFromJson(response, ImageTypesResponse.class),
+                        (response) -> ImageTypesResponse.fromJson(toJSONObject(response)),
                         ErrorUtils::handleError
                 );
     }
@@ -104,7 +100,15 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/tags"))
                 .build(
-                        (response) -> getClassFromJsonList(toJSONObject(response).getJSONArray("tags")),
+                        (response) -> {
+                            List<String> tags = new ArrayList<>();
+
+                            toJSONObject(response).getJSONArray("tags").forEach(
+                                    (it) -> tags.add(String.valueOf(it))
+                            );
+
+                            return tags;
+                        },
                         ErrorUtils::handleError
                 );
     }
@@ -134,7 +138,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/random"))
                 .build(
-                        (response) -> extractImageFromJson(response.body().string()),
+                        (response) -> WeebImage.fromJson(toJSONObject(response)),
                         ErrorUtils::handleError
                 );
     }
@@ -148,7 +152,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 ))
                 .setRateLimiter(getRateLimiter("/info"))
                 .build(
-                        (response) -> extractImageFromJson(response.body().string()),
+                        (response) -> WeebImage.fromJson(toJSONObject(response)),
                         ErrorUtils::handleError
                 );
     }
@@ -248,10 +252,6 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     private String colorToHex(Color color) {
         return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-    }
-
-    private WeebImage extractImageFromJson(String json) {
-        return gson.fromJson(json, WeebImage.class);
     }
 
     @Override
