@@ -18,6 +18,7 @@ package me.duncte123.weebJava.models.reputation.responses;
 
 import me.duncte123.weebJava.helpers.DateParser;
 import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
+import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class GiveUserReputationResponse extends ReputationResponse {
     private final ReputationUser targetUser;
     private final String date;
 
-    public GiveUserReputationResponse(int status, String message, ReputationUser user, int code, ReputationUser sourceUser, ReputationUser targetUser, String date) {
+    private GiveUserReputationResponse(int status, String message, ReputationUser user, int code, ReputationUser sourceUser, ReputationUser targetUser, String date) {
         super(status, message, user);
         this.code = code;
         this.sourceUser = sourceUser;
@@ -107,5 +108,17 @@ public class GiveUserReputationResponse extends ReputationResponse {
     @Override
     public ReputationUser getUser() {
         throw new IllegalArgumentException("Use getSourceUser() or getTargetUser()");
+    }
+
+    public static GiveUserReputationResponse fromJson(JSONObject jsonObject) {
+        return new GiveUserReputationResponse(
+                jsonObject.getInt("status"),
+                jsonObject.getString("message"),
+                null,
+                jsonObject.getInt("code"),
+                ReputationUser.fromJson(jsonObject.getJSONObject("sourceUser")),
+                ReputationUser.fromJson(jsonObject.getJSONObject("targetUser")),
+                jsonObject.getString("date")
+        );
     }
 }

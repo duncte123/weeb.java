@@ -18,26 +18,41 @@ package me.duncte123.weebJava.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class WeebUtils {
 
     private static final Gson gson = new Gson();
 
-    public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
+    public static <T> T getClassFromJson(@NotNull Response res, @NotNull Class<T> cls) throws IOException {
         return gson.fromJson(res.body().string(), cls);
     }
 
-    public static <T> List<T> getClassFromJsonList(JSONArray json) {
-        return gson.fromJson(json.toString(), new TypeToken<List<T>>() {
-        }.getType());
+    public static <T> List<T> getClassFromJsonList(@NotNull JSONArray json) {
+        return gson.fromJson(json.toString(), new TypeToken<List<T>>() {}.getType());
+    }
+
+    public static <T> T[] toArray(@NotNull JSONArray array) {
+        //noinspection unchecked
+        return (T[]) array.toList().toArray();
+    }
+
+    public static int[] toIntArray(@NotNull JSONArray array) {
+
+        // Create an int array to accomodate the numbers.
+        int[] numbers = new int[array.length()];
+
+        // Extract numbers from JSON array.
+        for (int i = 0; i < array.length(); ++i) {
+            numbers[i] = array.optInt(i);
+        }
+
+        return numbers;
     }
 
     public static boolean isNullOrEmpty(String s) {

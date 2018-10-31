@@ -18,13 +18,14 @@ package me.duncte123.weebJava.models.reputation.responses;
 
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
+import org.json.JSONObject;
 
 @SuppressWarnings("unused")
 public class ReputationSettingsResponse extends WeebResponse {
 
     private final ReputationSettings settings;
 
-    public ReputationSettingsResponse(int status, String message, ReputationSettings settings) {
+    private ReputationSettingsResponse(int status, String message, ReputationSettings settings) {
         super(status, message);
         this.settings = settings;
     }
@@ -34,5 +35,13 @@ public class ReputationSettingsResponse extends WeebResponse {
      */
     public ReputationSettings getSettings() {
         return settings;
+    }
+
+    public static ReputationSettingsResponse fromJson(JSONObject jsonObject) {
+        return new ReputationSettingsResponse(
+                jsonObject.getInt("status"),
+                jsonObject.getString("message"),
+                ReputationSettings.fromJson(jsonObject.getJSONObject("settings"))
+        );
     }
 }
