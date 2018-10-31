@@ -24,10 +24,18 @@ import java.time.LocalDateTime;
 @SuppressWarnings("unused")
 public class GiveUserReputationResponse extends ReputationResponse {
 
-    private int code;
-    private ReputationUser sourceUser;
-    private ReputationUser targetUser;
-    private String date;
+    private final int code;
+    private final ReputationUser sourceUser;
+    private final ReputationUser targetUser;
+    private final String date;
+
+    public GiveUserReputationResponse(int status, String message, ReputationUser user, int code, ReputationUser sourceUser, ReputationUser targetUser, String date) {
+        super(status, message, user);
+        this.code = code;
+        this.sourceUser = sourceUser;
+        this.targetUser = targetUser;
+        this.date = date;
+    }
 
     /**
      * @return The error code of this response

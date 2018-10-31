@@ -19,8 +19,13 @@ package me.duncte123.weebJava.models;
 @SuppressWarnings("unused")
 public class WeebResponse {
 
-    private int status;
-    private String message;
+    private final int status;
+    private final String message;
+
+    public WeebResponse(int status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
     public int getStatus() {
         return status;

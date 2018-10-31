@@ -22,7 +22,12 @@ import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 
 @SuppressWarnings("unused")
 public class SettingsResponse extends WeebResponse {
-    private SettingsObject setting;
+    private final SettingsObject setting;
+
+    public SettingsResponse(int status, String message, SettingsObject setting) {
+        super(status, message);
+        this.setting = setting;
+    }
 
     /**
      * @return The settings object holding your data

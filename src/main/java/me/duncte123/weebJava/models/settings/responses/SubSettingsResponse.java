@@ -22,7 +22,12 @@ import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
 @SuppressWarnings("unused")
 public class SubSettingsResponse extends SettingsResponse {
 
-    private SubSettingsObject subsetting;
+    private final SubSettingsObject subsetting;
+
+    public SubSettingsResponse(int status, String message, SettingsObject setting, SubSettingsObject subsetting) {
+        super(status, message, setting);
+        this.subsetting = subsetting;
+    }
 
     /**
      * {@inheritDoc}

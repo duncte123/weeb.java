@@ -25,8 +25,14 @@ import java.util.List;
 public class ImageTypesResponse extends WeebResponse {
 
 
-    private List<String> types;
-    private List<PartialImage> preview;
+    private final List<String> types;
+    private final List<PartialImage> preview;
+
+    public ImageTypesResponse(int status, String message, List<String> types, List<PartialImage> preview) {
+        super(status, message);
+        this.types = types;
+        this.preview = preview;
+    }
 
     /**
      * Returns a list of the available types

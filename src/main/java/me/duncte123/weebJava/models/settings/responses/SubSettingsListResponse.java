@@ -24,7 +24,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class SubSettingsListResponse extends WeebResponse {
 
-    private List<SubSettingsObject> subsettings;
+    private final List<SubSettingsObject> subsettings;
+
+    public SubSettingsListResponse(int status, String message, List<SubSettingsObject> subsettings) {
+        super(status, message);
+        this.subsettings = subsettings;
+    }
 
     /**
      * @return A list of {@link SubSettingsObject SubSettingsObjects}

@@ -22,7 +22,12 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 @SuppressWarnings("unused")
 public class ReputationSettingsResponse extends WeebResponse {
 
-    private ReputationSettings settings;
+    private final ReputationSettings settings;
+
+    public ReputationSettingsResponse(int status, String message, ReputationSettings settings) {
+        super(status, message);
+        this.settings = settings;
+    }
 
     /**
      * @return The {@link ReputationSettings settings} for your account

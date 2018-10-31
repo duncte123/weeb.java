@@ -32,7 +32,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 public class ErrorUtils {
-    static JSONObject toJSONObject(Response response) {
+    public static JSONObject toJSONObject(Response response) {
         return new JSONObject(new JSONTokener(getInputStream(response)));
     }
 

@@ -16,11 +16,19 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
+import com.google.gson.JsonElement;
+
 @SuppressWarnings("unused")
 public class SubSettingsObject extends SettingsObject {
 
-    private String subId;
-    private String subType;
+    private final String subId;
+    private final String subType;
+
+    public SubSettingsObject(String id, String type, String accountId, JsonElement data, String subId, String subType) {
+        super(id, type, accountId, data);
+        this.subId = subId;
+        this.subType = subType;
+    }
 
     public String getSubId() {
         return subId;

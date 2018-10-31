@@ -1,8 +1,8 @@
 package me.duncte123.weebJava.models.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.IOHelper;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
@@ -22,7 +22,9 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.util.List;
 
-import static me.duncte123.weebJava.helpers.WeebUtils.*;
+import static me.duncte123.weebJava.helpers.WeebUtils.getClassFromJson;
+import static me.duncte123.weebJava.helpers.WeebUtils.getClassFromJsonList;
+import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
 public class WeebApiImpl extends Reliqua implements WeebApi {
 
@@ -31,6 +33,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private final Endpoint endpoint;
 
     private final RequestManager manager;
+
+    private final Gson gson = new Gson();
 
     private ReputationManager reputationManager;
     private SettingsManager settingsManager;
@@ -100,7 +104,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/tags"))
                 .build(
-                        (response) -> getClassFromJsonList(toJsonObject(response).getJSONArray("tags"), String.class),
+                        (response) -> getClassFromJsonList(toJSONObject(response).getJSONArray("tags")),
                         ErrorUtils::handleError
                 );
     }
@@ -206,7 +210,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/license").build(),
-                        data,
+                        data.toString(),
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/license"))
@@ -218,7 +222,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
-                        new JSONObject().put("avatar", avatar),
+                        new JSONObject().put("avatar", avatar).toString(),
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/waifu-insult"))
@@ -235,7 +239,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/love-ship").build(),
-                        data,
+                        data.toString(),
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/love-ship"))
@@ -247,7 +251,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     }
 
     private WeebImage extractImageFromJson(String json) {
-        return Ason.deserialize(json, WeebImage.class);
+        return gson.fromJson(json, WeebImage.class);
     }
 
     @Override

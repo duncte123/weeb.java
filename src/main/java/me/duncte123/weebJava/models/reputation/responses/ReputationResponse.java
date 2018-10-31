@@ -22,7 +22,12 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ReputationResponse extends WeebResponse {
 
-    protected ReputationUser user;
+    protected final ReputationUser user;
+
+    public ReputationResponse(int status, String message, ReputationUser user) {
+        super(status, message);
+        this.user = user;
+    }
 
     /**
      * @return The corresponding user object for the reputation

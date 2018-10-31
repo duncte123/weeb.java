@@ -16,17 +16,26 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import com.afollestad.ason.Ason;
+import com.google.gson.JsonElement;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused")
 public class SettingsObject {
 
-    private String id;
-    private String type;
-    private String accountId;
-    private Ason data;
+    private final String id;
+    private final String type;
+    private final String accountId;
+    private final JsonElement data;
 
+    private JSONObject jsonData;
+    private String dataRaw;
+
+    public SettingsObject(String id, String type, String accountId, JsonElement data) {
+        this.id = id;
+        this.type = type;
+        this.accountId = accountId;
+        this.data = data;
+    }
 
     /**
      * @return The id for this setting
@@ -50,9 +59,26 @@ public class SettingsObject {
     }
 
     /**
+     * @return The data that you stored as a string
+     */
+    public String getDataRaw() {
+
+        if (dataRaw == null) {
+            dataRaw = data.getAsJsonObject().toString();
+        }
+
+        return dataRaw;
+    }
+
+    /**
      * @return The data that you stored
      */
     public JSONObject getData() {
-        return data.toStockJson();
+
+        if (jsonData == null) {
+            jsonData = new JSONObject(getDataRaw());
+        }
+
+        return jsonData;
     }
 }

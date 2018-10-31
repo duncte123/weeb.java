@@ -16,9 +16,9 @@
 
 package me.duncte123.weebJava.models.reputation.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.google.gson.Gson;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
@@ -36,6 +36,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     private final String apiBase;
     private final String token;
     private final RequestManager manager;
+    private final Gson gson = new Gson();
     private String botId;
 
     public ReputationManagerImpl(OkHttpClient client, String apiBase, RequestManager manager, String token) {
@@ -86,7 +87,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        new JSONObject().put("source_user", sourceUserId),
+                        new JSONObject().put("source_user", sourceUserId).toString(),
                         token
                 )
         ).build(
@@ -122,7 +123,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("increase", amount),
+                        new JSONObject().put("increase", amount).toString(),
                         token
                 )
         ).build(
@@ -141,7 +142,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("decrease", amount),
+                        new JSONObject().put("decrease", amount).toString(),
                         token
                 )
         ).build(
@@ -165,7 +166,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     @Override
     public PendingRequest<ReputationSettingsResponse> setSettings(ReputationSettings settings) {
 
-        JSONObject data = Ason.serialize(settings).toStockJson();
+        JSONObject data = new JSONObject(gson.toJson(settings));
         data.remove("accountId");
 
         String url = apiBase + "/reputation/settings";
@@ -173,7 +174,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        data,
+                        data.toString(),
                         token
                 )
         ).build(

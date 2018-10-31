@@ -96,11 +96,14 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
     @Override
     public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
         final String url = generateUrl(type, id, subtype, subId);
+        final String dataString = data.toString();
 
-        if (data.toString().length() > 10 * 1024)
+        System.out.println(dataString);
+
+        if (dataString.length() > 10 * 1024)
             throw new IllegalArgumentException("Data must be below 10Kib");
 
-        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data, token))
+        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, dataString, token))
                 .setRateLimiter(getRateLimiter(url));
 
         if (isNullOrEmpty(type)) {

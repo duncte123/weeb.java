@@ -16,29 +16,25 @@
 
 package me.duncte123.weebJava.helpers;
 
-import com.afollestad.ason.Ason;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
 
 public class WeebUtils {
+
+    private static final Gson gson = new Gson();
+
     public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
-        return Ason.deserialize(res.body().string(), cls, true);
+        return gson.fromJson(res.body().string(), cls);
     }
 
-    /*public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
-        return Ason.deserializeList(res.body().string(), cls, true);
-    }*/
-
-    public static <T> List<T> getClassFromJsonList(JSONArray json, Class<T> cls) {
-        return Ason.deserializeList(json.toString(), cls, true);
-    }
-
-    public static JSONObject toJsonObject(Response res) throws IOException {
-        return new JSONObject(res.body().string());
+    public static <T> List<T> getClassFromJsonList(JSONArray json) {
+        return gson.fromJson(json.toString(), new TypeToken<List<T>>() {
+        }.getType());
     }
 
     public static boolean isNullOrEmpty(String s) {
