@@ -28,7 +28,7 @@ plugins {
 
 group = 'me.duncte123'
 archivesBaseName = 'weebJava'
-version = '2.1.1'
+version = "2.1.1_${getBuildNumber()}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
