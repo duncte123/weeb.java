@@ -18,10 +18,13 @@ package me.duncte123.weebJava.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import me.duncte123.weebJava.web.ErrorUtils;
 import okhttp3.Response;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class WeebUtils {

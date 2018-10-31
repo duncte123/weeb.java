@@ -16,7 +16,6 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import com.google.gson.JsonElement;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused")
@@ -25,12 +24,9 @@ public class SettingsObject {
     private final String id;
     private final String type;
     private final String accountId;
-    private final JsonElement data;
+    private final JSONObject data;
 
-    private JSONObject jsonData;
-    private String dataRaw;
-
-    public SettingsObject(String id, String type, String accountId, JsonElement data) {
+    SettingsObject(String id, String type, String accountId, JSONObject data) {
         this.id = id;
         this.type = type;
         this.accountId = accountId;
@@ -59,26 +55,18 @@ public class SettingsObject {
     }
 
     /**
-     * @return The data that you stored as a string
-     */
-    public String getDataRaw() {
-
-        if (dataRaw == null) {
-            dataRaw = data.getAsJsonObject().toString();
-        }
-
-        return dataRaw;
-    }
-
-    /**
      * @return The data that you stored
      */
     public JSONObject getData() {
+        return data;
+    }
 
-        if (jsonData == null) {
-            jsonData = new JSONObject(getDataRaw());
-        }
-
-        return jsonData;
+    public static SettingsObject fromJson(JSONObject jsonObject) {
+        return new SettingsObject(
+                jsonObject.getString("id"),
+                jsonObject.getString("type"),
+                jsonObject.getString("accountId"),
+                jsonObject.getJSONObject("data")
+        );
     }
 }

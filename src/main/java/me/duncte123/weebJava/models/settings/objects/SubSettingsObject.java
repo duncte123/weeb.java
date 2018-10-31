@@ -16,7 +16,7 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 @SuppressWarnings("unused")
 public class SubSettingsObject extends SettingsObject {
@@ -24,7 +24,7 @@ public class SubSettingsObject extends SettingsObject {
     private final String subId;
     private final String subType;
 
-    public SubSettingsObject(String id, String type, String accountId, JsonElement data, String subId, String subType) {
+    private SubSettingsObject(String id, String type, String accountId, JSONObject data, String subId, String subType) {
         super(id, type, accountId, data);
         this.subId = subId;
         this.subType = subType;
@@ -36,5 +36,16 @@ public class SubSettingsObject extends SettingsObject {
 
     public String getSubType() {
         return subType;
+    }
+
+    public static SubSettingsObject fromJson(JSONObject jsonObject) {
+        return new SubSettingsObject(
+                jsonObject.getString("id"),
+                jsonObject.getString("type"),
+                jsonObject.getString("accountId"),
+                jsonObject.getJSONObject("data"),
+                jsonObject.getString("subId"),
+                jsonObject.getString("subType")
+        );
     }
 }
