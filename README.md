@@ -1,7 +1,9 @@
 [version]: https://api.bintray.com/packages/duncte123/weeb.java/weeb.java/images/download.svg
 [download]: https://bintray.com/duncte123/weeb.java/weeb.java/_latestVersion
+[ciBadge]: https://travis-ci.org/duncte123/weeb.java.svg?branch=master
+[ciUrl]: https://travis-ci.org/duncte123/weeb.java
 
-## Weeb.java
+## Weeb.java [![Build Status][ciBadge]][ciUrl]
 A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## Instalation & documentation
