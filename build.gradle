@@ -26,11 +26,9 @@ plugins {
     id 'maven-publish'
 }
 
-group = "me.duncte123"
-archivesBaseName = "weebJava"
-version = "2.1.1"
-def propFileLoc = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties"
-def shouldRelease = false
+group = 'me.duncte123'
+archivesBaseName = 'weebJava'
+version = '2.1.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -87,13 +85,10 @@ compileJava {
     dependsOn generateJavaSources
 }
 
-jar {
-    classifier = null
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
-    from ('src/main/java') {
+    
+    from('src/main/java') {
         exclude '**/WeebInfo.java'
     }
     from sourcesForRelease.destinationDir
@@ -107,24 +102,18 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 bintray {
-    Properties properties = new Properties()
-    File propFile = propFileLoc as File
-    if(propFile.exists()) {
-        properties.load(propFile.newDataInputStream())
-
-        user = properties.getProperty("bintray.user")
-        key = properties.getProperty("bintray.apikey")
-        publications = ["BintrayRelease"]
-        pkg {
-            repo = 'weeb.java'
-            name = 'weeb.java'
-            licenses = ['Apache-2.0']
-            vcsUrl = 'https://github.com/duncte123/weeb.java.git'
-            publish = true
-            version {
-                name = project.version
-                released = new Date()
-            }
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ["BintrayRelease"]
+    pkg {
+        repo = 'weeb.java'
+        name = 'weeb.java'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/duncte123/weeb.java.git'
+        publish = true
+        version {
+            name = project.version
+            released = new Date()
         }
     }
 }
@@ -140,17 +129,6 @@ publishing {
             artifact sourcesJar
         }
     }
-    /*publications {
-        MavenProject(MavenPublication) {
-            from components.java
-            groupId group
-            artifactId archivesBaseName
-            version = version
-
-            artifact javadocJar
-            artifact sourcesJar
-        }
-    }*/
 }
 
 build {
@@ -165,26 +143,21 @@ build {
 }
 
 bintrayUpload {
-    dependsOn clean
     dependsOn build
-    build.mustRunAfter clean
 
-    File propFile = propFileLoc as File
-    onlyIf { propFile.exists() }
-    onlyIf { shouldRelease }
+    onlyIf { System.getenv('BINTRAY_USER') != null }
+    onlyIf { System.getenv('BINTRAY_KEY') != null }
 }
 
-task renamePom(type: Copy) {
-    from('build/publications/MavenProject/pom-default.xml')
-    into('build/publications/MavenProject/')
-    rename('pom-default.xml', "${archivesBaseName}-${version}.pom")
+def getBuildNumber() {
+    return System.getenv('TRAVIS_BUILD_NUMBER') ?: getGitHash()
 }
 
-task buildRelease(dependsOn: build) {
-    dependsOn publishToMavenLocal
-    dependsOn renamePom
-
-    publishToMavenLocal.mustRunAfter build
-    renamePom.mustRunAfter publishToMavenLocal
-
+def getGitHash() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
