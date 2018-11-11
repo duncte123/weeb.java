@@ -31,7 +31,6 @@ import me.duncte123.weebJava.types.TokenType;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,18 +38,18 @@ import java.util.List;
 
 public class WeebApiTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
-                .setToken("My token here")
+                .setToken(Secrets.WOLKE_TOKEN)
                 .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
                 .build();
 
         testNormalImageThings(api);
-//        testImageGen(api);
-//        testReputation(api);
-//        testSettings(api);
+        testImageGen(api);
+        testReputation(api);
+        testSettings(api);
     }
 
     private static void testNormalImageThings(WeebApi api) {
@@ -105,7 +104,7 @@ public class WeebApiTest {
 
         ReputationSettings settings = manager.getSettings().execute().getSettings();
 
-        settings.setReputationCooldown(50L);
+        settings.setReputationCooldown(500L);
 
         manager.setSettings(settings).async(settings2 -> {
             System.out.println(settings2.getSettings().getAccountId());
@@ -131,9 +130,7 @@ public class WeebApiTest {
     private static void writeToFile(byte[] in, String name) {
         try {
 
-            File targetFile = new File("image-test-" + name + ".png");
-
-            try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+            try (FileOutputStream fos = new FileOutputStream("image-test-" + name + ".png")) {
                 fos.write(in);
                 System.out.println("writing");
             }

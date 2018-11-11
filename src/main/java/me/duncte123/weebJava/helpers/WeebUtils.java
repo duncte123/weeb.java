@@ -16,29 +16,27 @@
 
 package me.duncte123.weebJava.helpers;
 
-import com.afollestad.ason.Ason;
-import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
 
 public class WeebUtils {
-    public static <T> T getClassFromJson(Response res, Class<T> cls) throws IOException {
-        return Ason.deserialize(res.body().string(), cls, true);
+
+    public static <T> T[] toArray(@NotNull JSONArray array) {
+        //noinspection unchecked
+        return (T[]) array.toList().toArray();
     }
 
-    /*public static <T> List<T> getClassFromJsonList(Response res, Class<T> cls) throws IOException {
-        return Ason.deserializeList(res.body().string(), cls, true);
-    }*/
+    public static int[] toIntArray(@NotNull JSONArray array) {
 
-    public static <T> List<T> getClassFromJsonList(JSONArray json, Class<T> cls) {
-        return Ason.deserializeList(json.toString(), cls, true);
-    }
+        // Create an int array to accomodate the numbers.
+        int[] numbers = new int[array.length()];
 
-    public static JSONObject toJsonObject(Response res) throws IOException {
-        return new JSONObject(res.body().string());
+        // Extract numbers from JSON array.
+        for (int i = 0; i < array.length(); ++i) {
+            numbers[i] = array.optInt(i);
+        }
+
+        return numbers;
     }
 
     public static boolean isNullOrEmpty(String s) {

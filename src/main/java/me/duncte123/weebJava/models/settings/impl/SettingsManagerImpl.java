@@ -19,11 +19,9 @@ package me.duncte123.weebJava.models.settings.impl;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import com.github.natanbc.reliqua.util.PendingRequestBuilder;
-import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
-import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
@@ -31,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
+import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
 public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
@@ -68,7 +67,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         return createRequest(manager.prepareGet(url, token))
                 .setRateLimiter(getRateLimiter(url))
                 .build(
-                        (response) -> WeebUtils.getClassFromJson(response, SubSettingsListResponse.class),
+                        (response) -> SubSettingsListResponse.fromJson(toJSONObject(response)),
                         ErrorUtils::handleError
                 );
     }
@@ -82,38 +81,43 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
-                    ErrorUtils::handleError
-            );
-        } else {
-            return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
                     ErrorUtils::handleError
             );
         }
+
+        return builder.build(
+                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                ErrorUtils::handleError
+        );
+
     }
 
     @Override
     public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
         final String url = generateUrl(type, id, subtype, subId);
+        final String dataString = data.toString();
 
-        if (data.toString().length() > 10 * 1024)
+        System.out.println(dataString);
+
+        if (dataString.length() > 10 * 1024)
             throw new IllegalArgumentException("Data must be below 10Kib");
 
-        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data, token))
+        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, dataString, token))
                 .setRateLimiter(getRateLimiter(url));
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
-                    ErrorUtils::handleError
-            );
-        } else {
-            return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
                     ErrorUtils::handleError
             );
         }
+
+        return builder.build(
+                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                ErrorUtils::handleError
+        );
+
     }
 
     @Override
@@ -126,15 +130,16 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SettingsResponse.class),
-                    ErrorUtils::handleError
-            );
-        } else {
-            return builder.build(
-                    (response) -> WeebUtils.getClassFromJson(response, SubSettingsResponse.class),
+                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
                     ErrorUtils::handleError
             );
         }
+
+        return builder.build(
+                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                ErrorUtils::handleError
+        );
+
     }
 
     private String generateUrl(String type, String id, @NotNull String subType, @NotNull String subid) {

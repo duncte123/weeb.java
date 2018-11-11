@@ -19,10 +19,16 @@ package me.duncte123.weebJava.models.settings.responses;
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
+import org.json.JSONObject;
 
 @SuppressWarnings("unused")
 public class SettingsResponse extends WeebResponse {
-    private SettingsObject setting;
+    private final SettingsObject setting;
+
+    SettingsResponse(int status, String message, SettingsObject setting) {
+        super(status, message);
+        this.setting = setting;
+    }
 
     /**
      * @return The settings object holding your data
@@ -36,5 +42,13 @@ public class SettingsResponse extends WeebResponse {
      */
     public SubSettingsObject getSubsetting() {
         throw new IllegalArgumentException("Can't get sub-settings on settings");
+    }
+
+    public static SettingsResponse fromJson(JSONObject jsonObject) {
+        return new SettingsResponse(
+                jsonObject.getInt("status"),
+                jsonObject.optString("message"),
+                SettingsObject.fromJson(jsonObject.getJSONObject("setting"))
+        );
     }
 }

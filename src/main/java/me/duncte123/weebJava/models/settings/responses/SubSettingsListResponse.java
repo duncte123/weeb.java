@@ -18,18 +18,40 @@ package me.duncte123.weebJava.models.settings.responses;
 
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class SubSettingsListResponse extends WeebResponse {
 
-    private List<SubSettingsObject> subsettings;
+    private final List<SubSettingsObject> subsettings;
+
+    private SubSettingsListResponse(int status, String message, List<SubSettingsObject> subsettings) {
+        super(status, message);
+        this.subsettings = subsettings;
+    }
 
     /**
      * @return A list of {@link SubSettingsObject SubSettingsObjects}
      */
     public List<SubSettingsObject> getSubsettings() {
         return subsettings;
+    }
+
+    public static SubSettingsListResponse fromJson(JSONObject jsonObject) {
+        List<SubSettingsObject> objects = new ArrayList<>();
+
+        jsonObject.getJSONArray("subsettings").forEach(
+                (item) -> objects.add(SubSettingsObject.fromJson((JSONObject) item))
+        );
+
+        return new SubSettingsListResponse(
+                jsonObject.getInt("status"),
+                jsonObject.optString("message"),
+                objects
+        );
+
     }
 }

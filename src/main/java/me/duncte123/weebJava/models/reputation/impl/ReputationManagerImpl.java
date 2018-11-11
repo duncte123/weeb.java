@@ -16,11 +16,9 @@
 
 package me.duncte123.weebJava.models.reputation.impl;
 
-import com.afollestad.ason.Ason;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.helpers.QueryBuilder;
-import me.duncte123.weebJava.helpers.WeebUtils;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.reputation.responses.GiveUserReputationResponse;
@@ -30,6 +28,8 @@ import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
+
+import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
 public class ReputationManagerImpl extends Reliqua implements ReputationManager {
 
@@ -68,7 +68,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -86,11 +86,11 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        new JSONObject().put("source_user", sourceUserId),
+                        new JSONObject().put("source_user", sourceUserId).toString(),
                         token
                 )
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, GiveUserReputationResponse.class),
+                (response) -> GiveUserReputationResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -107,7 +107,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(builder.build(), token)
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -122,11 +122,11 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("increase", amount),
+                        new JSONObject().put("increase", amount).toString(),
                         token
                 )
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -141,11 +141,11 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("decrease", amount),
+                        new JSONObject().put("decrease", amount).toString(),
                         token
                 )
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationResponse.class),
+                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -157,7 +157,7 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationSettingsResponse.class),
+                (response) -> ReputationSettingsResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }
@@ -165,19 +165,16 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
     @Override
     public PendingRequest<ReputationSettingsResponse> setSettings(ReputationSettings settings) {
 
-        JSONObject data = Ason.serialize(settings).toStockJson();
-        data.remove("accountId");
-
         String url = apiBase + "/reputation/settings";
 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        data,
+                        settings.toJson().toString(),
                         token
                 )
         ).build(
-                (response) -> WeebUtils.getClassFromJson(response, ReputationSettingsResponse.class),
+                (response) -> ReputationSettingsResponse.fromJson(toJSONObject(response)),
                 ErrorUtils::handleError
         );
     }

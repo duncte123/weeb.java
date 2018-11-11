@@ -20,7 +20,6 @@ import me.duncte123.weebJava.WeebInfo;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.json.JSONObject;
 
 public class RequestManager {
 
@@ -42,10 +41,10 @@ public class RequestManager {
         return prepareGet(url, token).delete();
     }
 
-    public Request.Builder preparePOST(String url, JSONObject body, String token) {
+    public Request.Builder preparePOST(String url, String body, String token) {
         return new Request.Builder()
                 .url(url)
-                .post(RequestBody.create(MediaType.parse("application/json"), body.toString()))
+                .post(RequestBody.create(MediaType.parse("application/json"), body))
                 .header("Authorization", token)
                 .addHeader("User-Agent", USER_AGENT);
     }

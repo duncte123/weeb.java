@@ -16,14 +16,24 @@
 
 package me.duncte123.weebJava.models.reputation.objects;
 
+import org.json.JSONObject;
+
 @SuppressWarnings("unused")
 public class ReputationSettings {
 
+    private final String accountId;
     private int reputationPerDay;
     private int maximumReputation;
     private int maximumReputationReceivedDay;
     private long reputationCooldown;
-    private String accountId;
+
+    private ReputationSettings(int reputationPerDay, int maximumReputation, int maximumReputationReceivedDay, long reputationCooldown, String accountId) {
+        this.reputationPerDay = reputationPerDay;
+        this.maximumReputation = maximumReputation;
+        this.maximumReputationReceivedDay = maximumReputationReceivedDay;
+        this.reputationCooldown = reputationCooldown;
+        this.accountId = accountId;
+    }
 
     /**
      * @return Number of reputations a user may give out per reputationCooldown
@@ -106,5 +116,25 @@ public class ReputationSettings {
      */
     public String getAccountId() {
         return accountId;
+    }
+
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put("reputationPerDay", getReputationPerDay())
+                .put("maximumReputation", getMaximumReputation())
+                .put("maximumReputationReceivedDay", getMaximumReputationReceivedDay())
+                .put("reputationCooldown", getReputationCooldown());
+    }
+
+    public static ReputationSettings fromJson(JSONObject jsonObject) {
+
+        return new ReputationSettings(
+                jsonObject.getInt("reputationPerDay"),
+                jsonObject.getInt("maximumReputation"),
+                jsonObject.getInt("maximumReputationReceivedDay"),
+                jsonObject.getInt("reputationCooldown"),
+                jsonObject.getString("accountId")
+        );
+
     }
 }

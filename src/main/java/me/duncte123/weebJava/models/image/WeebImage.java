@@ -17,23 +17,39 @@
 package me.duncte123.weebJava.models.image;
 
 import me.duncte123.weebJava.models.WeebApi;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class WeebImage {
 
-    private String id;
-    private String type;
-    private String baseType;
-    private boolean nsfw;
-    private String fileType;
-    private String mimeType;
-    private List<ImageTag> tags;
-    private String url;
-    private boolean hidden;
-    private String source;
-    private String account;
+    private final String id;
+    private final String type;
+    private final String baseType;
+    private final boolean nsfw;
+    private final String fileType;
+    private final String mimeType;
+    private final List<ImageTag> tags;
+    private final String url;
+    private final boolean hidden;
+    private final String source;
+    private final String account;
+
+    private WeebImage(String id, String type, String baseType, boolean nsfw, String fileType, String mimeType, List<ImageTag> tags, String url, boolean hidden, String source, String account) {
+        this.id = id;
+        this.type = type;
+        this.baseType = baseType;
+        this.nsfw = nsfw;
+        this.fileType = fileType;
+        this.mimeType = mimeType;
+        this.tags = tags;
+        this.url = url;
+        this.hidden = hidden;
+        this.source = source;
+        this.account = account;
+    }
 
     /**
      * Returns the unique id of the image
@@ -125,5 +141,27 @@ public class WeebImage {
      */
     public String getSource() {
         return source;
+    }
+
+    public static WeebImage fromJson(JSONObject jsonObject) {
+        List<ImageTag> tags = new ArrayList<>();
+
+        jsonObject.getJSONArray("tags").forEach(
+                (it) -> tags.add(ImageTag.fromJson((JSONObject) it))
+        );
+
+        return new WeebImage(
+                jsonObject.getString("id"),
+                jsonObject.getString("type"),
+                jsonObject.getString("baseType"),
+                jsonObject.getBoolean("nsfw"),
+                jsonObject.getString("fileType"),
+                jsonObject.getString("mimeType"),
+                tags,
+                jsonObject.getString("url"),
+                jsonObject.getBoolean("hidden"),
+                jsonObject.optString("source", null),
+                jsonObject.getString("account")
+        );
     }
 }

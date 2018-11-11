@@ -16,17 +16,22 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import com.afollestad.ason.Ason;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused")
 public class SettingsObject {
 
-    private String id;
-    private String type;
-    private String accountId;
-    private Ason data;
+    private final String id;
+    private final String type;
+    private final String accountId;
+    private final JSONObject data;
 
+    SettingsObject(String id, String type, String accountId, JSONObject data) {
+        this.id = id;
+        this.type = type;
+        this.accountId = accountId;
+        this.data = data;
+    }
 
     /**
      * @return The id for this setting
@@ -53,6 +58,15 @@ public class SettingsObject {
      * @return The data that you stored
      */
     public JSONObject getData() {
-        return data.toStockJson();
+        return data;
+    }
+
+    public static SettingsObject fromJson(JSONObject jsonObject) {
+        return new SettingsObject(
+                jsonObject.getString("id"),
+                jsonObject.getString("type"),
+                jsonObject.getString("accountId"),
+                jsonObject.getJSONObject("data")
+        );
     }
 }
