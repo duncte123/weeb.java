@@ -33,7 +33,7 @@ public class StatusConverter {
      *
      * @return The {@link StatusType} that matches the JDA status
      */
-    public static StatusType from(net.dv8tion.jda.core.OnlineStatus status) {
+    public static StatusType fromJDA(net.dv8tion.jda.core.OnlineStatus status) {
         switch (status) {
             case ONLINE:
                 return StatusType.ONLINE;
@@ -57,7 +57,7 @@ public class StatusConverter {
      *
      * @return The {@link StatusType} that matches the Discord4J status
      */
-    public static StatusType from(sx.blah.discord.handle.obj.StatusType status) {
+    public static StatusType fromD4J(sx.blah.discord.handle.obj.StatusType status) {
         switch (status) {
             case ONLINE:
                 return StatusType.ONLINE;
@@ -81,7 +81,7 @@ public class StatusConverter {
      *
      * @return The {@link StatusType} that matches the Javacord status
      */
-    public static StatusType from(org.javacord.api.entity.user.UserStatus status) {
+    public static StatusType fromJavacord(org.javacord.api.entity.user.UserStatus status) {
         switch (status) {
             case ONLINE:
                 return StatusType.ONLINE;
