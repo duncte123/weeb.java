@@ -53,7 +53,6 @@ public enum StatusType implements QueryParam {
         this.status = status;
     }
 
-
     @Override
     public void appendTo(QueryBuilder builder) {
         builder.append("status", status);
