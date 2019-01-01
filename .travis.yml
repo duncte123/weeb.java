@@ -15,3 +15,4 @@ cache:
 
 script:
 - ./gradlew bintrayUpload
+- if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == false ]]; then ./gradlew githubRelease; else echo 'Not on master, not uploading'; fi
