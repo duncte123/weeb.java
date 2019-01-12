@@ -31,11 +31,13 @@ import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
@@ -52,7 +54,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private SettingsManager settingsManager;
 
     public WeebApiImpl(TokenType tokenType, String token, Endpoint endpoint, String appName) {
-        super(new OkHttpClient(), null, true);
+        super(new OkHttpClient.Builder()
+                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+                .build());
 
         this.tokenType = tokenType;
         this.token = token;
