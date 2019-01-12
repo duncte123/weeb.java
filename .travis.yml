@@ -1,8 +1,5 @@
 language: java
 jdk: openjdk11
-branches:
-  only:
-  - master
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -14,5 +11,4 @@ cache:
   - $HOME/.gradle/wrapper/
 
 script:
-- ./gradlew bintrayUpload
-- if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == false ]]; then ./gradlew githubRelease; else echo 'Not on master, not uploading'; fi
+- if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == false ]]; then ./gradlew bintrayUpload githubRelease; else ./gradlew build; fi
