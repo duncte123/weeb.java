@@ -11,4 +11,4 @@ cache:
   - $HOME/.gradle/wrapper/
 
 script:
-- if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == false ]]; then ./gradlew bintrayUpload githubRelease; else ./gradlew build; fi
+- if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == false ]]; then ./gradlew bintrayUpload && ./gradlew githubRelease; else ./gradlew build; fi
