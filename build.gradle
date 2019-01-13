@@ -150,8 +150,6 @@ bintrayUpload {
 
     onlyIf { System.getenv('BINTRAY_USER') != null }
     onlyIf { System.getenv('BINTRAY_KEY') != null }
-    onlyIf { System.getenv('TRAVIS_BRANCH') == 'master' }
-    onlyIf { !System.getenv('TRAVIS_PULL_REQUEST') }
 }
 
 githubRelease {
