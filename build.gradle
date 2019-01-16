@@ -107,12 +107,15 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ["BintrayRelease"]
+    publications = ['BintrayRelease']
+    description = 'A java wrapper for the weeb.sh api'
     pkg {
         repo = 'weeb.java'
         name = 'weeb.java'
+        desc = 'A java wrapper for the weeb.sh api'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/duncte123/weeb.java.git'
+        githubRepo = 'https://github.com/duncte123/weeb.java'
         publish = true
         version {
             name = project.version
