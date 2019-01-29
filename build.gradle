@@ -24,7 +24,7 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'maven-publish'
-    id 'com.github.breadmoirai.github-release' version '2.2.3'
+    id 'com.github.breadmoirai.github-release' version '2.2.0'
 }
 
 group = 'me.duncte123'
