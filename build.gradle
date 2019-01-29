@@ -24,7 +24,7 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'maven-publish'
-    id 'com.github.breadmoirai.github-release' version '2.2.0'
+    id 'com.github.breadmoirai.github-release' version '2.2.3'
 }
 
 group = 'me.duncte123'
@@ -113,6 +113,7 @@ bintray {
         repo = 'weeb.java'
         name = 'weeb.java'
         desc = 'A java wrapper for the weeb.sh api'
+        description = getDesc()
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/duncte123/weeb.java.git'
         githubRepo = 'https://github.com/duncte123/weeb.java'
@@ -161,6 +162,10 @@ githubRelease {
     repo 'weeb.java'
     releaseAssets jar.destinationDir.listFiles()
     overwrite true
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '5.1.1'
 }
 
 static def getBuildNumber() {
