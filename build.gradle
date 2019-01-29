@@ -164,10 +164,6 @@ githubRelease {
     overwrite true
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '5.1.1'
-}
-
 static def getBuildNumber() {
     return System.getenv('TRAVIS_BUILD_NUMBER') ?: System.getenv("TRAVIS_COMMIT") ?:
             System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?: "dev"
