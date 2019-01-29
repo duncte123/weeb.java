@@ -19,18 +19,6 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-buildscript {
-    dependencies {
-        classpath 'com.squareup.okhttp3:okhttp:3.12.0'
-        classpath 'com.j256.simplemagic:simplemagic:1.10'
-        classpath 'org.zeroturnaround:zt-exec:1.10'
-    }
-    
-    repositories {
-        jcenter()
-    }
-}
-
 plugins {
     id 'com.jfrog.bintray' version '1.8.4'
     id 'java-library'
@@ -53,7 +41,7 @@ repositories {
 dependencies {
     api group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
     api group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    implementation  group: 'com.github.natanbc', name: 'reliqua', version: '2.4'
+    api  group: 'com.github.natanbc', name: 'reliqua', version: '2.4'
     implementation  group: 'org.json', name: 'json', version: '20180813'
 }
 
