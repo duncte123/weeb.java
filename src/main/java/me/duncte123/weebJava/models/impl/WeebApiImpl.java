@@ -86,14 +86,17 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/types");
 
-        if (hidden != null)
+        if (hidden != null) {
             hidden.appendTo(builder);
+        }
 
-        if (nsfw != null)
+        if (nsfw != null) {
             nsfw.appendTo(builder);
+        }
 
-        if (preview != null)
+        if (preview != null) {
             preview.appendTo(builder);
+        }
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
@@ -145,14 +148,17 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         if (!tags.isEmpty())
             builder.append("tags", StringUtils.join(tags, ","));
 
-        if (nsfw != null)
+        if (nsfw != null) {
             nsfw.appendTo(builder);
+        }
 
-        if (hidden != null)
+        if (hidden != null) {
             hidden.appendTo(builder);
+        }
 
-        if (fileType != null)
+        if (fileType != null) {
             fileType.appendTo(builder);
+        }
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
