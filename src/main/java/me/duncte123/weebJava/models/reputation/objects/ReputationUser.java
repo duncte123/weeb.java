@@ -26,7 +26,7 @@ import java.util.List;
 import static me.duncte123.weebJava.helpers.WeebUtils.toArray;
 import static me.duncte123.weebJava.helpers.WeebUtils.toIntArray;
 
-@SuppressWarnings({"unused", "MismatchedReadAndWriteOfArray"})
+@SuppressWarnings("unused")
 public class ReputationUser {
 
     /*
@@ -59,15 +59,17 @@ public class ReputationUser {
     }
 
     public List<LocalDateTime> getCooldown() {
-        if (cooldownParsed.isEmpty())
+        if (cooldownParsed.isEmpty()) {
             cooldownParsed.addAll(DateParser.parseDate(cooldown));
+        }
 
         return cooldownParsed;
     }
 
     public List<LocalDateTime> getGivenReputation() {
-        if (givenReputationParsed.isEmpty())
+        if (givenReputationParsed.isEmpty()) {
             givenReputationParsed.addAll(DateParser.parseDate(givenReputation));
+        }
 
         return givenReputationParsed;
     }

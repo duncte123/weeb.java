@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.types;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 
 public class Endpoint {
@@ -30,7 +31,7 @@ public class Endpoint {
 
     private final String url;
 
-    private Endpoint(String url) {
+    private Endpoint(@Nonnull String url) {
         this.url = url;
     }
 
@@ -39,6 +40,7 @@ public class Endpoint {
      *
      * @return the url as a string
      */
+    @Nonnull
     public String getUrl() {
         return url;
     }
@@ -56,7 +58,8 @@ public class Endpoint {
      *
      * @return The url ready to be used with {@link me.duncte123.weebJava.WeebApiBuilder#setEndpoint(Endpoint)}
      */
-    public static Endpoint fromUrl(URL url) {
+    @Nonnull
+    public static Endpoint fromUrl(@Nonnull URL url) {
         return new Endpoint("https://" + url.getHost());
     }
 }

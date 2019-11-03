@@ -19,8 +19,10 @@ package me.duncte123.weebJava.models.settings;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("unused")
 public interface SettingsManager {
@@ -33,7 +35,8 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> getSetting(@NotNull String type, @NotNull String id);
+    @Nonnull
+    PendingRequest<SettingsResponse> getSetting(@Nonnull String type, @Nonnull String id);
 
     /**
      * @param type
@@ -48,7 +51,8 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull JSONObject data);
+    @Nonnull
+    PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JSONObject data);
 
     /**
      * Deletes a setting from the server <strong>THIS CAN NOT BE UNDONE.</strong>
@@ -60,7 +64,8 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> deleteSetting(@NotNull String type, @NotNull String id);
+    @Nonnull
+    PendingRequest<SettingsResponse> deleteSetting(@Nonnull String type, @Nonnull String id);
 
 
     /**
@@ -75,7 +80,8 @@ public interface SettingsManager {
      * <p>
      * Note: <strong>You don't have to create a parent setting to be able to use the sub-settings of it</strong>
      */
-    PendingRequest<SubSettingsListResponse> listSubSettings(@NotNull String type, @NotNull String id, @NotNull String subtype);
+    @Nonnull
+    PendingRequest<SubSettingsListResponse> listSubSettings(@Nonnull String type, @Nonnull String id, @Nonnull String subtype);
 
     /**
      * @param type
@@ -89,7 +95,8 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> getSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId);
+    @Nonnull
+    PendingRequest<SettingsResponse> getSubSetting(@Nullable String type, @Nullable String id, @Nonnull String subtype, @Nonnull String subId);
 
     /**
      * @param type
@@ -108,7 +115,8 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data);
+    @Nonnull
+    PendingRequest<SettingsResponse> updateSubSetting(@Nullable String type, @Nullable String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JSONObject data);
 
     /**
      * Deletes a setting from the server <strong>THIS CAN NOT BE UNDONE.</strong>
@@ -124,5 +132,6 @@ public interface SettingsManager {
      *
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
-    PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId);
+    @Nonnull
+    PendingRequest<SettingsResponse> deleteSubSetting(@Nullable String type, @Nullable String id, @Nonnull String subtype, @Nonnull String subId);
 }

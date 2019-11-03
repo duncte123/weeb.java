@@ -16,17 +16,18 @@
 
 package me.duncte123.weebJava.helpers;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+
+import javax.annotation.Nonnull;
 
 public class WeebUtils {
 
-    public static <T> T[] toArray(@NotNull JSONArray array) {
+    public static <T> T[] toArray(@Nonnull JSONArray array) {
         //noinspection unchecked
         return (T[]) array.toList().toArray();
     }
 
-    public static int[] toIntArray(@NotNull JSONArray array) {
+    public static int[] toIntArray(@Nonnull JSONArray array) {
 
         // Create an int array to accomodate the numbers.
         int[] numbers = new int[array.length()];

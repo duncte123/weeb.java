@@ -31,13 +31,13 @@ import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
@@ -54,9 +54,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private SettingsManager settingsManager;
 
     public WeebApiImpl(TokenType tokenType, String token, Endpoint endpoint, String appName) {
-        super(new OkHttpClient.Builder()
-                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
-                .build());
+        super();
 
         this.tokenType = tokenType;
         this.token = token;
@@ -65,21 +63,25 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         this.manager = new RequestManager(appName);
     }
 
+    @NotNull
     @Override
     public TokenType getTokenType() {
         return tokenType;
     }
 
+    @NotNull
     @Override
     public String getToken() {
         return token;
     }
 
+    @NotNull
     @Override
     public String getAPIBaseUrl() {
         return endpoint.getUrl();
     }
 
+    @NotNull
     @Override
     public PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview) {
 
@@ -107,17 +109,20 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
+    @NotNull
     @Override
     public PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/tags");
 
-        if (hidden != null)
+        if (hidden != null) {
             hidden.appendTo(builder);
+        }
 
-        if (nsfw != null)
+        if (nsfw != null) {
             nsfw.appendTo(builder);
+        }
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
@@ -136,17 +141,24 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
+    @NotNull
     @Override
     public PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/random");
 
-        if (type != null && !type.isEmpty())
-            builder.append("type", type);
+        if (type == null && tags == null) {
+            throw new IllegalArgumentException("Either one of type or tags must be set");
+        }
 
-        if (!tags.isEmpty())
+        if (type != null && !type.isEmpty()) {
+            builder.append("type", type);
+        }
+
+        if (tags != null && !tags.isEmpty()) {
             builder.append("tags", StringUtils.join(tags, ","));
+        }
 
         if (nsfw != null) {
             nsfw.appendTo(builder);
@@ -169,8 +181,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
+    @NotNull
     @Override
-    public PendingRequest<WeebImage> getImageInfo(String imageId) {
+    public PendingRequest<WeebImage> getImageInfo(@NotNull String imageId) {
         return createRequest(
                 manager.prepareGet(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
@@ -183,20 +196,22 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
+    @NotNull
     @Override
-    public PendingRequest<byte[]> generateSimple(GenerateType type, Color face, Color hair) {
+    public PendingRequest<byte[]> generateSimple(@NotNull GenerateType type, Color face, Color hair) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
 
-        if (type != null)
-            type.appendTo(builder);
+        type.appendTo(builder);
 
-        if (face != null)
+        if (face != null) {
             builder.append("face", colorToHex(face));
+        }
 
-        if (hair != null)
+        if (hair != null) {
             builder.append("hair", colorToHex(hair));
+        }
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
@@ -204,17 +219,20 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
+    @NotNull
     @Override
     public PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/discord-status");
 
-        if (status != null)
+        if (status != null) {
             status.appendTo(builder);
+        }
 
-        if (avatar != null && !avatar.isEmpty())
+        if (avatar != null && !avatar.isEmpty()) {
             builder.append("avatar", avatar);
+        }
 
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
@@ -222,20 +240,24 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
+    @NotNull
     @Override
-    public PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges, String[] widgets) {
+    public PendingRequest<byte[]> generateLicense(@NotNull String title, @NotNull String avatar, @NotNull String[] badges, @NotNull String[] widgets) {
         JSONObject data = new JSONObject()
                 .put("title", title)
                 .put("avatar", avatar);
 
-        if (badges.length > 3 || widgets.length > 3)
+        if (badges.length > 3 || widgets.length > 3) {
             throw new IllegalArgumentException("Size badges and widgets cannot be higher than 3");
+        }
 
-        if (badges.length > 0)
+        if (badges.length > 0) {
             data.put("badges", badges);
+        }
 
-        if (widgets.length > 0)
+        if (widgets.length > 0) {
             data.put("widgets", widgets);
+        }
 
         return createRequest(
                 manager.preparePOST(
@@ -247,8 +269,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
+    @NotNull
     @Override
-    public PendingRequest<byte[]> generateWaifuinsult(String avatar) {
+    public PendingRequest<byte[]> generateWaifuinsult(@NotNull String avatar) {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
@@ -259,8 +282,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
+    @NotNull
     @Override
-    public PendingRequest<byte[]> generateLoveship(String targetOne, String targetTwo) {
+    public PendingRequest<byte[]> generateLoveship(@NotNull String targetOne, @NotNull String targetTwo) {
 
         JSONObject data = new JSONObject()
                 .put("targetOne", targetOne)
@@ -280,18 +304,29 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    @NotNull
     @Override
     public ReputationManager getReputationManager() {
-        if (reputationManager == null)
+        if (reputationManager == null) {
             reputationManager = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+        }
+
         return reputationManager;
     }
 
+    @NotNull
     @Override
     public SettingsManager getSettingsManager() {
-        if (settingsManager == null)
+        if (settingsManager == null) {
             settingsManager = new SettingsManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+        }
+
         return settingsManager;
     }
 
+    @Override
+    public void shutdown() {
+        this.getClient().connectionPool().evictAll();
+        this.getClient().dispatcher().executorService().shutdown();
+    }
 }

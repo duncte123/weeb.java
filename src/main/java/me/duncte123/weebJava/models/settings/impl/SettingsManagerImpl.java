@@ -25,8 +25,9 @@ import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+
+import javax.annotation.Nonnull;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
@@ -45,23 +46,27 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         this.manager = manager;
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> getSetting(@NotNull String type, @NotNull String id) {
+    public PendingRequest<SettingsResponse> getSetting(@Nonnull String type, @Nonnull String id) {
         return getSubSetting(null, null, type, id);
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> updateSetting(@NotNull String type, @NotNull String id, @NotNull JSONObject data) {
+    public PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JSONObject data) {
         return updateSubSetting(null, null, type, id, data);
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> deleteSetting(@NotNull String type, @NotNull String id) {
+    public PendingRequest<SettingsResponse> deleteSetting(@Nonnull String type, @Nonnull String id) {
         return deleteSubSetting(null, null, type, id);
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SubSettingsListResponse> listSubSettings(@NotNull String type, @NotNull String id, @NotNull String subtype) {
+    public PendingRequest<SubSettingsListResponse> listSubSettings(@Nonnull String type, @Nonnull String id, @Nonnull String subtype) {
         final String url = generateUrl(type, id) + "/" + subtype;
 
         return createRequest(manager.prepareGet(url, token))
@@ -72,8 +77,9 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
                 );
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> getSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId) {
+    public PendingRequest<SettingsResponse> getSubSetting(String type, String id, @Nonnull String subtype, @Nonnull String subId) {
         final String url = generateUrl(type, id, subtype, subId);
 
         final PendingRequestBuilder builder = createRequest(manager.prepareGet(url, token))
@@ -93,8 +99,9 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId, @NotNull JSONObject data) {
+    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JSONObject data) {
         final String url = generateUrl(type, id, subtype, subId);
         final String dataString = data.toString();
 
@@ -120,8 +127,9 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     }
 
+    @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @NotNull String subtype, @NotNull String subId) {
+    public PendingRequest<SettingsResponse> deleteSubSetting(String type, String id, @Nonnull String subtype, @Nonnull String subId) {
 
         final String url = generateUrl(type, id, subtype, subId);
 
@@ -142,7 +150,8 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     }
 
-    private String generateUrl(String type, String id, @NotNull String subType, @NotNull String subid) {
+    @Nonnull
+    private String generateUrl(String type, String id, @Nonnull String subType, @Nonnull String subid) {
         String url = apiBase + "/settings/";
         if (!isNullOrEmpty(type) && !isNullOrEmpty(id)) {
             url += type + "/" + id + "/";
@@ -150,7 +159,8 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         return url + subType + "/" + subid;
     }
 
-    private String generateUrl(String type, String id) {
+    @Nonnull
+    private String generateUrl(@Nonnull String type, @Nonnull String id) {
         return generateUrl(null, null, type, id);
     }
 }

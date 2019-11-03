@@ -22,10 +22,12 @@ import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.types.*;
+import okhttp3.OkHttpClient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -36,6 +38,7 @@ public interface WeebApi {
      *
      * @return the token type set on the builder
      */
+    @Nonnull
     TokenType getTokenType();
 
     /**
@@ -43,6 +46,7 @@ public interface WeebApi {
      *
      * @return the token set on the builder
      */
+    @Nonnull
     String getToken();
 
     /**
@@ -50,6 +54,7 @@ public interface WeebApi {
      *
      * @return the base url for the api
      */
+    @Nonnull
     default String getAPIBaseUrl() {
         return "https://api.weeb.sh";
     }
@@ -59,6 +64,7 @@ public interface WeebApi {
      *
      * @return the base url for the cdn
      */
+    @Nonnull
     default String getCDNBaseUrl() {
         return "https://cdn.weeb.sh/";
     }
@@ -70,6 +76,7 @@ public interface WeebApi {
      *
      * @return the token ready to be passed into the auth header
      */
+    @Nonnull
     default String getCompiledToken() {
         return getTokenType().getType() + " " + getToken();
     }
@@ -79,6 +86,7 @@ public interface WeebApi {
      *
      * @return The types that match your response
      */
+    @Nonnull
     default PendingRequest<ImageTypesResponse> getTypes() {
         return getTypes(null, null, null);
     }
@@ -91,7 +99,8 @@ public interface WeebApi {
      *
      * @return The types that match your response
      */
-    default PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden) {
+    @Nonnull
+    default PendingRequest<ImageTypesResponse> getTypes(@Nullable HiddenMode hidden) {
         return getTypes(hidden, null, null);
     }
 
@@ -105,7 +114,8 @@ public interface WeebApi {
      *
      * @return The types that match your response
      */
-    default PendingRequest<ImageTypesResponse> getTypes(NSFWMode nsfw) {
+    @Nonnull
+    default PendingRequest<ImageTypesResponse> getTypes(@Nullable NSFWMode nsfw) {
         return getTypes(null, nsfw, null);
     }
 
@@ -117,7 +127,8 @@ public interface WeebApi {
      *
      * @return The types that match your response
      */
-    default PendingRequest<ImageTypesResponse> getTypes(PreviewMode preview) {
+    @Nonnull
+    default PendingRequest<ImageTypesResponse> getTypes(@Nullable PreviewMode preview) {
         return getTypes(null, null, preview);
     }
 
@@ -135,13 +146,15 @@ public interface WeebApi {
      *
      * @return The types that match your response
      */
-    PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview);
+    @Nonnull
+    PendingRequest<ImageTypesResponse> getTypes(@Nullable HiddenMode hidden, @Nullable NSFWMode nsfw, @Nullable PreviewMode preview);
 
     /**
      * Get a list of the available tags
      *
      * @return A list of tags
      */
+    @Nonnull
     default PendingRequest<List<String>> getTags() {
         return getTags(null, null);
     }
@@ -154,7 +167,8 @@ public interface WeebApi {
      *
      * @return A list of tags
      */
-    default PendingRequest<List<String>> getTags(HiddenMode hidden) {
+    @Nonnull
+    default PendingRequest<List<String>> getTags(@Nullable HiddenMode hidden) {
         return getTags(hidden, null);
     }
 
@@ -168,7 +182,8 @@ public interface WeebApi {
      *
      * @return A list of tags
      */
-    default PendingRequest<List<String>> getTags(NSFWMode nsfw) {
+    @Nonnull
+    default PendingRequest<List<String>> getTags(@Nullable NSFWMode nsfw) {
         return getTags(null, nsfw);
     }
 
@@ -184,7 +199,8 @@ public interface WeebApi {
      *
      * @return A list of tags
      */
-    PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw);
+    @Nonnull
+    PendingRequest<List<String>> getTags(@Nullable HiddenMode hidden, @Nullable NSFWMode nsfw);
 
     /**
      * Get a random image based on the information that you provide
@@ -194,8 +210,9 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(String type) {
-        return getRandomImage(type, new ArrayList<>(), null, null, null);
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable String type) {
+        return getRandomImage(type, null, null, null, null);
     }
 
     /**
@@ -210,8 +227,9 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(String type, NSFWMode nsfw) {
-        return getRandomImage(type, new ArrayList<>(), nsfw, null, null);
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable NSFWMode nsfw) {
+        return getRandomImage(type, null, nsfw, null, null);
     }
 
     /**
@@ -225,8 +243,9 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(String type, HiddenMode hidden) {
-        return getRandomImage(type, new ArrayList<>(), null, hidden, null);
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable HiddenMode hidden) {
+        return getRandomImage(type, null, null, hidden, null);
     }
 
     /**
@@ -239,8 +258,9 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(String type, FileType fileType) {
-        return getRandomImage(type, new ArrayList<>(), null, null, fileType);
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable FileType fileType) {
+        return getRandomImage(type, null, null, null, fileType);
     }
 
     /**
@@ -251,7 +271,8 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(List<String> tags) {
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags) {
         return getRandomImage(null, tags, null, null, null);
     }
 
@@ -267,7 +288,8 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(List<String> tags, NSFWMode nsfw) {
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable NSFWMode nsfw) {
         return getRandomImage(null, tags, nsfw, null, null);
     }
 
@@ -282,7 +304,8 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(List<String> tags, HiddenMode hidden) {
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable HiddenMode hidden) {
         return getRandomImage(null, tags, null, hidden, null);
     }
 
@@ -296,7 +319,8 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    default PendingRequest<WeebImage> getRandomImage(List<String> tags, FileType fileType) {
+    @Nonnull
+    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable FileType fileType) {
         return getRandomImage(null, tags, null, null, fileType);
     }
 
@@ -319,7 +343,8 @@ public interface WeebApi {
      *
      * @return A random image
      */
-    PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType);
+    @Nonnull
+    PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable List<String> tags, @Nullable NSFWMode nsfw, @Nullable HiddenMode hidden, @Nullable FileType fileType);
 
 
     /**
@@ -330,7 +355,8 @@ public interface WeebApi {
      *
      * @return The information returned from the server
      */
-    PendingRequest<WeebImage> getImageInfo(String imageId);
+    @Nonnull
+    PendingRequest<WeebImage> getImageInfo(@Nonnull String imageId);
 
 
     /**
@@ -341,7 +367,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<byte[]> generateSimple(GenerateType type) {
+    @Nonnull
+    default PendingRequest<byte[]> generateSimple(@Nonnull GenerateType type) {
         return generateSimple(type, null, null);
     }
 
@@ -357,13 +384,15 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<byte[]> generateSimple(GenerateType type, Color face, Color hair);
+    @Nonnull
+    PendingRequest<byte[]> generateSimple(@Nonnull GenerateType type, @Nullable Color face, @Nullable Color hair);
 
     /**
      * Generates a discord avatar status
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
+    @Nonnull
     default PendingRequest<byte[]> generateDiscordStatus() {
         return generateDiscordStatus(null, null);
     }
@@ -376,7 +405,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<byte[]> generateDiscordStatus(StatusType status) {
+    @Nonnull
+    default PendingRequest<byte[]> generateDiscordStatus(@Nullable StatusType status) {
         return generateDiscordStatus(status, null);
     }
 
@@ -388,7 +418,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<byte[]> generateDiscordStatus(String avatar) {
+    @Nonnull
+    default PendingRequest<byte[]> generateDiscordStatus(@Nullable String avatar) {
         return generateDiscordStatus(null, avatar);
     }
 
@@ -402,7 +433,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar);
+    @Nonnull
+    PendingRequest<byte[]> generateDiscordStatus(@Nullable StatusType status, @Nullable String avatar);
 
     /**
      * Generates a licence
@@ -414,7 +446,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<byte[]> generateLicense(String title, String avatar) {
+    @Nonnull
+    default PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar) {
         return generateLicense(title, avatar, new String[0], new String[0]);
     }
 
@@ -431,7 +464,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    default PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges) {
+    @Nonnull
+    default PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges) {
         return generateLicense(title, avatar, badges, new String[0]);
     }
 
@@ -450,7 +484,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<byte[]> generateLicense(String title, String avatar, String[] badges, String[] widgets);
+    @Nonnull
+    PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges, @Nonnull String[] widgets);
 
     /**
      * Generates a waifu insult
@@ -460,7 +495,8 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<byte[]> generateWaifuinsult(String avatar);
+    @Nonnull
+    PendingRequest<byte[]> generateWaifuinsult(@Nonnull String avatar);
 
     /**
      * Generates a loveship with two images
@@ -474,13 +510,15 @@ public interface WeebApi {
      *
      * @return The {@link InputStream InputStream} of the generated image
      */
-    PendingRequest<byte[]> generateLoveship(String targetOne, String targetTwo);
+    @Nonnull
+    PendingRequest<byte[]> generateLoveship(@Nonnull String targetOne, @Nonnull String targetTwo);
 
     /**
      * Returns the manager that is responsible for interacting with the reputation api
      *
      * @return The manager that is responsible for interacting with the reputation api
      */
+    @Nonnull
     ReputationManager getReputationManager();
 
     /**
@@ -488,5 +526,8 @@ public interface WeebApi {
      *
      * @return The manager that is responsible for interacting with the settings api
      */
+    @Nonnull
     SettingsManager getSettingsManager();
+
+    void shutdown();
 }
