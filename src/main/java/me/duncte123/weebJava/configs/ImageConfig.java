@@ -17,6 +17,7 @@
 package me.duncte123.weebJava.configs;
 
 import me.duncte123.weebJava.configs.base.HasHiddenAndNsfwMode;
+import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.types.FileType;
 import me.duncte123.weebJava.types.HiddenMode;
 import me.duncte123.weebJava.types.NSFWMode;
@@ -36,16 +37,31 @@ public class ImageConfig extends HasHiddenAndNsfwMode {
         this.fileType = fileType;
     }
 
+    /**
+     * Returns the type set on the builder
+     *
+     * @return The type set on the builder
+     */
     @Nullable
     public String getType() {
         return type;
     }
 
+    /**
+     * The tags set on the builder
+     *
+     * @return The tags set on the builder
+     */
     @Nullable
     public List<String> getTags() {
         return tags;
     }
 
+    /**
+     * The file type set on the builder
+     *
+     * @return The file type set on the builder
+     */
     @Nullable
     public FileType getFileType() {
         return fileType;
@@ -56,16 +72,44 @@ public class ImageConfig extends HasHiddenAndNsfwMode {
         private List<String> tags;
         private FileType fileType;
 
+        /**
+         * Sets the type of the image you want to get either {@code #setType(String)} or {@link #setTags(List)} is
+         * mandatory, but you can combine them
+         * <p>Types can be fetched with {@link WeebApi#getTypes()}</p>
+         *
+         * @param type
+         *         the type of image to search for
+         *
+         * @return The builder, useful for chaining
+         */
         public Builder setType(@Nullable String type) {
             this.type = type;
             return this;
         }
 
+        /**
+         * Sets the type of the image you want to get either {@link #setType(String)} or {@code #setTags(List)} is
+         * mandatory, but you can combine them
+         * <p>Types can be fetched with {@link WeebApi#getTags()}</p>
+         *
+         * @param tags
+         *         a list of tags that the image should have
+         *
+         * @return The builder, useful for chaining
+         */
         public Builder setTags(@Nullable List<String> tags) {
             this.tags = tags;
             return this;
         }
 
+        /**
+         * Sets the file type to return
+         *
+         * @param fileType
+         *         The file type of the image to return
+         *
+         * @return The builder, useful for chaining
+         */
         public Builder setFileType(@Nullable FileType fileType) {
             this.fileType = fileType;
             return this;

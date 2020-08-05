@@ -19,6 +19,7 @@ package me.duncte123.weebJava.models.impl;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.LicenseConfig;
 import me.duncte123.weebJava.configs.TagsConfig;
 import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.helpers.IOHelper;
@@ -37,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,8 +119,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     @Nonnull
     @Override
     public PendingRequest<List<String>> getTags(@Nonnull TagsConfig config) {
+        Objects.requireNonNull(config, "The config cannot be null");
+
         final QueryBuilder builder = new QueryBuilder()
-                .append(getAPIBaseUrl()).append("/images/tags");
+                .append(getAPIBaseUrl())
+                .append("/images/tags");
 
         if (config.getHiddenMode() != null) {
             config.getHiddenMode().appendTo(builder);
@@ -148,9 +153,11 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     @Nonnull
     @Override
     public PendingRequest<WeebImage> getRandomImage(@Nonnull ImageConfig config) {
+        Objects.requireNonNull(config, "The config cannot be null");
 
-        QueryBuilder builder = new QueryBuilder()
-                .append(getAPIBaseUrl()).append("/images/random");
+        final QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl())
+                .append("/images/random");
 
         if (config.getType() == null && config.getTags() == null) {
             throw new IllegalArgumentException("Either one of type or tags must be set");
@@ -202,7 +209,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     @Nonnull
     @Override
-    public PendingRequest<byte[]> generateSimple(@Nonnull GenerateType type, Color face, Color hair) {
+    public PendingRequest<byte[]> generateSimple(@Nonnull GenerateType type, @Nullable Color face, @Nullable Color hair) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
@@ -246,10 +253,15 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
 
     @Nonnull
     @Override
-    public PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges, @Nonnull String[] widgets) {
-        JSONObject data = new JSONObject()
-                .put("title", title)
-                .put("avatar", avatar);
+    public PendingRequest<byte[]> generateLicense(@Nonnull LicenseConfig config) {
+        Objects.requireNonNull(config, "The config cannot be null");
+
+        final JSONObject data = new JSONObject()
+                .put("title", config.getTitle())
+                .put("avatar", config.getAvatar());
+
+        final String[] badges = config.getBadges();
+        final String[] widgets = config.getWidgets();
 
         if (badges.length > 3 || widgets.length > 3) {
             throw new IllegalArgumentException("Size badges and widgets cannot be higher than 3");

@@ -31,6 +31,11 @@ public class TypesConfig extends HasHiddenAndNsfwMode {
         this.previewMode = previewMode;
     }
 
+    /**
+     * Returns the preview mode for this request
+     *
+     * @return The preview mode for this request
+     */
     @Nullable
     public PreviewMode getPreviewMode() {
         return previewMode;
@@ -39,6 +44,14 @@ public class TypesConfig extends HasHiddenAndNsfwMode {
     public static class Builder extends HasHiddenAndNsfwMode.Builder<Builder, TypesConfig> {
         private PreviewMode previewMode;
 
+        /**
+         * Sets if we should have a preview for the types that we request, default is null
+         *
+         * @param previewMode
+         *         {@link PreviewMode#PREVIEW} to show a preview, {@link PreviewMode#NO_PREVIEW} to disable previews
+         *
+         * @return The builder, useful for chaining
+         */
         public Builder setPreviewMode(@Nullable PreviewMode previewMode) {
             this.previewMode = previewMode;
             return this;

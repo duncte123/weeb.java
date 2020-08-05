@@ -18,13 +18,16 @@ package me.duncte123.weebJava.models;
 
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.LicenseConfig;
 import me.duncte123.weebJava.configs.TagsConfig;
 import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.settings.SettingsManager;
-import me.duncte123.weebJava.types.*;
+import me.duncte123.weebJava.types.GenerateType;
+import me.duncte123.weebJava.types.StatusType;
+import me.duncte123.weebJava.types.TokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,6 +85,7 @@ public interface WeebApi {
     default String getCompiledToken() {
         return getTokenType().getType() + " " + getToken();
     }
+
     /**
      * Lists the types for the images
      *
@@ -95,15 +99,8 @@ public interface WeebApi {
     /**
      * Lists the types for the images
      *
-     * @param hidden
-     *         if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns
-     *         only types from nsfw images
-     * @param preview
-     *         Sets if we should get a preview for each type
-     * @param config the configuration for this request
+     * @param config
+     *         the configuration for this request
      *
      * @return The types that match your response
      */
@@ -123,12 +120,8 @@ public interface WeebApi {
     /**
      * Get a list of the available tags
      *
-     * @param hidden
-     *         if {@link HiddenMode#ONLY}, you only get back hidden tags you added
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
-     *         tags from nsfw images
+     * @param config
+     *         the configuration for this request
      *
      * @return A list of tags
      */
@@ -138,19 +131,8 @@ public interface WeebApi {
     /**
      * Get a random image based on the information that you provide
      *
-     * @param type
-     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param tags
-     *         list of the tags the image should have
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
-     *         types from nsfw images
-     * @param hidden
-     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
-     *         hidden images uploaded by yourself
-     * @param fileType
-     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
+     * @param config
+     *         the config for this request
      *
      * @return A random image
      */
@@ -201,48 +183,12 @@ public interface WeebApi {
     /**
      * Generates a discord avatar status
      *
-     * @return The {@link InputStream InputStream} of the generated image
-     */
-    @Nonnull
-    default PendingRequest<byte[]> generateDiscordStatus() {
-        return generateDiscordStatus(null, null);
-    }
-
-    /**
-     * Generates a discord avatar status
-     *
      * @param status
-     *         discord status of the mock
-     *
-     * @return The {@link InputStream InputStream} of the generated image
-     */
-    @Nonnull
-    default PendingRequest<byte[]> generateDiscordStatus(@Nullable StatusType status) {
-        return generateDiscordStatus(status, null);
-    }
-
-    /**
-     * Generates a discord avatar status
-     *
+     *         discord status that should display on the avatar, or null
      * @param avatar
-     *         http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
+     *         http/s url pointing to an avatar, has to have proper headers and be a direct link to an image, or null
      *
-     * @return The {@link InputStream InputStream} of the generated image
-     */
-    @Nonnull
-    default PendingRequest<byte[]> generateDiscordStatus(@Nullable String avatar) {
-        return generateDiscordStatus(null, avatar);
-    }
-
-    /**
-     * Generates a discord avatar status
-     *
-     * @param status
-     *         discord status of the mock
-     * @param avatar
-     *         http/s url pointing to an avatar, has to have proper headers and be a direct link to an image
-     *
-     * @return The {@link InputStream InputStream} of the generated image
+     * @return A {@code byte[]} of the generated image
      */
     @Nonnull
     PendingRequest<byte[]> generateDiscordStatus(@Nullable StatusType status, @Nullable String avatar);
@@ -250,53 +196,13 @@ public interface WeebApi {
     /**
      * Generates a licence
      *
-     * @param title
-     *         Title of the license
-     * @param avatar
-     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
+     * @param config
+     *         The configuration for this request
      *
-     * @return The {@link InputStream InputStream} of the generated image
+     * @return A {@code byte[]} of the generated image
      */
     @Nonnull
-    default PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar) {
-        return generateLicense(title, avatar, new String[0], new String[0]);
-    }
-
-    /**
-     * Generates a licence
-     *
-     * @param title
-     *         Title of the license
-     * @param avatar
-     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param badges
-     *         Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar
-     *         apply
-     *
-     * @return The {@link InputStream InputStream} of the generated image
-     */
-    @Nonnull
-    default PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges) {
-        return generateLicense(title, avatar, badges, new String[0]);
-    }
-
-    /**
-     * Generates a licence
-     *
-     * @param title
-     *         Title of the license
-     * @param avatar
-     *         http/s url pointing to an image, has to have proper headers and be a direct link to an image
-     * @param badges
-     *         Array of http/s urls pointing to images, that should be used in the badges, same conditions as for avatar
-     *         apply
-     * @param widgets
-     *         Array of strings for filling the three boxes with text content
-     *
-     * @return The {@link InputStream InputStream} of the generated image
-     */
-    @Nonnull
-    PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges, @Nonnull String[] widgets);
+    PendingRequest<byte[]> generateLicense(@Nonnull LicenseConfig config);
 
     /**
      * Generates a waifu insult

@@ -84,6 +84,11 @@ public abstract class HasHiddenAndNsfwMode {
             return (B) this;
         }
 
+        /**
+         * Builds the object and returns it
+         *
+         * @return The object from this builder
+         */
         public abstract T build();
     }
 }

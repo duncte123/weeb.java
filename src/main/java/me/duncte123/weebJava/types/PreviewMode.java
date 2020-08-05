@@ -20,19 +20,17 @@ import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.helpers.QueryParam;
 
 public enum PreviewMode implements QueryParam {
+    PREVIEW(true),
+    NO_PREVIEW(false);
 
-    PREVIEW {
-        @Override
-        public void appendTo(QueryBuilder builder) {
-            builder.append("preview", "true");
-        }
-    },
+    private final boolean status;
 
-    NO_PREVIEW {
-        @Override
-        public void appendTo(QueryBuilder builder) {
-            builder.append("preview", "false");
-        }
+    PreviewMode(boolean status) {
+        this.status = status;
     }
 
+    @Override
+    public void appendTo(QueryBuilder builder) {
+        builder.append("preview", String.valueOf(this.status));
+    }
 }

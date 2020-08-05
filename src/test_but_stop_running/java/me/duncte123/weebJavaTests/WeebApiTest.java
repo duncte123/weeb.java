@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 Duncan Sterken
+ *    Copyright 2018 - 2020 Duncan Sterken
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.LicenseConfig;
 import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
@@ -27,6 +28,7 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
+import me.duncte123.weebJava.types.FileType;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
@@ -71,7 +73,9 @@ public class WeebApiTest {
 
         //Get an image by a type
         WeebImage imageByType = api.getRandomImage(new ImageConfig.Builder()
+                .setNsfwMode(null)
                 .setType("awoo")
+                .setFileType(FileType.PNG)
                 .build()).execute();
         //And display the url
         System.out.println(imageByType.getUrl());
@@ -95,13 +99,17 @@ public class WeebApiTest {
         //Generate Awooo
         apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));
         //Discord status
-        apiImg.generateDiscordStatus(myavy).async((img) -> writeToFile(img, "status"));
+        apiImg.generateDiscordStatus(null, myavy).async((img) -> writeToFile(img, "status"));
         //Insult
         apiImg.generateWaifuinsult(myavy).async((img) -> writeToFile(img, "wifu"));
         //License
-        apiImg.generateLicense("Phan", myavy,
-                new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"},
-                new String[]{"", "", "Discord: duncte123#1245"}).async((img) -> writeToFile(img, "license"));
+
+        apiImg.generateLicense(new LicenseConfig.Builder()
+                .setTitle("Phan")
+                .setAvatar(myavy)
+                .setBadges(new String[]{"https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg"})
+                .setWidgets(new String[]{"", "", "Discord: duncte123#1245"})
+                .build()).async((img) -> writeToFile(img, "license"));
         //Love ship
         apiImg.generateLoveship(myavy, myavy).async((img) -> writeToFile(img, "loveship"));
     }
