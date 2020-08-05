@@ -22,7 +22,6 @@ import me.duncte123.weebJava.helpers.QueryParam;
 /**
  * This sets the hidden mode on the images
  */
-@SuppressWarnings("unused")
 public enum HiddenMode implements QueryParam {
 
     /**

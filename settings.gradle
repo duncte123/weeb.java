@@ -15,4 +15,6 @@
  */
 
 rootProject.name = 'weebJava'
+include 'src:examples'
+findProject(':src:examples')?.name = 'weebJava.examples'
 

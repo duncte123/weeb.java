@@ -18,6 +18,9 @@ package me.duncte123.weebJava.models.impl;
 
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.TagsConfig;
+import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.helpers.IOHelper;
 import me.duncte123.weebJava.helpers.QueryBuilder;
 import me.duncte123.weebJava.models.WeebApi;
@@ -30,15 +33,14 @@ import me.duncte123.weebJava.models.settings.impl.SettingsManagerImpl;
 import me.duncte123.weebJava.types.*;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
-import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
@@ -63,41 +65,44 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         this.manager = new RequestManager(appName);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public TokenType getTokenType() {
         return tokenType;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getToken() {
         return token;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getAPIBaseUrl() {
         return endpoint.getUrl();
     }
 
-    @NotNull
+
+    @Nonnull
     @Override
-    public PendingRequest<ImageTypesResponse> getTypes(HiddenMode hidden, NSFWMode nsfw, PreviewMode preview) {
+    public PendingRequest<ImageTypesResponse> getTypes(@Nonnull TypesConfig config) {
+        Objects.requireNonNull(config, "The config cannot be null");
 
-        QueryBuilder builder = new QueryBuilder()
-                .append(getAPIBaseUrl()).append("/images/types");
+        final QueryBuilder builder = new QueryBuilder()
+                .append(getAPIBaseUrl())
+                .append("/images/types");
 
-        if (hidden != null) {
-            hidden.appendTo(builder);
+        if (config.getHiddenMode() != null) {
+            config.getHiddenMode().appendTo(builder);
         }
 
-        if (nsfw != null) {
-            nsfw.appendTo(builder);
+        if (config.getNsfwMode() != null) {
+            config.getNsfwMode().appendTo(builder);
         }
 
-        if (preview != null) {
-            preview.appendTo(builder);
+        if (config.getPreviewMode() != null) {
+            config.getPreviewMode().appendTo(builder);
         }
 
         return createRequest(
@@ -109,19 +114,18 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<List<String>> getTags(HiddenMode hidden, NSFWMode nsfw) {
-
-        QueryBuilder builder = new QueryBuilder()
+    public PendingRequest<List<String>> getTags(@Nonnull TagsConfig config) {
+        final QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/tags");
 
-        if (hidden != null) {
-            hidden.appendTo(builder);
+        if (config.getHiddenMode() != null) {
+            config.getHiddenMode().appendTo(builder);
         }
 
-        if (nsfw != null) {
-            nsfw.appendTo(builder);
+        if (config.getNsfwMode() != null) {
+            config.getNsfwMode().appendTo(builder);
         }
 
         return createRequest(
@@ -141,35 +145,35 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<WeebImage> getRandomImage(String type, List<String> tags, NSFWMode nsfw, HiddenMode hidden, FileType fileType) {
+    public PendingRequest<WeebImage> getRandomImage(@Nonnull ImageConfig config) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/images/random");
 
-        if (type == null && tags == null) {
+        if (config.getType() == null && config.getTags() == null) {
             throw new IllegalArgumentException("Either one of type or tags must be set");
         }
 
-        if (type != null && !type.isEmpty()) {
-            builder.append("type", type);
+        if (config.getType() != null && !config.getType().isEmpty()) {
+            builder.append("type", config.getType());
         }
 
-        if (tags != null && !tags.isEmpty()) {
-            builder.append("tags", StringUtils.join(tags, ","));
+        if (config.getTags() != null && !config.getTags().isEmpty()) {
+            builder.append("tags", StringUtils.join(config.getTags(), ","));
         }
 
-        if (nsfw != null) {
-            nsfw.appendTo(builder);
+        if (config.getNsfwMode() != null) {
+            config.getNsfwMode().appendTo(builder);
         }
 
-        if (hidden != null) {
-            hidden.appendTo(builder);
+        if (config.getHiddenMode() != null) {
+            config.getHiddenMode().appendTo(builder);
         }
 
-        if (fileType != null) {
-            fileType.appendTo(builder);
+        if (config.getFileType() != null) {
+            config.getFileType().appendTo(builder);
         }
 
         return createRequest(
@@ -181,9 +185,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<WeebImage> getImageInfo(@NotNull String imageId) {
+    public PendingRequest<WeebImage> getImageInfo(@Nonnull String imageId) {
         return createRequest(
                 manager.prepareGet(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/info/").append(imageId).build(),
@@ -196,9 +200,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 );
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<byte[]> generateSimple(@NotNull GenerateType type, Color face, Color hair) {
+    public PendingRequest<byte[]> generateSimple(@Nonnull GenerateType type, Color face, Color hair) {
 
         QueryBuilder builder = new QueryBuilder()
                 .append(getAPIBaseUrl()).append("/auto-image/generate");
@@ -219,7 +223,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PendingRequest<byte[]> generateDiscordStatus(StatusType status, String avatar) {
 
@@ -240,9 +244,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<byte[]> generateLicense(@NotNull String title, @NotNull String avatar, @NotNull String[] badges, @NotNull String[] widgets) {
+    public PendingRequest<byte[]> generateLicense(@Nonnull String title, @Nonnull String avatar, @Nonnull String[] badges, @Nonnull String[] widgets) {
         JSONObject data = new JSONObject()
                 .put("title", title)
                 .put("avatar", avatar);
@@ -269,9 +273,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<byte[]> generateWaifuinsult(@NotNull String avatar) {
+    public PendingRequest<byte[]> generateWaifuinsult(@Nonnull String avatar) {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
@@ -282,9 +286,9 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PendingRequest<byte[]> generateLoveship(@NotNull String targetOne, @NotNull String targetTwo) {
+    public PendingRequest<byte[]> generateLoveship(@Nonnull String targetOne, @Nonnull String targetTwo) {
 
         JSONObject data = new JSONObject()
                 .put("targetOne", targetOne)
@@ -304,7 +308,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return String.format("%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ReputationManager getReputationManager() {
         if (reputationManager == null) {
@@ -314,7 +318,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return reputationManager;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public SettingsManager getSettingsManager() {
         if (settingsManager == null) {

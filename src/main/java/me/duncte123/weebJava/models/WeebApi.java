@@ -17,12 +17,14 @@
 package me.duncte123.weebJava.models;
 
 import com.github.natanbc.reliqua.request.PendingRequest;
+import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.TagsConfig;
+import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
 import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.types.*;
-import okhttp3.OkHttpClient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,7 +82,6 @@ public interface WeebApi {
     default String getCompiledToken() {
         return getTokenType().getType() + " " + getToken();
     }
-
     /**
      * Lists the types for the images
      *
@@ -88,48 +89,7 @@ public interface WeebApi {
      */
     @Nonnull
     default PendingRequest<ImageTypesResponse> getTypes() {
-        return getTypes(null, null, null);
-    }
-
-    /**
-     * Lists the types for the images
-     *
-     * @param hidden
-     *         if {@link HiddenMode#ONLY}, you only get back hidden images you uploaded
-     *
-     * @return The types that match your response
-     */
-    @Nonnull
-    default PendingRequest<ImageTypesResponse> getTypes(@Nullable HiddenMode hidden) {
-        return getTypes(hidden, null, null);
-    }
-
-    /**
-     * Lists the types for the images
-     *
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW}, returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW}, returns
-     *         only types from nsfw images
-     *
-     * @return The types that match your response
-     */
-    @Nonnull
-    default PendingRequest<ImageTypesResponse> getTypes(@Nullable NSFWMode nsfw) {
-        return getTypes(null, nsfw, null);
-    }
-
-    /**
-     * Lists the types for the images
-     *
-     * @param preview
-     *         Sets if we should get a preview for each type
-     *
-     * @return The types that match your response
-     */
-    @Nonnull
-    default PendingRequest<ImageTypesResponse> getTypes(@Nullable PreviewMode preview) {
-        return getTypes(null, null, preview);
+        return getTypes(new TypesConfig(null, null, null));
     }
 
     /**
@@ -143,11 +103,12 @@ public interface WeebApi {
      *         only types from nsfw images
      * @param preview
      *         Sets if we should get a preview for each type
+     * @param config the configuration for this request
      *
      * @return The types that match your response
      */
     @Nonnull
-    PendingRequest<ImageTypesResponse> getTypes(@Nullable HiddenMode hidden, @Nullable NSFWMode nsfw, @Nullable PreviewMode preview);
+    PendingRequest<ImageTypesResponse> getTypes(@Nonnull TypesConfig config);
 
     /**
      * Get a list of the available tags
@@ -156,35 +117,7 @@ public interface WeebApi {
      */
     @Nonnull
     default PendingRequest<List<String>> getTags() {
-        return getTags(null, null);
-    }
-
-    /**
-     * Get a list of the available tags
-     *
-     * @param hidden
-     *         if {@link HiddenMode#ONLY}, you only get back hidden tags you added
-     *
-     * @return A list of tags
-     */
-    @Nonnull
-    default PendingRequest<List<String>> getTags(@Nullable HiddenMode hidden) {
-        return getTags(hidden, null);
-    }
-
-    /**
-     * Get a list of the available tags
-     *
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no tags coming from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW} returns tags from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
-     *         tags from nsfw images
-     *
-     * @return A list of tags
-     */
-    @Nonnull
-    default PendingRequest<List<String>> getTags(@Nullable NSFWMode nsfw) {
-        return getTags(null, nsfw);
+        return getTags(new TagsConfig(null, null));
     }
 
     /**
@@ -200,129 +133,7 @@ public interface WeebApi {
      * @return A list of tags
      */
     @Nonnull
-    PendingRequest<List<String>> getTags(@Nullable HiddenMode hidden, @Nullable NSFWMode nsfw);
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param type
-     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable String type) {
-        return getRandomImage(type, null, null, null, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param type
-     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
-     *         types from nsfw images
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable NSFWMode nsfw) {
-        return getRandomImage(type, null, nsfw, null, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param type
-     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param hidden
-     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
-     *         hidden images uploaded by yourself
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable HiddenMode hidden) {
-        return getRandomImage(type, null, null, hidden, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param type
-     *         type of the image you want to get Either Type or Tags is mandatory, but you can combine them
-     * @param fileType
-     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable FileType fileType) {
-        return getRandomImage(type, null, null, null, fileType);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param tags
-     *         list of the tags the image should have
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags) {
-        return getRandomImage(null, tags, null, null, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param tags
-     *         list of the tags the image should have
-     * @param nsfw
-     *         When {@link NSFWMode#DISALLOW_NSFW}, no types from nsfw images will be returned, {@link
-     *         NSFWMode#ALLOW_NSFW} returns types from nsfw and non-nsfw images, {@link NSFWMode#ONLY_NSFW} returns only
-     *         types from nsfw images
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable NSFWMode nsfw) {
-        return getRandomImage(null, tags, nsfw, null, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param tags
-     *         list of the tags the image should have
-     * @param hidden
-     *         When {@link HiddenMode#HIDE} you only get public images, {@link HiddenMode#ONLY} will only give you
-     *         hidden images uploaded by yourself
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable HiddenMode hidden) {
-        return getRandomImage(null, tags, null, hidden, null);
-    }
-
-    /**
-     * Get a random image based on the information that you provide
-     *
-     * @param tags
-     *         list of the tags the image should have
-     * @param fileType
-     *         Filetype of the image, may either be jpg/jpeg, png or gif. jpeg and jpg are treated like being the same.
-     *
-     * @return A random image
-     */
-    @Nonnull
-    default PendingRequest<WeebImage> getRandomImage(@Nullable List<String> tags, @Nullable FileType fileType) {
-        return getRandomImage(null, tags, null, null, fileType);
-    }
+    PendingRequest<List<String>> getTags(@Nonnull TagsConfig config);
 
     /**
      * Get a random image based on the information that you provide
@@ -344,7 +155,7 @@ public interface WeebApi {
      * @return A random image
      */
     @Nonnull
-    PendingRequest<WeebImage> getRandomImage(@Nullable String type, @Nullable List<String> tags, @Nullable NSFWMode nsfw, @Nullable HiddenMode hidden, @Nullable FileType fileType);
+    PendingRequest<WeebImage> getRandomImage(@Nonnull ImageConfig config);
 
 
     /**

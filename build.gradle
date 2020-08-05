@@ -24,12 +24,12 @@ plugins {
     id 'java-library'
     id 'idea'
     id 'maven-publish'
-    id 'com.github.breadmoirai.github-release' version '2.2.0'
+//    id 'com.github.breadmoirai.github-release' version '2.2.0'
 }
 
 group = 'me.duncte123'
 archivesBaseName = 'weebJava'
-version = "2.2.0_${getBuildNumber()}"
+version = "3.0.0_${getBuildNumber()}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -157,12 +157,17 @@ bintrayUpload {
     onlyIf { System.getenv('BINTRAY_KEY') != null }
 }
 
-githubRelease {
+/*githubRelease {
     token "${System.getenv('GITHUB_TOKEN')}"
-    owner 'duncte123'
+    setOwner('duncte123')
     repo 'weeb.java'
-    releaseAssets jar.destinationDir.listFiles()
+    releaseAssets jar.destinationDirectory.listFiles()
     overwrite true
+}*/
+
+wrapper {
+    gradleVersion = '6.5'
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 static def getBuildNumber() {

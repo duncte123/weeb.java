@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
+      <module name="weebJava.src.weebJava.examples.main" target="13" />
+      <module name="weebJava.src.weebJava.examples.test" target="13" />
       <module name="weebJava_main" target="1.8" />
       <module name="weebJava_test" target="1.8" />
     </bytecodeTargetLevel>

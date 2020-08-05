@@ -17,6 +17,8 @@
 package me.duncte123.weebJavaTests;
 
 import me.duncte123.weebJava.WeebApiBuilder;
+import me.duncte123.weebJava.configs.ImageConfig;
+import me.duncte123.weebJava.configs.TypesConfig;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.image.WeebImage;
 import me.duncte123.weebJava.models.image.response.ImageTypesResponse;
@@ -59,21 +61,27 @@ public class WeebApiTest {
         System.out.println(tags);
 
         //This should get the tags if there are none yet
-        ImageTypesResponse types = api.getTypes(PreviewMode.PREVIEW).execute();
+        ImageTypesResponse types = api.getTypes(new TypesConfig.Builder()
+                .setPreviewMode(PreviewMode.PREVIEW)
+                .build()).execute();
         //Print the tags
         System.out.println(types.getStatus());
         System.out.println(types.getTypes());
         System.out.println(types.getPreview());
 
         //Get an image by a type
-        WeebImage imageByType = api.getRandomImage("awoo").execute();
+        WeebImage imageByType = api.getRandomImage(new ImageConfig.Builder()
+                .setType("awoo")
+                .build()).execute();
         //And display the url
         System.out.println(imageByType.getUrl());
 
         //Get an image by a tag
         List<String> typesA = new ArrayList<>();
         typesA.add("b1nzy");
-        WeebImage imageByTags = api.getRandomImage(typesA).execute();
+        WeebImage imageByTags = api.getRandomImage(new ImageConfig.Builder()
+                .setTags(typesA)
+                .build()).execute();
         //And display the url
         System.out.println(imageByTags.getUrl());
         System.out.println(imageByTags.getTags());
@@ -81,7 +89,8 @@ public class WeebApiTest {
 
     private static void testImageGen(WeebApi apiImg) {
 
-        String myavy = "https://profile-pictures.rabb.it/e65e7a6b-5011-4907-86bb-38b886a9e401.jpg";
+        // not my avi anymore
+        String myavy = "https://pbs.twimg.com/profile_images/456226536816119809/Gwzk9qCp.jpeg";
 
         //Generate Awooo
         apiImg.generateSimple(GenerateType.AWOOO, Color.CYAN, Color.GREEN).async((img) -> writeToFile(img, "simple"));

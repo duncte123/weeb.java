@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.duncte123-weebJava.iml" filepath="$PROJECT_DIR$/.idea/modules/me.duncte123-weebJava.iml" group="weebJava" />
       <module fileurl="file://$PROJECT_DIR$/weebJava.iml" filepath="$PROJECT_DIR$/weebJava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava_main.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava_main.iml" group="weebJava" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava_test.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava_test.iml" group="weebJava" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava.main.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weebJava.test.iml" filepath="$PROJECT_DIR$/.idea/modules/weebJava.test.iml" />
     </modules>
   </component>
 </project>
