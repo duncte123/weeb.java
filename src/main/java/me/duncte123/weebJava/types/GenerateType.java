@@ -25,27 +25,21 @@ public enum GenerateType implements QueryParam {
      * This is the awooo type: <br>
      * <img src="https://i.imgur.com/9sJ21z3.png" alt="awooo">
      */
-    AWOOO("awooo"),
+    AWOOO,
     /**
      * This is the eyes type: <br>
      * <img src="https://i.imgur.com/q9UL3fN.png" alt="eyes">
      */
-    EYES("eyes"),
+    EYES,
     /**
      * This is the won type: <br>
      * <img src="https://i.imgur.com/hdapIsB.png?1" alt="won">
      */
-    WON("won");
-
-    private final String type;
-
-    GenerateType(String type) {
-        this.type = type;
-    }
+    WON;
 
 
     @Override
     public void appendTo(QueryBuilder builder) {
-        builder.append("type", type);
+        builder.append("type", this.name().toLowerCase());
     }
 }
