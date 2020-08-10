@@ -16,24 +16,37 @@
 
 package me.duncte123.weebJava.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.natanbc.reliqua.request.RequestContext;
 import com.github.natanbc.reliqua.request.RequestException;
 import me.duncte123.weebJava.exceptions.MissingPermissionException;
 import me.duncte123.weebJava.exceptions.NotFoundException;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 public class ErrorUtils {
-    public static JSONObject toJSONObject(Response response) {
-        return new JSONObject(new JSONTokener(getInputStream(response)));
+    private static final JsonMapper mapper = new JsonMapper();
+
+    @Nonnull
+    public static JsonNode toJSONObject(Response response) throws IOException {
+        return mapper.readTree(getInputStream(response));
+    }
+
+    @Nonnull
+    public static <T> T getItem(Response response, JsonMapper mapper, Class<T> cls) {
+        try {
+            return mapper.readValue(getInputStream(response), cls);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public static InputStream getInputStream(Response response) {
@@ -62,22 +75,26 @@ public class ErrorUtils {
             context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + " (No body)", context.getCallStack()));
             return;
         }
+
+        JsonNode json = null;
+
+        try {
+            json = toJSONObject(response);
+        } catch (IOException ignored) {
+        }
+
         switch (response.code()) {
+            // json is never null in cases of 403 and 404
             case 403:
-                context.getErrorConsumer().accept(new MissingPermissionException(toJSONObject(response).getString("message"), context.getCallStack()));
+                context.getErrorConsumer().accept(new MissingPermissionException(json.get("message").asText(), context.getCallStack()));
                 break;
             case 404:
-                context.getErrorConsumer().accept(new NotFoundException(toJSONObject(response).getString("message"), context.getCallStack()));
+                context.getErrorConsumer().accept(new NotFoundException(json.get("message").asText(), context.getCallStack()));
                 context.getSuccessConsumer().accept(null);
                 break;
             default:
-                JSONObject json = null;
-                try {
-                    json = toJSONObject(response);
-                } catch (JSONException ignored) {
-                }
                 if (json != null) {
-                    context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + ": " + json.getString("message"), context.getCallStack()));
+                    context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code() + ": " + json.get("message").asText(), context.getCallStack()));
                 } else {
                     context.getErrorConsumer().accept(new RequestException("Unexpected status code " + response.code(), context.getCallStack()));
                 }

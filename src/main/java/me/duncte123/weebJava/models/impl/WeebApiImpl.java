@@ -16,8 +16,12 @@
 
 package me.duncte123.weebJava.models.impl;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
+import com.github.natanbc.reliqua.util.StatusCodeValidator;
 import me.duncte123.weebJava.configs.ImageConfig;
 import me.duncte123.weebJava.configs.LicenseConfig;
 import me.duncte123.weebJava.configs.TagsConfig;
@@ -31,11 +35,13 @@ import me.duncte123.weebJava.models.reputation.ReputationManager;
 import me.duncte123.weebJava.models.reputation.impl.ReputationManagerImpl;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.impl.SettingsManagerImpl;
-import me.duncte123.weebJava.types.*;
+import me.duncte123.weebJava.types.Endpoint;
+import me.duncte123.weebJava.types.GenerateType;
+import me.duncte123.weebJava.types.StatusType;
+import me.duncte123.weebJava.types.TokenType;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static me.duncte123.weebJava.web.ErrorUtils.getItem;
 import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
 
 public class WeebApiImpl extends Reliqua implements WeebApi {
@@ -57,6 +64,8 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     private ReputationManager reputationManager;
     private SettingsManager settingsManager;
 
+    private final JsonMapper mapper = new JsonMapper();
+
     public WeebApiImpl(TokenType tokenType, String token, Endpoint endpoint, String appName) {
         super();
 
@@ -64,7 +73,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         this.token = token;
         this.endpoint = endpoint;
 
-        this.manager = new RequestManager(appName);
+        this.manager = new RequestManager(appName, mapper);
     }
 
     @Nonnull
@@ -111,7 +120,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/types"))
                 .build(
-                        (response) -> ImageTypesResponse.fromJson(toJSONObject(response)),
+                        (response) -> getItem(response, this.mapper, ImageTypesResponse.class),
                         ErrorUtils::handleError
                 );
     }
@@ -140,7 +149,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                         (response) -> {
                             List<String> tags = new ArrayList<>();
 
-                            toJSONObject(response).getJSONArray("tags").forEach(
+                            toJSONObject(response).get("tags").forEach(
                                     (it) -> tags.add(String.valueOf(it))
                             );
 
@@ -187,7 +196,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/images/random"))
                 .build(
-                        (response) -> WeebImage.fromJson(toJSONObject(response)),
+                        (response) -> getItem(response, this.mapper, WeebImage.class),
                         ErrorUtils::handleError
                 );
     }
@@ -202,7 +211,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
                 ))
                 .setRateLimiter(getRateLimiter("/info"))
                 .build(
-                        (response) -> WeebImage.fromJson(toJSONObject(response)),
+                        (response) -> getItem(response, this.mapper, WeebImage.class),
                         ErrorUtils::handleError
                 );
     }
@@ -248,6 +257,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.prepareGet(builder.build(), getCompiledToken()))
                 .setRateLimiter(getRateLimiter("/auto-image/discord-status"))
+                .setStatusCodeValidator(StatusCodeValidator.ACCEPT_2XX)
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
@@ -256,7 +266,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     public PendingRequest<byte[]> generateLicense(@Nonnull LicenseConfig config) {
         Objects.requireNonNull(config, "The config cannot be null");
 
-        final JSONObject data = new JSONObject()
+        final ObjectNode data = this.mapper.createObjectNode()
                 .put("title", config.getTitle())
                 .put("avatar", config.getAvatar());
 
@@ -268,20 +278,29 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         }
 
         if (badges.length > 0) {
-            data.put("badges", badges);
+            final ArrayNode badgesArray = data.putArray("badges");
+
+            for (final String badge : badges) {
+                badgesArray.add(badge);
+            }
         }
 
         if (widgets.length > 0) {
-            data.put("widgets", widgets);
+            final ArrayNode widgetsArray = data.putArray("widgets");
+
+            for (final String widget : widgets) {
+                widgetsArray.add(widget);
+            }
         }
 
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/license").build(),
-                        data.toString(),
+                        data,
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/license"))
+                .setStatusCodeValidator(StatusCodeValidator.ACCEPT_2XX)
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
@@ -291,28 +310,29 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/waifu-insult").build(),
-                        new JSONObject().put("avatar", avatar).toString(),
+                        this.mapper.createObjectNode().put("avatar", avatar),
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/waifu-insult"))
+                .setStatusCodeValidator(StatusCodeValidator.ACCEPT_2XX)
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
     @Nonnull
     @Override
     public PendingRequest<byte[]> generateLoveship(@Nonnull String targetOne, @Nonnull String targetTwo) {
-
-        JSONObject data = new JSONObject()
+        final ObjectNode data = this.mapper.createObjectNode()
                 .put("targetOne", targetOne)
                 .put("targetTwo", targetTwo);
 
         return createRequest(
                 manager.preparePOST(
                         new QueryBuilder().append(getAPIBaseUrl()).append("/auto-image/love-ship").build(),
-                        data.toString(),
+                        data,
                         getCompiledToken()
                 ))
                 .setRateLimiter(getRateLimiter("/auto-image/love-ship"))
+                .setStatusCodeValidator(StatusCodeValidator.ACCEPT_2XX)
                 .build(IOHelper::read, ErrorUtils::handleError);
     }
 
@@ -324,7 +344,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     @Override
     public ReputationManager getReputationManager() {
         if (reputationManager == null) {
-            reputationManager = new ReputationManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+            reputationManager = new ReputationManagerImpl(getClient(), this.mapper, getAPIBaseUrl(), manager, getCompiledToken());
         }
 
         return reputationManager;
@@ -334,7 +354,7 @@ public class WeebApiImpl extends Reliqua implements WeebApi {
     @Override
     public SettingsManager getSettingsManager() {
         if (settingsManager == null) {
-            settingsManager = new SettingsManagerImpl(getClient(), getAPIBaseUrl(), manager, getCompiledToken());
+            settingsManager = new SettingsManagerImpl(getClient(), this.mapper, getAPIBaseUrl(), manager, getCompiledToken());
         }
 
         return settingsManager;

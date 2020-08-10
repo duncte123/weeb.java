@@ -16,21 +16,29 @@
 
 package me.duncte123.weebJava.models.image.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.models.WeebApi;
 import me.duncte123.weebJava.models.WeebResponse;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageTypesResponse extends WeebResponse {
 
 
     private final List<String> types;
     private final List<PartialImage> preview;
 
-    private ImageTypesResponse(int status, String message, List<String> types, List<PartialImage> preview) {
+    @JsonCreator
+    public ImageTypesResponse(
+            @JsonProperty("status") int status,
+            @JsonProperty("message") String message,
+            @JsonProperty("types") List<String> types,
+            @JsonProperty("preview") List<PartialImage> preview
+    ) {
         super(status, message);
         this.types = types;
         this.preview = preview;
@@ -54,30 +62,7 @@ public class ImageTypesResponse extends WeebResponse {
         return preview;
     }
 
-    public static ImageTypesResponse fromJson(JSONObject jsonObject) {
-        List<String> types = new ArrayList<>();
-        List<PartialImage> preview = new ArrayList<>();
-
-        jsonObject.getJSONArray("types").forEach(
-                (type) -> types.add(String.valueOf(type))
-        );
-
-
-        if (jsonObject.has("preview")) {
-            jsonObject.getJSONArray("preview").forEach(
-                    (it) -> preview.add(PartialImage.fromJson((JSONObject) it))
-            );
-        }
-
-        return new ImageTypesResponse(
-                jsonObject.getInt("status"),
-                jsonObject.optString("message"),
-                types,
-                preview
-        );
-    }
-
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PartialImage {
 
         private final String url;
@@ -86,7 +71,14 @@ public class ImageTypesResponse extends WeebResponse {
         private final String baseType;
         private final String type;
 
-        private PartialImage(String url, String id, String fileType, String baseType, String type) {
+        @JsonCreator
+        public PartialImage(
+                @JsonProperty("url") String url,
+                @JsonProperty("id") String id,
+                @JsonProperty("fileType") String fileType,
+                @JsonProperty("baseType") String baseType,
+                @JsonProperty("type") String type
+        ) {
             this.url = url;
             this.id = id;
             this.fileType = fileType;
@@ -143,16 +135,6 @@ public class ImageTypesResponse extends WeebResponse {
 
         public String toString() {
             return "PartialImage(" + url + ")";
-        }
-
-        static PartialImage fromJson(JSONObject jsonObject) {
-            return new PartialImage(
-                    jsonObject.getString("url"),
-                    jsonObject.getString("id"),
-                    jsonObject.getString("fileType"),
-                    jsonObject.getString("baseType"),
-                    jsonObject.getString("type")
-            );
         }
     }
 }

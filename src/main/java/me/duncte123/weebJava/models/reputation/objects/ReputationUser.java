@@ -16,17 +16,17 @@
 
 package me.duncte123.weebJava.models.reputation.objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.helpers.DateParser;
-import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.duncte123.weebJava.helpers.WeebUtils.toArray;
-import static me.duncte123.weebJava.helpers.WeebUtils.toIntArray;
-
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReputationUser {
 
     /*
@@ -43,7 +43,25 @@ public class ReputationUser {
     private final int availableReputations;
     private final int[] nextAvailableReputations;
 
-    public ReputationUser(int reputation, String[] cooldown, String[] givenReputation, String userId, String botId, String accountId, int availableReputations, int[] nextAvailableReputations) {
+    @JsonCreator
+    public ReputationUser(
+            @JsonProperty("reputation")
+            int reputation,
+            @JsonProperty("cooldown")
+            String[] cooldown,
+            @JsonProperty("givenReputation")
+            String[] givenReputation,
+            @JsonProperty("userId")
+            String userId,
+            @JsonProperty("botId")
+            String botId,
+            @JsonProperty("accountId")
+            String accountId,
+            @JsonProperty("availableReputations")
+            int availableReputations,
+            @JsonProperty(value = "nextAvailableReputations")
+            int[] nextAvailableReputations
+    ) {
         this.reputation = reputation;
         this.cooldown = cooldown;
         this.givenReputation = givenReputation;
@@ -92,18 +110,5 @@ public class ReputationUser {
 
     public int[] getNextAvailableReputations() {
         return nextAvailableReputations;
-    }
-
-    public static ReputationUser fromJson(JSONObject jsonObject) {
-        return new ReputationUser(
-                jsonObject.getInt("reputation"),
-                toArray(jsonObject.getJSONArray("cooldown")),
-                toArray(jsonObject.getJSONArray("givenReputation")),
-                jsonObject.getString("userId"),
-                jsonObject.getString("botId"),
-                jsonObject.getString("accountId"),
-                jsonObject.getInt("availableReputations"),
-                toIntArray(jsonObject.getJSONArray("nextAvailableReputations"))
-        );
     }
 }

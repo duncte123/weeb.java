@@ -16,9 +16,14 @@
 
 package me.duncte123.weebJava.models.reputation.objects;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReputationSettings {
 
     private final String accountId;
@@ -27,7 +32,14 @@ public class ReputationSettings {
     private int maximumReputationReceivedDay;
     private long reputationCooldown;
 
-    private ReputationSettings(int reputationPerDay, int maximumReputation, int maximumReputationReceivedDay, long reputationCooldown, String accountId) {
+    @JsonCreator
+    private ReputationSettings(
+            @JsonProperty("reputationPerDay") int reputationPerDay,
+            @JsonProperty("maximumReputation") int maximumReputation,
+            @JsonProperty("maximumReputationReceivedDay") int maximumReputationReceivedDay,
+            @JsonProperty("reputationCooldown") long reputationCooldown,
+            @JsonProperty("accountId") String accountId
+    ) {
         this.reputationPerDay = reputationPerDay;
         this.maximumReputation = maximumReputation;
         this.maximumReputationReceivedDay = maximumReputationReceivedDay;
@@ -118,23 +130,12 @@ public class ReputationSettings {
         return accountId;
     }
 
-    public JSONObject toJson() {
-        return new JSONObject()
+    public ObjectNode toJson(JsonMapper mapper) {
+        return mapper.createObjectNode()
                 .put("reputationPerDay", getReputationPerDay())
                 .put("maximumReputation", getMaximumReputation())
                 .put("maximumReputationReceivedDay", getMaximumReputationReceivedDay())
                 .put("reputationCooldown", getReputationCooldown());
     }
 
-    public static ReputationSettings fromJson(JSONObject jsonObject) {
-
-        return new ReputationSettings(
-                jsonObject.getInt("reputationPerDay"),
-                jsonObject.getInt("maximumReputation"),
-                jsonObject.getInt("maximumReputationReceivedDay"),
-                jsonObject.getInt("reputationCooldown"),
-                jsonObject.getString("accountId")
-        );
-
-    }
 }

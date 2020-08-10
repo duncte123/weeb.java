@@ -16,16 +16,24 @@
 
 package me.duncte123.weebJava.models.image;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageTag {
 
     private final String name;
     private final boolean hidden;
     private final String user;
 
-    private ImageTag(String name, boolean hidden, String user) {
+    @JsonCreator
+    public ImageTag(
+            @JsonProperty("name") String name,
+            @JsonProperty("hidden") boolean hidden,
+            @JsonProperty("user") String user
+    ) {
         this.name = name;
         this.hidden = hidden;
         this.user = user;
@@ -45,13 +53,5 @@ public class ImageTag {
 
     public String toString() {
         return "ImageTag(" + name + ")";
-    }
-
-    public static ImageTag fromJson(JSONObject jsonObject) {
-        return new ImageTag(
-                jsonObject.getString("name"),
-                jsonObject.getBoolean("hidden"),
-                jsonObject.getString("user")
-        );
     }
 }

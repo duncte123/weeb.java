@@ -16,13 +16,15 @@
 
 package me.duncte123.weebJava.models.image;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.models.WeebApi;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WeebImage {
 
     private final String id;
@@ -37,7 +39,20 @@ public class WeebImage {
     private final String source;
     private final String account;
 
-    private WeebImage(String id, String type, String baseType, boolean nsfw, String fileType, String mimeType, List<ImageTag> tags, String url, boolean hidden, String source, String account) {
+    @JsonCreator
+    public WeebImage(
+            @JsonProperty("id") String id,
+            @JsonProperty("type") String type,
+            @JsonProperty("baseType") String baseType,
+            @JsonProperty("nsfw") boolean nsfw,
+            @JsonProperty("fileType") String fileType,
+            @JsonProperty("mimeType") String mimeType,
+            @JsonProperty("tags") List<ImageTag> tags,
+            @JsonProperty("url") String url,
+            @JsonProperty("hidden") boolean hidden,
+            @JsonProperty("source") String source,
+            @JsonProperty("account") String account
+    ) {
         this.id = id;
         this.type = type;
         this.baseType = baseType;
@@ -87,6 +102,15 @@ public class WeebImage {
      */
     public String getMimeType() {
         return mimeType;
+    }
+
+    /**
+     * Returns the file type of this image
+     *
+     * @return The file type of this image
+     */
+    public String getFileType() {
+        return fileType;
     }
 
     /**
@@ -141,27 +165,5 @@ public class WeebImage {
      */
     public String getSource() {
         return source;
-    }
-
-    public static WeebImage fromJson(JSONObject jsonObject) {
-        List<ImageTag> tags = new ArrayList<>();
-
-        jsonObject.getJSONArray("tags").forEach(
-                (it) -> tags.add(ImageTag.fromJson((JSONObject) it))
-        );
-
-        return new WeebImage(
-                jsonObject.getString("id"),
-                jsonObject.getString("type"),
-                jsonObject.getString("baseType"),
-                jsonObject.getBoolean("nsfw"),
-                jsonObject.getString("fileType"),
-                jsonObject.getString("mimeType"),
-                tags,
-                jsonObject.getString("url"),
-                jsonObject.getBoolean("hidden"),
-                jsonObject.optString("source", null),
-                jsonObject.getString("account")
-        );
     }
 }

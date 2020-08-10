@@ -16,15 +16,27 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SubSettingsObject extends SettingsObject {
 
     private final String subId;
     private final String subType;
 
-    private SubSettingsObject(String id, String type, String accountId, JSONObject data, String subId, String subType) {
+    @JsonCreator
+    public SubSettingsObject(
+            @JsonProperty("id") String id,
+            @JsonProperty("type") String type,
+            @JsonProperty("accountId") String accountId,
+            @JsonProperty("data") JsonNode data,
+            @JsonProperty("subId") String subId,
+            @JsonProperty("subType") String subType
+    ) {
         super(id, type, accountId, data);
         this.subId = subId;
         this.subType = subType;
@@ -36,16 +48,5 @@ public class SubSettingsObject extends SettingsObject {
 
     public String getSubType() {
         return subType;
-    }
-
-    public static SubSettingsObject fromJson(JSONObject jsonObject) {
-        return new SubSettingsObject(
-                jsonObject.getString("id"),
-                jsonObject.getString("type"),
-                jsonObject.getString("accountId"),
-                jsonObject.getJSONObject("data"),
-                jsonObject.getString("subId"),
-                jsonObject.getString("subType")
-        );
     }
 }

@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJava.models.reputation.impl;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.helpers.QueryBuilder;
@@ -27,23 +28,24 @@ import me.duncte123.weebJava.models.reputation.responses.ReputationSettingsRespo
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
-import org.json.JSONObject;
 
-import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
+import static me.duncte123.weebJava.web.ErrorUtils.getItem;
 
 public class ReputationManagerImpl extends Reliqua implements ReputationManager {
 
     private final String apiBase;
     private final String token;
     private final RequestManager manager;
+    private final JsonMapper mapper;
     private String botId;
 
-    public ReputationManagerImpl(OkHttpClient client, String apiBase, RequestManager manager, String token) {
+    public ReputationManagerImpl(OkHttpClient client, JsonMapper mapper, String apiBase, RequestManager manager, String token) {
         super(client, null, true);
 
         this.apiBase = apiBase;
         this.token = token;
         this.manager = manager;
+        this.mapper = mapper;
     }
 
     @Override
@@ -68,8 +70,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -86,12 +88,12 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        new JSONObject().put("source_user", sourceUserId).toString(),
+                        this.mapper.createObjectNode().put("source_user", sourceUserId),
                         token
                 )
         ).build(
-                (response) -> GiveUserReputationResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, GiveUserReputationResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -107,8 +109,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(builder.build(), token)
         ).build(
-                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -122,12 +124,12 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("increase", amount).toString(),
+                        this.mapper.createObjectNode().put("increase", amount),
                         token
                 )
         ).build(
-                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -141,12 +143,12 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         builder.build(),
-                        new JSONObject().put("decrease", amount).toString(),
+                        this.mapper.createObjectNode().put("decrease", amount),
                         token
                 )
         ).build(
-                (response) -> ReputationResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -157,8 +159,8 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.prepareGet(url, token)
         ).build(
-                (response) -> ReputationSettingsResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationSettingsResponse.class),
+                 ErrorUtils::handleError
         );
     }
 
@@ -170,12 +172,12 @@ public class ReputationManagerImpl extends Reliqua implements ReputationManager 
         return createRequest(
                 manager.preparePOST(
                         url,
-                        settings.toJson().toString(),
+                        settings.toJson(this.mapper),
                         token
                 )
         ).build(
-                (response) -> ReputationSettingsResponse.fromJson(toJSONObject(response)),
-                ErrorUtils::handleError
+                (response) -> getItem(response, this.mapper, ReputationSettingsResponse.class),
+                 ErrorUtils::handleError
         );
     }
 }

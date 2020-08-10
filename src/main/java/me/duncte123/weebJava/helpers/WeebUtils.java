@@ -16,30 +16,7 @@
 
 package me.duncte123.weebJava.helpers;
 
-import org.json.JSONArray;
-
-import javax.annotation.Nonnull;
-
 public class WeebUtils {
-
-    public static <T> T[] toArray(@Nonnull JSONArray array) {
-        //noinspection unchecked
-        return (T[]) array.toList().toArray();
-    }
-
-    public static int[] toIntArray(@Nonnull JSONArray array) {
-
-        // Create an int array to accomodate the numbers.
-        int[] numbers = new int[array.length()];
-
-        // Extract numbers from JSON array.
-        for (int i = 0; i < array.length(); ++i) {
-            numbers[i] = array.optInt(i);
-        }
-
-        return numbers;
-    }
-
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }

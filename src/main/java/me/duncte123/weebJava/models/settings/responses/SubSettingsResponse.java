@@ -16,17 +16,25 @@
 
 package me.duncte123.weebJava.models.settings.responses;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
-import org.json.JSONObject;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SubSettingsResponse extends SettingsResponse {
 
     private final SubSettingsObject subsetting;
 
-    public SubSettingsResponse(int status, String message, SettingsObject setting, SubSettingsObject subsetting) {
-        super(status, message, setting);
+    @JsonCreator
+    public SubSettingsResponse(
+            @JsonProperty("status") int status,
+            @JsonProperty("message") String message,
+            @JsonProperty("subsetting") SubSettingsObject subsetting
+    ) {
+        super(status, message, null);
         this.subsetting = subsetting;
     }
 
@@ -44,14 +52,5 @@ public class SubSettingsResponse extends SettingsResponse {
     @Override
     public SettingsObject getSetting() {
         throw new IllegalArgumentException("Cannot get settings on sub-settings");
-    }
-
-    public static SubSettingsResponse fromJson(JSONObject jsonObject) {
-        return new SubSettingsResponse(
-                jsonObject.getInt("status"),
-                jsonObject.optString("message"),
-                null,
-                SubSettingsObject.fromJson(jsonObject.getJSONObject("subsetting"))
-        );
     }
 }

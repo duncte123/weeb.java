@@ -16,19 +16,26 @@
 
 package me.duncte123.weebJava.models.settings.responses;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.settings.objects.SubSettingsObject;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SubSettingsListResponse extends WeebResponse {
 
     private final List<SubSettingsObject> subsettings;
 
-    private SubSettingsListResponse(int status, String message, List<SubSettingsObject> subsettings) {
+    @JsonCreator
+    public SubSettingsListResponse(
+            @JsonProperty("id") int status,
+            @JsonProperty("message") String message,
+            @JsonProperty("subsettings") List<SubSettingsObject> subsettings
+    ) {
         super(status, message);
         this.subsettings = subsettings;
     }
@@ -38,20 +45,5 @@ public class SubSettingsListResponse extends WeebResponse {
      */
     public List<SubSettingsObject> getSubsettings() {
         return subsettings;
-    }
-
-    public static SubSettingsListResponse fromJson(JSONObject jsonObject) {
-        List<SubSettingsObject> objects = new ArrayList<>();
-
-        jsonObject.getJSONArray("subsettings").forEach(
-                (item) -> objects.add(SubSettingsObject.fromJson((JSONObject) item))
-        );
-
-        return new SubSettingsListResponse(
-                jsonObject.getInt("status"),
-                jsonObject.optString("message"),
-                objects
-        );
-
     }
 }

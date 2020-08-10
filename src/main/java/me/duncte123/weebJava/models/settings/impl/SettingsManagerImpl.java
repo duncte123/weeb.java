@@ -16,34 +16,38 @@
 
 package me.duncte123.weebJava.models.settings.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.github.natanbc.reliqua.Reliqua;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import com.github.natanbc.reliqua.util.PendingRequestBuilder;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
+import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import me.duncte123.weebJava.web.ErrorUtils;
 import me.duncte123.weebJava.web.RequestManager;
 import okhttp3.OkHttpClient;
-import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 
 import static me.duncte123.weebJava.helpers.WeebUtils.isNullOrEmpty;
-import static me.duncte123.weebJava.web.ErrorUtils.toJSONObject;
+import static me.duncte123.weebJava.web.ErrorUtils.getItem;
 
 public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     private final String apiBase;
     private final String token;
     private final RequestManager manager;
+    private final JsonMapper mapper;
 
-    public SettingsManagerImpl(OkHttpClient client, String apiBase, RequestManager manager, String token) {
+    public SettingsManagerImpl(OkHttpClient client, JsonMapper mapper, String apiBase, RequestManager manager, String token) {
         super(client, null, true);
 
         this.apiBase = apiBase;
         this.token = token;
         this.manager = manager;
+        this.mapper = mapper;
     }
 
     @Nonnull
@@ -54,7 +58,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JSONObject data) {
+    public PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JsonNode data) {
         return updateSubSetting(null, null, type, id, data);
     }
 
@@ -72,7 +76,7 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
         return createRequest(manager.prepareGet(url, token))
                 .setRateLimiter(getRateLimiter(url))
                 .build(
-                        (response) -> SubSettingsListResponse.fromJson(toJSONObject(response)),
+                        (response) -> getItem(response, this.mapper, SubSettingsListResponse.class),
                         ErrorUtils::handleError
                 );
     }
@@ -87,13 +91,13 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                    (response) -> getItem(response, this.mapper, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         }
 
         return builder.build(
-                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                (response) -> getItem(response, this.mapper, SubSettingsResponse.class),
                 ErrorUtils::handleError
         );
 
@@ -101,27 +105,25 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
     @Nonnull
     @Override
-    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JSONObject data) {
+    public PendingRequest<SettingsResponse> updateSubSetting(String type, String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JsonNode data) {
         final String url = generateUrl(type, id, subtype, subId);
-        final String dataString = data.toString();
 
-        System.out.println(dataString);
-
-        if (dataString.length() > 10 * 1024)
+        if (data.toString().length() > 10 * 1024) {
             throw new IllegalArgumentException("Data must be below 10Kib");
+        }
 
-        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, dataString, token))
+        final PendingRequestBuilder builder = createRequest(manager.preparePOST(url, data, token))
                 .setRateLimiter(getRateLimiter(url));
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                    (response) -> getItem(response, this.mapper, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         }
 
         return builder.build(
-                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                (response) -> getItem(response, this.mapper, SubSettingsResponse.class),
                 ErrorUtils::handleError
         );
 
@@ -138,13 +140,13 @@ public class SettingsManagerImpl extends Reliqua implements SettingsManager {
 
         if (isNullOrEmpty(type)) {
             return builder.build(
-                    (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                    (response) -> getItem(response, this.mapper, SettingsResponse.class),
                     ErrorUtils::handleError
             );
         }
 
         return builder.build(
-                (response) -> SettingsResponse.fromJson(toJSONObject(response)),
+                (response) -> getItem(response, this.mapper, SubSettingsResponse.class),
                 ErrorUtils::handleError
         );
 

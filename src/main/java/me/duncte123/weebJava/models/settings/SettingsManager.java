@@ -16,10 +16,10 @@
 
 package me.duncte123.weebJava.models.settings;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.natanbc.reliqua.request.PendingRequest;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
 import me.duncte123.weebJava.models.settings.responses.SubSettingsListResponse;
-import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +52,7 @@ public interface SettingsManager {
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
     @Nonnull
-    PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JSONObject data);
+    PendingRequest<SettingsResponse> updateSetting(@Nonnull String type, @Nonnull String id, @Nonnull JsonNode data);
 
     /**
      * Deletes a setting from the server <strong>THIS CAN NOT BE UNDONE.</strong>
@@ -116,7 +116,7 @@ public interface SettingsManager {
      * @return The {@link SettingsResponse} holding the settings data from the server
      */
     @Nonnull
-    PendingRequest<SettingsResponse> updateSubSetting(@Nullable String type, @Nullable String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JSONObject data);
+    PendingRequest<SettingsResponse> updateSubSetting(@Nullable String type, @Nullable String id, @Nonnull String subtype, @Nonnull String subId, @Nonnull JsonNode data);
 
     /**
      * Deletes a setting from the server <strong>THIS CAN NOT BE UNDONE.</strong>

@@ -16,17 +16,27 @@
 
 package me.duncte123.weebJava.models.settings.objects;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SettingsObject {
 
     private final String id;
     private final String type;
     private final String accountId;
-    private final JSONObject data;
+    private final JsonNode data;
 
-    SettingsObject(String id, String type, String accountId, JSONObject data) {
+    @JsonCreator
+    public SettingsObject(
+            @JsonProperty("id") String id,
+            @JsonProperty("type") String type,
+            @JsonProperty("accountId") String accountId,
+            @JsonProperty("data") JsonNode data
+    ) {
         this.id = id;
         this.type = type;
         this.accountId = accountId;
@@ -57,16 +67,7 @@ public class SettingsObject {
     /**
      * @return The data that you stored
      */
-    public JSONObject getData() {
+    public JsonNode getData() {
         return data;
-    }
-
-    public static SettingsObject fromJson(JSONObject jsonObject) {
-        return new SettingsObject(
-                jsonObject.getString("id"),
-                jsonObject.getString("type"),
-                jsonObject.getString("accountId"),
-                jsonObject.getJSONObject("data")
-        );
     }
 }

@@ -16,17 +16,21 @@
 
 package me.duncte123.weebJava.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import me.duncte123.weebJava.WeebInfo;
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class RequestManager {
 
     private final String USER_AGENT;
+    private final JsonMapper mapper;
 
-    public RequestManager(String appName) {
+    public RequestManager(String appName, JsonMapper mapper) {
         USER_AGENT = appName.trim() + " (Weeb.java/" + WeebInfo.VERSION + ")";
+        this.mapper = mapper;
     }
 
     public Request.Builder prepareGet(String url, String token) {
@@ -41,12 +45,17 @@ public class RequestManager {
         return prepareGet(url, token).delete();
     }
 
-    public Request.Builder preparePOST(String url, String body, String token) {
-        return new Request.Builder()
-                .url(url)
-                .post(RequestBody.create(MediaType.parse("application/json"), body))
-                .header("Authorization", token)
-                .addHeader("User-Agent", USER_AGENT);
+    public Request.Builder preparePOST(String url, JsonNode body, String token){
+        try {
+            return new Request.Builder()
+                    .url(url)
+                    .post(RequestBody.create(null, this.mapper.writeValueAsBytes(body)))
+                    .header("Authorization", token)
+                    .header("Content-Type", "application/json")
+                    .header("User-Agent", USER_AGENT);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

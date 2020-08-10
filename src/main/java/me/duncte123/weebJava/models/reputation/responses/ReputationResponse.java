@@ -16,16 +16,24 @@
 
 package me.duncte123.weebJava.models.reputation.responses;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.models.WeebResponse;
 import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
-import org.json.JSONObject;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReputationResponse extends WeebResponse {
 
     protected final ReputationUser user;
 
-    ReputationResponse(int status, String message, ReputationUser user) {
+    @JsonCreator
+    public ReputationResponse(
+            @JsonProperty("status") int status,
+            @JsonProperty("message") String message,
+            @JsonProperty("user") ReputationUser user
+    ) {
         super(status, message);
         this.user = user;
     }
@@ -35,14 +43,6 @@ public class ReputationResponse extends WeebResponse {
      */
     public ReputationUser getUser() {
         return user;
-    }
-
-    public static ReputationResponse fromJson(JSONObject jsonObject) {
-        return new ReputationResponse(
-                jsonObject.getInt("status"),
-                jsonObject.optString("message"),
-                ReputationUser.fromJson(jsonObject.getJSONObject("user"))
-        );
     }
 
 }

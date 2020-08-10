@@ -16,13 +16,16 @@
 
 package me.duncte123.weebJava.models.reputation.responses;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import me.duncte123.weebJava.helpers.DateParser;
 import me.duncte123.weebJava.models.reputation.objects.ReputationUser;
-import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GiveUserReputationResponse extends ReputationResponse {
 
     private final int code;
@@ -30,7 +33,16 @@ public class GiveUserReputationResponse extends ReputationResponse {
     private final ReputationUser targetUser;
     private final String date;
 
-    private GiveUserReputationResponse(int status, String message, ReputationUser user, int code, ReputationUser sourceUser, ReputationUser targetUser, String date) {
+    @JsonCreator
+    public GiveUserReputationResponse(
+            @JsonProperty("status") int status,
+            @JsonProperty("message") String message,
+            @JsonProperty("user") ReputationUser user,
+            @JsonProperty("code") int code,
+            @JsonProperty("sourceUser") ReputationUser sourceUser,
+            @JsonProperty("targetUser") ReputationUser targetUser,
+            @JsonProperty("date") String date
+    ) {
         super(status, message, user);
         this.code = code;
         this.sourceUser = sourceUser;
@@ -110,15 +122,4 @@ public class GiveUserReputationResponse extends ReputationResponse {
         throw new IllegalArgumentException("Use getSourceUser() or getTargetUser()");
     }
 
-    public static GiveUserReputationResponse fromJson(JSONObject jsonObject) {
-        return new GiveUserReputationResponse(
-                jsonObject.getInt("status"),
-                jsonObject.optString("message"),
-                null,
-                jsonObject.getInt("code"),
-                ReputationUser.fromJson(jsonObject.getJSONObject("sourceUser")),
-                ReputationUser.fromJson(jsonObject.getJSONObject("targetUser")),
-                jsonObject.getString("date")
-        );
-    }
 }

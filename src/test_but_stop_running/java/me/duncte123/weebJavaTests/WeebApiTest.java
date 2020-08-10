@@ -16,6 +16,7 @@
 
 package me.duncte123.weebJavaTests;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import me.duncte123.weebJava.WeebApiBuilder;
 import me.duncte123.weebJava.configs.ImageConfig;
 import me.duncte123.weebJava.configs.LicenseConfig;
@@ -28,11 +29,11 @@ import me.duncte123.weebJava.models.reputation.objects.ReputationSettings;
 import me.duncte123.weebJava.models.settings.SettingsManager;
 import me.duncte123.weebJava.models.settings.objects.SettingsObject;
 import me.duncte123.weebJava.models.settings.responses.SettingsResponse;
+import me.duncte123.weebJava.models.settings.responses.SubSettingsResponse;
 import me.duncte123.weebJava.types.FileType;
 import me.duncte123.weebJava.types.GenerateType;
 import me.duncte123.weebJava.types.PreviewMode;
 import me.duncte123.weebJava.types.TokenType;
-import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.FileOutputStream;
@@ -47,7 +48,7 @@ public class WeebApiTest {
         WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
                 //me.duncte123.weebJavaTests.Secrets#WOLKE_TOKEN
                 .setToken(Secrets.WOLKE_TOKEN)
-                .setBotInfo("Weeb.java-test-environment", "0.0.0", "staging")
+                .setBotInfo("Example", "0.0.0", "staging")
                 .build();
 
         testNormalImageThings(api);
@@ -130,9 +131,10 @@ public class WeebApiTest {
     }
 
     private static void testSettings(WeebApi api) {
+        JsonMapper mapper = new JsonMapper();
         SettingsManager manager = api.getSettingsManager();
         SettingsResponse response = manager.updateSetting("guilds", "300407204987666432",
-                new JSONObject().put("fruit", "apple")).execute();
+                mapper.createObjectNode().put("fruit", "apple")).execute();
         System.out.print("first response: ");
         System.out.println(response.getSetting().getData());
 
@@ -142,6 +144,12 @@ public class WeebApiTest {
             System.out.println("deleted");
             System.out.println(res.getSetting().getData());
         });
+
+        final SubSettingsResponse subTest = (SubSettingsResponse) manager.updateSubSetting("guilds", "300407204987666432", "honk", "goos",
+                mapper.createObjectNode().put("test", "123")).execute();
+
+        System.out.print("Sub test ");
+        System.out.println(subTest.getSubsetting().getData());
     }
 
     private static void writeToFile(byte[] in, String name) {

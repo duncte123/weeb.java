@@ -24,7 +24,7 @@ The current latest version is: [ ![version][] ][download]
 <repository>
     <id>jcenter</id>
     <name>jcenter-bintray</name>
-    <url>http://jcenter.bintray.com</url>
+    <url>https://jcenter.bintray.com</url>
 </repository>
 
 <dependency>
@@ -48,28 +48,7 @@ Make sure to replace `[LATEST-VERSION]` with whatever the latest version is
 
 
 ## Examples
-More examples are provided in the examples directory
-
-Building the api:
-```JAVA
-WeebApi api = new WeebApiBuilder(TokenType.WOLKETOKENS)
-                .setToken("TOKEN")
-                .build();
-```
-
-Getting an image by type:
-```JAVA
-WeebImage imageByType = api.getRandomImage("hug").execute();
-```
-
-**NOTE:** `.execute()` is a blocking request, if you prefer asynchronous requests use `.async(Consumer)`
-
-Getting an image by the image id:
-```JAVA
-api.getImageById("H1mOU3auZ").async( (image) -> {
-    System.out.println(image.getUrl());
-} );
-```
+Examples for all methods can be found in the `test_but_stop_running` directory
 
 ## Libs used
 - Ason: [LINK](https://github.com/afollestad/ason)
