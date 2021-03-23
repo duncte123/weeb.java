@@ -7,7 +7,6 @@
 A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## TODO:
-- switch from org.json to jackson
 - write documentation and better examples
 
 ## Instalation & documentation
