@@ -1,5 +1,5 @@
-[version]: https://api.bintray.com/packages/duncte123/weeb.java/weeb.java/images/download.svg
-[download]: https://bintray.com/duncte123/weeb.java/weeb.java/_latestVersion
+[version]: https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fduncte123.jfrog.io%2Fartifactory%2Fmaven%2Fme%2Fduncte123%2FweebJava%2Fmaven-metadata.xml
+[download]: https://duncte123.jfrog.io/ui/packages/gav:%2F%2Fme.duncte123:weebJava
 [ciBadge]: https://travis-ci.org/duncte123/weeb.java.svg?branch=master
 [ciUrl]: https://travis-ci.org/duncte123/weeb.java
 
@@ -22,23 +22,24 @@ The current latest version is: [ ![version][] ][download]
 #### Maven
 ```XML
 <repository>
-    <id>jcenter</id>
-    <name>jcenter-bintray</name>
-    <url>https://jcenter.bintray.com</url>
+    <id>duncte123</id>
+    <name>duncte123-maven</name>
+    <url>https://duncte123.jfrog.io/artifactory/maven</url>
 </repository>
 
 <dependency>
   <groupId>me.duncte123</groupId>
   <artifactId>weebJava</artifactId>
   <version>[LATEST-VERSION]</version>
-  <type>pom</type>
 </dependency>
 ```
 
 #### Gradle
 ```GRADLE
 repositories {
-    jcenter()
+    maven {
+        url = 'https://duncte123.jfrog.io/artifactory/maven/'
+    }
 }
 dependencies {
     compile 'me.duncte123:weebJava:[LATEST-VERSION]'
@@ -51,6 +52,6 @@ Make sure to replace `[LATEST-VERSION]` with whatever the latest version is
 Examples for all methods can be found in the `test_but_stop_running` directory
 
 ## Libs used
-- Ason: [LINK](https://github.com/afollestad/ason)
+- Jackson: [LINK](https://github.com/FasterXML/jackson-databind)
 - OkHttp: [LINK](https://github.com/square/okhttp)
-- Reliqua: [LINK](https://github.com/natanbc/reliqua)
+- Reliqua: [LINK](https://github.com/duncte123/reliqua)

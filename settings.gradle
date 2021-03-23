@@ -15,6 +15,7 @@
  */
 
 rootProject.name = 'weebJava'
-include 'src:examples'
-findProject(':src:examples')?.name = 'weebJava.examples'
+//include 'src:examples'
+//findProject(':src:examples')?.name = 'weebJava.examples'
+//enableFeaturePreview('STABLE_PUBLISHING')
 

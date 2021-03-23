@@ -20,21 +20,25 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'com.jfrog.bintray' version '1.8.4'
     id 'java-library'
-    id 'idea'
     id 'maven-publish'
-//    id 'com.github.breadmoirai.github-release' version '2.2.0'
 }
 
 group = 'me.duncte123'
 archivesBaseName = 'weebJava'
-version = "3.0.0_${getBuildNumber()}"
+version = "3.0.1_${getBuildNumber()}"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    mavenCentral()
+
+    // this before jcenter to cache my own repos
+    maven {
+        url = "https://duncte123.jfrog.io/artifactory/bintray-maven/"
+    }
+
     jcenter()
 }
 
@@ -91,7 +95,7 @@ compileJava {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    getArchiveClassifier().set('sources')
 
     from('src/main/java') {
         exclude '**/WeebInfo.java'
@@ -102,42 +106,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    getArchiveClassifier().set('javadoc')
     from javadoc.destinationDir
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['BintrayRelease']
-    description = 'A java wrapper for the weeb.sh api'
-    pkg {
-        repo = 'weeb.java'
-        name = 'weeb.java'
-        desc = 'A java wrapper for the weeb.sh api'
-        description = getDesc()
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/duncte123/weeb.java.git'
-        githubRepo = 'https://github.com/duncte123/weeb.java'
-        publish = true
-        version {
-            name = project.version
-            released = new Date()
-        }
-    }
-}
-
-publishing {
-    publications {
-        BintrayRelease(MavenPublication) {
-            from components.java
-            groupId group
-            artifactId archivesBaseName
-            version version
-            artifact javadocJar
-            artifact sourcesJar
-        }
-    }
 }
 
 build {
@@ -151,27 +121,44 @@ build {
     sourcesJar.mustRunAfter javadocJar
 }
 
-bintrayUpload {
+publish {
     dependsOn build
 
-    onlyIf { System.getenv('BINTRAY_USER') != null }
-    onlyIf { System.getenv('BINTRAY_KEY') != null }
+    onlyIf {
+        System.getenv("JFROG_USERNAME") != null && System.getenv("JFROG_TOKEN") != null
+    }
 }
 
-/*githubRelease {
-    token "${System.getenv('GITHUB_TOKEN')}"
-    setOwner('duncte123')
-    repo 'weeb.java'
-    releaseAssets jar.destinationDirectory.listFiles()
-    overwrite true
-}*/
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            artifactId archivesBaseName
+            groupId project.group
+            version project.version
+
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
+    repositories {
+        maven {
+            name =  "jfrog"
+            url = "https://duncte123.jfrog.io/artifactory/maven/"
+            credentials {
+                username = System.getenv("JFROG_USERNAME")
+                password = System.getenv("JFROG_TOKEN")
+            }
+        }
+    }
+}
 
 wrapper {
-    gradleVersion = '6.5'
+    gradleVersion = '6.8'
     distributionType = Wrapper.DistributionType.ALL
 }
 
 static def getBuildNumber() {
-    return System.getenv('TRAVIS_BUILD_NUMBER') ?: System.getenv("TRAVIS_COMMIT") ?:
-            System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?: "dev"
+    return System.getenv("GITHUB_RUN_NUMBER")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?: "dev"
 }
