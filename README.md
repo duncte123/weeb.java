@@ -1,9 +1,7 @@
 [version]: https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fduncte123.jfrog.io%2Fartifactory%2Fmaven%2Fme%2Fduncte123%2FweebJava%2Fmaven-metadata.xml
 [download]: https://duncte123.jfrog.io/ui/packages/gav:%2F%2Fme.duncte123:weebJava
-[ciBadge]: https://travis-ci.org/duncte123/weeb.java.svg?branch=master
-[ciUrl]: https://travis-ci.org/duncte123/weeb.java
 
-## Weeb.java [![Build Status][ciBadge]][ciUrl]
+## Weeb.java 
 A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## TODO:
@@ -11,8 +9,6 @@ A java wrapper for [weeb.sh](https://weeb.sh/)
 
 ## Instalation & documentation
 You can install the wrapper with the following dependency managers.
-
-The repo can be downloaded from jcenter.
 
 The docs are available <a href="https://jitpack.io/com/github/duncte123/weeb.java/master-SNAPSHOT/javadoc/" target="_blank">here</a>
 
