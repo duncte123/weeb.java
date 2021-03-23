@@ -160,5 +160,5 @@ wrapper {
 }
 
 static def getBuildNumber() {
-    return System.getenv("GITHUB_RUN_NUMBER")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?: "dev"
+    return System.getenv("GITHUB_RUN_NUMBER") ?: "dev"
 }
