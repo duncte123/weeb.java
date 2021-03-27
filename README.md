@@ -33,7 +33,7 @@ The current latest version is: [ ![version][] ][download]
 ```GRADLE
 repositories {
     maven {
-        url = 'https://duncte123.jfrog.io/artifactory/maven/'
+        url = 'https://duncte123.jfrog.io/artifactory/maven'
     }
 }
 dependencies {
