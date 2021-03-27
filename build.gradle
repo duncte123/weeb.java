@@ -36,7 +36,10 @@ repositories {
 
     // this before jcenter to cache my own repos
     maven {
-        url = "https://duncte123.jfrog.io/artifactory/bintray-maven/"
+        url = "https://duncte123.jfrog.io/artifactory/bintray-maven"
+    }
+    maven {
+        url = "https://duncte123.jfrog.io/artifactory/maven"
     }
 
     jcenter()
@@ -44,7 +47,7 @@ repositories {
 
 dependencies {
     api group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    api(group: 'me.duncte123', name: 'reliqua', version: '2.4.10') {
+    api(group: 'me.duncte123', name: 'reliqua', version: '2.5.1') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
     api group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.9'
@@ -145,7 +148,7 @@ publishing {
     repositories {
         maven {
             name =  "jfrog"
-            url = "https://duncte123.jfrog.io/artifactory/maven/"
+            url = "https://duncte123.jfrog.io/artifactory/maven"
             credentials {
                 username = System.getenv("JFROG_USERNAME")
                 password = System.getenv("JFROG_TOKEN")
