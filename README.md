@@ -1,5 +1,5 @@
-[version]: https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fduncte123.jfrog.io%2Fartifactory%2Fmaven%2Fme%2Fduncte123%2FweebJava%2Fmaven-metadata.xml
-[download]: https://duncte123.jfrog.io/ui/packages/gav:%2F%2Fme.duncte123:weebJava
+[version]: https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fm2.duncte123.dev%2Freleases%2Fme%2Fduncte123%2FweebJava%2Fmaven-metadata.xml
+[download]: https://m2.duncte123.dev/#/releases/me/duncte123/weebJava
 
 ## Weeb.java 
 A java wrapper for [weeb.sh](https://weeb.sh/)
@@ -19,7 +19,7 @@ The current latest version is: [ ![version][] ][download]
 <repository>
     <id>duncte123</id>
     <name>duncte123-maven</name>
-    <url>https://duncte123.jfrog.io/artifactory/maven</url>
+    <url>https://m2.duncte123.dev/releases</url>
 </repository>
 
 <dependency>
@@ -33,7 +33,7 @@ The current latest version is: [ ![version][] ][download]
 ```GRADLE
 repositories {
     maven {
-        url = 'https://duncte123.jfrog.io/artifactory/maven'
+        url = 'https://m2.duncte123.dev/releases'
     }
 }
 dependencies {
