@@ -40,6 +40,7 @@ repositories {
 
 dependencies {
     api group: 'org.apache.commons', name: 'commons-text', version: '1.10.0'
+    api 'com.google.code.findbugs:jsr305:3.0.2'
     api(group: 'me.duncte123', name: 'reliqua', version: '2.6.5') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
